@@ -1,0 +1,146 @@
+[
+  {
+    "_type": "logoList",
+    "_id": "logoList-aktarr",
+    "clientName": "Aktarr",
+    "slug": {
+      "_type": "slug",
+      "current": "aktarr"
+    },
+    "sortOrder": 9,
+    "logo": {
+      "_type": "image",
+      "alt": "Aktarr logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67a4b8c7874f80b4dd63c115_aktarr-logo.svg"
+    },
+    "featured": true
+  },
+  {
+    "_type": "logoList",
+    "_id": "logoList-digital-tolk",
+    "clientName": "Digital Tolk",
+    "slug": {
+      "_type": "slug",
+      "current": "digital-tolk"
+    },
+    "sortOrder": 8,
+    "logo": {
+      "_type": "image",
+      "alt": "Digital Tolk logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67a4b8e00fafae0f6d7b81ac_DT_Logo.svg"
+    },
+    "featured": true
+  },
+  {
+    "_type": "logoList",
+    "_id": "logoList-dose-of-venture",
+    "clientName": "Dose of Venture",
+    "slug": {
+      "_type": "slug",
+      "current": "dose-of-venture"
+    },
+    "sortOrder": 2,
+    "logo": {
+      "_type": "image",
+      "alt": "Dose of Venture logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67ed49cf5f8cf691300971e6_YELLOW-01-2.avif"
+    },
+    "featured": true
+  },
+  {
+    "_type": "logoList",
+    "_id": "logoList-lever-brands",
+    "clientName": "Lever Brands",
+    "slug": {
+      "_type": "slug",
+      "current": "lever-brands"
+    },
+    "sortOrder": 1,
+    "logo": {
+      "_type": "image",
+      "alt": "Lever Brands logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67a4c2ad162a8dd039096cec_lever-logo.svg"
+    },
+    "featured": true
+  },
+  {
+    "_type": "logoList",
+    "_id": "logoList-pale-blue-dot",
+    "clientName": "Pale Blue Dot",
+    "slug": {
+      "_type": "slug",
+      "current": "pale-blue-dot"
+    },
+    "sortOrder": 4,
+    "logo": {
+      "_type": "image",
+      "alt": "Pale Blue Dot logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/6839c811b29e2dfdabffac77_PBD%20logo.avif"
+    },
+    "featured": true
+  },
+  {
+    "_type": "logoList",
+    "_id": "logoList-pulpe-sense",
+    "clientName": "Pulpe Sense",
+    "slug": {
+      "_type": "slug",
+      "current": "pulpe-sense"
+    },
+    "sortOrder": 7,
+    "logo": {
+      "_type": "image",
+      "alt": "Pulpe Sense logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67fce2032492961dd21e4a6a_Pulp-Sense-Logo-_1_-p-500.avif"
+    },
+    "featured": true
+  },
+  {
+    "_type": "logoList",
+    "_id": "logoList-secret-leaders",
+    "clientName": "Secret Leaders",
+    "slug": {
+      "_type": "slug",
+      "current": "secret-leaders"
+    },
+    "sortOrder": 5,
+    "logo": {
+      "_type": "image",
+      "alt": "Secret Leaders logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67a4b901c280b2f7b2f50a57_Copy%2Bof%2BCopy%2Bof%2Buk%27s%2Bstartup%2Bpodcast%2B(4).avif"
+    },
+    "featured": true
+  },
+  {
+    "_type": "logoList",
+    "_id": "logoList-superseed",
+    "clientName": "Superseed",
+    "slug": {
+      "_type": "slug",
+      "current": "superseed"
+    },
+    "sortOrder": 3,
+    "logo": {
+      "_type": "image",
+      "alt": "Superseed logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/6854670fdb85dc8f1030ce75_superseed-logo-white.svg"
+    },
+    "featured": true
+  },
+  {
+    "_type": "logoList",
+    "_id": "logoList-the-offsite-co",
+    "clientName": "The Offsite Co",
+    "slug": {
+      "_type": "slug",
+      "current": "the-offsite-co"
+    },
+    "sortOrder": 6,
+    "logo": {
+      "_type": "image",
+      "alt": "The Offsite Co logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/6854687cc09131b64f00c96b_TheOffsite_Logo_Light_Red.png"
+    },
+    "featured": true
+  }
+]

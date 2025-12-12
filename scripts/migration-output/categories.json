@@ -1,0 +1,38 @@
+[
+  {
+    "_type": "category",
+    "_id": "category-automation-tips",
+    "name": "Automation Tips",
+    "slug": {
+      "_type": "slug",
+      "current": "automation-tips"
+    }
+  },
+  {
+    "_type": "category",
+    "_id": "category-built-with-n8n",
+    "name": "Built With N8n",
+    "slug": {
+      "_type": "slug",
+      "current": "built-with-n8n"
+    }
+  },
+  {
+    "_type": "category",
+    "_id": "category-n8n-announcements",
+    "name": "N8n Announcements ",
+    "slug": {
+      "_type": "slug",
+      "current": "n8n-announcements"
+    }
+  },
+  {
+    "_type": "category",
+    "_id": "category-video-tutorials",
+    "name": "Video Tutorials",
+    "slug": {
+      "_type": "slug",
+      "current": "video-tutorials"
+    }
+  }
+]

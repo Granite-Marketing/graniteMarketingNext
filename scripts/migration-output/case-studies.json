@@ -1,0 +1,418 @@
+[
+  {
+    "_type": "caseStudy",
+    "_id": "caseStudy-automating-content-ideation-from-tiktok-x-and-more",
+    "title": "Automating Content Ideation From TikTok, X and More",
+    "slug": {
+      "_type": "slug",
+      "current": "automating-content-ideation-from-tiktok-x-and-more"
+    },
+    "client": "Automating Content Ideation From TikTok, X and More",
+    "industry": "london",
+    "excerpt": "Learn how we build an AI Agent that conducted market research on TikTok, X, Tavily and more.",
+    "featuredImage": {
+      "_type": "image",
+      "alt": "Automating Content Ideation From TikTok, X and More",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/6772e1c93602e85420716711_greg-gelsinger--DR5fys2hXY-unsplash%20copy.avif"
+    },
+    "challenge": [
+      {
+        "_type": "block",
+        "_key": "0atle",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "kx8j5f",
+            "text": "Learn how we build an AI Agent that conducted market research on user supplied topics and then converted them into high-quality social media scripts.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "solution": [
+      {
+        "_type": "block",
+        "_key": "om3ymj",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "wlcc6",
+            "text": "We used n8n, Tavily, and Apify to curate and create scripts.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "techStack": [
+      {
+        "_key": "tech-1",
+        "title": "n8n Automations",
+        "description": "Our process automation platform of choice",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc6032_image15.jpeg"
+      },
+      {
+        "_key": "tech-2",
+        "title": "Tavily",
+        "description": "LLM powered search engine, great for research",
+        "imageUrl": "https://cdn.prod.website-files.com/6761096c3a79984bb20edf4e/67727c614d2ae2e17fded8b1_image5.jpeg"
+      },
+      {
+        "_key": "tech-3",
+        "title": "Apify Scraper",
+        "description": "Helped transcribe social media videos",
+        "imageUrl": "https://cdn.prod.website-files.com/6761096c3a79984bb20edf4e/67727c614d2ae2e17fded8b4_image15.jpeg"
+      },
+      {
+        "_key": "tech-4",
+        "title": "Open AI Assistant",
+        "description": "A specialised writing AI trained on client data",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc6066_image11.jpeg"
+      }
+    ],
+    "results": [
+      {
+        "_key": "result-1",
+        "value": "15",
+        "metric": "Daily new content ideas",
+        "description": "New, relevant ideas without duplication."
+      },
+      {
+        "_key": "result-2",
+        "value": "2",
+        "metric": "Minute execution time",
+        "description": "Create on-brand scripts in minutes."
+      },
+      {
+        "_key": "result-3",
+        "value": "0",
+        "metric": "Time spent browsing",
+        "description": "Automate ideation from preferred sources."
+      }
+    ],
+    "testimonial": {
+      "_type": "reference",
+      "_ref": "client-liyapa-sikazwe"
+    },
+    "loomUrl": "https://example.com/automation-case-study-3",
+    "seo": {
+      "metaTitle": "Automating Content Ideation From TikTok, X and More | Case Study",
+      "metaDescription": "Explore how we build an AI agent that helped Secret Leaders automate content ideation and creation."
+    }
+  },
+  {
+    "_type": "caseStudy",
+    "_id": "caseStudy-conducting-in-depth-research-with-a-click-of-a-button",
+    "title": "Conducting In-depth Research with a Click of a Button",
+    "slug": {
+      "_type": "slug",
+      "current": "conducting-in-depth-research-with-a-click-of-a-button"
+    },
+    "client": "Conducting In-depth Research with a Click of a Button",
+    "industry": "london",
+    "excerpt": "We developed an multi-agent flow that conducts in-depth research on topics and individuals.",
+    "featuredImage": {
+      "_type": "image",
+      "alt": "Conducting In-depth Research with a Click of a Button",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/6772e1b2d3ac852e4cc03e88_kit-formerly-convertkit--CbLJAUI_js-unsplash%20copy.avif"
+    },
+    "challenge": [
+      {
+        "_type": "block",
+        "_key": "yigfn",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "h7w2d",
+            "text": "Learn more about the multi-agent workflow we developed to help Secret Leaders learn about guests and perform general research all from Notion.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "solution": [
+      {
+        "_type": "block",
+        "_key": "fdwevl",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "engfln",
+            "text": "We implemented tools like Notion, n8n, and Tavily to conduct in-depth research",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "techStack": [
+      {
+        "_key": "tech-1",
+        "title": "Notion",
+        "description": "Served as the backend for the client to manage the system",
+        "imageUrl": "https://cdn.prod.website-files.com/6761096c3a79984bb20edf4e/67727c614d2ae2e17fded8ae_image5.jpeg"
+      },
+      {
+        "_key": "tech-2",
+        "title": "n8n Automations",
+        "description": "We were able to link various tools including custom HTTP requests",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc6066_image11.jpeg"
+      },
+      {
+        "_key": "tech-3",
+        "title": "Tavily",
+        "description": "An LLM powered search engine great for research",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc6051_image5.jpeg"
+      },
+      {
+        "_key": "tech-4",
+        "title": "Firecrawl ",
+        "description": "Enables scraping website content in plaintext",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc6032_image15.jpeg"
+      }
+    ],
+    "results": [
+      {
+        "_key": "result-1",
+        "value": "3",
+        "metric": "Minutes average run time",
+        "description": "Results were typically displayed within 3 minutes."
+      },
+      {
+        "_key": "result-2",
+        "value": "4",
+        "metric": "Different research formats",
+        "description": "Create reports, list resources and more."
+      },
+      {
+        "_key": "result-3",
+        "value": "100%",
+        "metric": "Reports accuracy",
+        "description": "The automation was optimised to reduce hallucinations."
+      }
+    ],
+    "testimonial": {
+      "_type": "reference",
+      "_ref": "client-liyapa-sikazwe"
+    },
+    "loomUrl": "https://example.com/automation-case-study-2",
+    "seo": {
+      "metaTitle": "Conducting In-depth Research with a Click of a Button | Case Study",
+      "metaDescription": "Learn how we developed a multi-agent research assistant to help Secret Leaders learn about guests."
+    }
+  },
+  {
+    "_type": "caseStudy",
+    "_id": "caseStudy-creating-accessible-content-for-a-diverse-audience",
+    "title": "Creating Accessible Content for a Diverse Audience",
+    "slug": {
+      "_type": "slug",
+      "current": "creating-accessible-content-for-a-diverse-audience"
+    },
+    "client": "Creating Accessible Content for a Diverse Audience",
+    "industry": "malmo",
+    "excerpt": "Discover how we helped Aktarr reach their target audience with swift and accurate translations.",
+    "featuredImage": {
+      "_type": "image",
+      "alt": "Creating Accessible Content for a Diverse Audience",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/6772e198b5154be47122f7fa_mhrezaa-MO3yBgE6mJ0-unsplash%20copy.avif"
+    },
+    "challenge": [
+      {
+        "_type": "block",
+        "_key": "emnnio",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "9k433q",
+            "text": "Discover how our innovative no-code solutions have empowered Aktarr to streamline their operations and enhance productivity. This case study highlights the remarkable journey and outcomes achieved through our tailored automation strategies.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "solution": [
+      {
+        "_type": "block",
+        "_key": "34dj0r",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "qpddjs",
+            "text": "We combined Notion, n8n and Apify to curate and create high-quality content.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "techStack": [
+      {
+        "_key": "tech-1",
+        "title": "Notion backend",
+        "description": "The client can now easily manage their flow from their mobile phone on notion",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc6078_image17.jpeg"
+      },
+      {
+        "_key": "tech-2",
+        "title": "n8n Automations",
+        "description": "We built the flow with n8n, split into the article finder and article writer",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc6069_image9.jpeg"
+      },
+      {
+        "_key": "tech-3",
+        "title": "Custom HTTP",
+        "description": "We created an efficient setup to trigger an Apify scraper using custom HTTP requests",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc6092_image1.jpeg"
+      },
+      {
+        "_key": "tech-4",
+        "title": "Apify scraper",
+        "description": "We configured an Apify scraper that can login and auto-refresh the cookies",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc608c_image10.jpeg"
+      }
+    ],
+    "results": [
+      {
+        "_key": "result-1",
+        "value": "40",
+        "metric": "High Quality Articles / hour",
+        "description": "We were able to generate 40 high quality articles per hour in Arabic."
+      },
+      {
+        "_key": "result-2",
+        "value": "400%",
+        "metric": "Increase in Free time",
+        "description": "The client has gone form spending whole days writing articles to 1h per day for 20."
+      },
+      {
+        "_key": "result-3",
+        "value": "98%",
+        "metric": "Article Accuracy",
+        "description": "It only requires a few mins of proof reading to publish each article."
+      }
+    ],
+    "testimonial": {
+      "_type": "reference",
+      "_ref": "client-kotada-yunus"
+    },
+    "loomUrl": "https://example.com/automation-case-study-1",
+    "seo": {
+      "metaTitle": "Creating Accessible Content for a Diverse Audience | Case Study",
+      "metaDescription": "Discover how we empowered Aktarr to streamline their operations and enhance productivity through automation."
+    }
+  },
+  {
+    "_type": "caseStudy",
+    "_id": "caseStudy-automation-case-study-5",
+    "title": "Enhancing Data Management",
+    "slug": {
+      "_type": "slug",
+      "current": "automation-case-study-5"
+    },
+    "client": "Enhancing Data Management",
+    "industry": "Technology",
+    "excerpt": "Explore our data management strategies.",
+    "featuredImage": {
+      "_type": "image",
+      "alt": "Enhancing Data Management",
+      "_externalUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc608c_image10.jpeg"
+    },
+    "challenge": [
+      {
+        "_type": "block",
+        "_key": "xsaxyl",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "0xap2",
+            "text": "This case study illustrates our approach to enhancing data management for a financial services firm using automation.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "solution": [
+      {
+        "_type": "block",
+        "_key": "7k34dq",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "gn45mm",
+            "text": "We utilized tools like Airtable, Google Sheets, and Zapier for effective data management.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "techStack": [
+      {
+        "_key": "tech-1",
+        "title": "Airtable",
+        "description": "Organized data in a user-friendly interface.",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc6051_image5.jpeg"
+      },
+      {
+        "_key": "tech-2",
+        "title": "Google Sheets",
+        "description": "Managed data and created reports.",
+        "imageUrl": "https://cdn.prod.website-files.com/6761096c3a79984bb20edf4e/67727c614d2ae2e17fded8b1_image5.jpeg"
+      },
+      {
+        "_key": "tech-3",
+        "title": "Zapier",
+        "description": "Automated data entry and updates.",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc608c_image10.jpeg"
+      },
+      {
+        "_key": "tech-4",
+        "title": "Tableau",
+        "description": "Visualized data for better insights.",
+        "imageUrl": "https://cdn.prod.website-files.com/676f85965f94cfa879d8ebd9/67727a3a4d2ae2e17fdc6089_image11.jpeg"
+      }
+    ],
+    "results": [
+      {
+        "_key": "result-1",
+        "value": "60%",
+        "metric": "Data Processing Time",
+        "description": "Data processing time was significantly reduced."
+      },
+      {
+        "_key": "result-2",
+        "value": "30%",
+        "metric": "Data Accuracy",
+        "description": "Data accuracy improved notably."
+      },
+      {
+        "_key": "result-3",
+        "value": "85%",
+        "metric": "User Satisfaction",
+        "description": "Achieved high user satisfaction with the new system."
+      }
+    ],
+    "testimonial": {
+      "_type": "reference",
+      "_ref": "client-liyapa-sikazwe"
+    },
+    "loomUrl": "https://example.com/automation-case-study-5",
+    "seo": {
+      "metaTitle": "Enhancing Data Management through Automation",
+      "metaDescription": "Learn how we enhanced data management for a client."
+    }
+  }
+]

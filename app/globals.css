@@ -1,0 +1,531 @@
+@import "tailwindcss";
+
+/* ===========================
+   Custom Fonts
+   =========================== */
+@font-face {
+  font-family: "Chakra Petch";
+  src: url("/fonts/ChakraPetch-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Chakra Petch";
+  src: url("/fonts/ChakraPetch-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Chakra Petch";
+  src: url("/fonts/ChakraPetch-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Share Tech Mono";
+  src: url("/fonts/ShareTechMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ===========================
+   CSS Custom Properties (Design Tokens)
+   =========================== */
+:root {
+  /* Brand Colors */
+  --color-brand-black: #111;
+  --color-brand-off-black: #1e1e1e;
+  --color-brand-white: #ffffff;
+  --color-brand-off-white: #d1d1d1;
+  --color-brand-green: #25995b;
+  --color-brand-green-light: #7adcaa;
+  --color-brand-blue: #587ea4;
+
+  /* Neutral Colors */
+  --color-neutral-black: #000000;
+  --color-neutral-darkest: #111;
+  --color-neutral-darker: #222;
+  --color-neutral-dark: #444;
+  --color-neutral: #666;
+  --color-neutral-light: #aaa;
+  --color-neutral-lighter: #ccc;
+  --color-neutral-lightest: #eee;
+  --color-neutral-white: #ffffff;
+
+  /* System Colors */
+  --color-success: #027a48;
+  --color-success-light: #ecfdf3;
+  --color-error: #b42318;
+  --color-error-light: #fef3f2;
+
+  /* Semantic Colors */
+  --color-background: var(--color-neutral-black);
+  --color-background-alt: var(--color-brand-off-black);
+  --color-text-primary: var(--color-brand-off-white);
+  --color-text-secondary: var(--color-neutral-light);
+  --color-text-white: var(--color-brand-white);
+  --color-border: var(--color-neutral-dark);
+
+  /* Typography */
+  --font-heading: "Chakra Petch", Verdana, sans-serif;
+  --font-body: "Inter", Arial, sans-serif;
+  --font-mono: "Share Tech Mono", monospace;
+
+  /* Spacing Scale */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+  --spacing-32: 8rem;
+
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+}
+
+/* ===========================
+   Tailwind Theme Extension
+   =========================== */
+@theme {
+  /* Colors */
+  --color-brand-black: #111;
+  --color-brand-off-black: #1e1e1e;
+  --color-brand-white: #ffffff;
+  --color-brand-off-white: #d1d1d1;
+  --color-brand-green: #25995b;
+  --color-brand-green-light: #7adcaa;
+  --color-brand-blue: #587ea4;
+  
+  --color-neutral-black: #000000;
+  --color-neutral-darkest: #111111;
+  --color-neutral-darker: #222222;
+  --color-neutral-dark: #444444;
+  --color-neutral-base: #666666;
+  --color-neutral-light: #aaaaaa;
+  --color-neutral-lighter: #cccccc;
+  --color-neutral-lightest: #eeeeee;
+  --color-neutral-white: #ffffff;
+
+  /* Font Families */
+  --font-heading: "Chakra Petch", Verdana, sans-serif;
+  --font-body: "Inter", Arial, sans-serif;
+  --font-mono: "Share Tech Mono", monospace;
+}
+
+/* ===========================
+   Base Styles
+   =========================== */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-text-white);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+h4 {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+}
+
+h5 {
+  font-size: 1.125rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+/* Focus States */
+*[tabindex]:focus-visible,
+input[type="file"]:focus-visible {
+  outline: 2px solid var(--color-brand-green);
+  outline-offset: 2px;
+}
+
+/* Form Reset */
+input, textarea, select {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+/* ===========================
+   Utility Classes
+   =========================== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Section Padding */
+.padding-section-small {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.padding-section-medium {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.padding-section-large {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+@media (min-width: 768px) {
+  .padding-section-small {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  .padding-section-medium {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+  .padding-section-large {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+/* Text Colors */
+.text-color-white {
+  color: var(--color-text-white);
+}
+
+.text-color-green {
+  color: var(--color-brand-green);
+}
+
+.text-color-muted {
+  color: var(--color-text-secondary);
+}
+
+/* Text Sizes */
+.text-size-tiny {
+  font-size: 0.75rem;
+}
+
+.text-size-small {
+  font-size: 0.875rem;
+}
+
+.text-size-regular {
+  font-size: 1rem;
+}
+
+.text-size-medium {
+  font-size: 1.125rem;
+}
+
+.text-size-large {
+  font-size: 1.25rem;
+}
+
+/* Text Weights */
+.text-weight-light {
+  font-weight: 300;
+}
+
+.text-weight-normal {
+  font-weight: 400;
+}
+
+.text-weight-medium {
+  font-weight: 500;
+}
+
+.text-weight-semibold {
+  font-weight: 600;
+}
+
+.text-weight-bold {
+  font-weight: 700;
+}
+
+/* Font Families */
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Gradient Border */
+.gradient-border {
+  background: #010101;
+  background-clip: padding-box;
+  border: solid 1px transparent;
+  position: relative;
+  border-radius: var(--radius-lg);
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  box-sizing: border-box;
+  margin: -1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(3, 129, 39, 0.5) 17.89%,
+    rgba(10, 169, 55, 0)
+  );
+}
+
+/* Logo Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 24s linear infinite;
+}
+
+/* Swiper Customization */
+.swiper-pagination-bullet {
+  border: solid 1px #fff;
+  border-radius: 0;
+  background: transparent;
+  width: 0.75rem;
+  height: 0.75rem;
+  display: block;
+}
+
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+  background: #fff;
+}
+
+/* Section Overflow */
+section,
+header {
+  overflow: clip;
+}
+
+/* Text Line Clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* Hide scrollbar */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Rich Text Styles */
+.rich-text h1,
+.rich-text h2,
+.rich-text h3,
+.rich-text h4,
+.rich-text h5,
+.rich-text h6 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.rich-text h1:first-child,
+.rich-text h2:first-child,
+.rich-text h3:first-child,
+.rich-text h4:first-child,
+.rich-text h5:first-child,
+.rich-text h6:first-child {
+  margin-top: 0;
+}
+
+.rich-text p {
+  margin-bottom: 1em;
+}
+
+.rich-text p:last-child {
+  margin-bottom: 0;
+}
+
+.rich-text ul,
+.rich-text ol {
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+
+.rich-text li {
+  margin-bottom: 0.5em;
+}
+
+.rich-text blockquote {
+  border-left: 3px solid var(--color-brand-green);
+  padding-left: 1em;
+  margin: 1.5em 0;
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+.rich-text a {
+  color: var(--color-brand-green);
+  text-decoration: underline;
+}
+
+.rich-text a:hover {
+  color: var(--color-brand-green-light);
+}
+
+.rich-text img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  margin: 1.5em 0;
+}
+
+.rich-text pre {
+  background: var(--color-neutral-darker);
+  padding: 1em;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+.rich-text code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* Hero Loading State */
+.js-loading.section-hero {
+  opacity: 0;
+}

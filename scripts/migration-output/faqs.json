@@ -1,0 +1,245 @@
+[
+  {
+    "_type": "faq",
+    "_id": "faq-do-i-need-to-be-technical-to-manage-things-after-launch",
+    "question": "Do I need to be technical to manage things after launch?",
+    "slug": {
+      "_type": "slug",
+      "current": "do-i-need-to-be-technical-to-manage-things-after-launch"
+    },
+    "answer": [
+      {
+        "_type": "block",
+        "_key": "m8j3o7",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "74es58",
+            "text": "Not at all. While n8n is a developer-friendly tool, we build every automation with ease of use in mind. We’ll hand over a clean, documented workflow — and we include training so your team knows how to operate or tweak it without needing to code. You'll never need to touch the backend—the entire workflow can usually be managed from a mobile or laptop.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "order": 1,
+    "category": "general"
+  },
+  {
+    "_type": "faq",
+    "_id": "faq-how-do-we-get-started-with-granite-marketing",
+    "question": "How do we get started with Granite Marketing?",
+    "slug": {
+      "_type": "slug",
+      "current": "how-do-we-get-started-with-granite-marketing"
+    },
+    "answer": [
+      {
+        "_type": "block",
+        "_key": "sra5mf",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "hjfbuw",
+            "text": "It starts with a quick discovery call. We’ll talk through your current challenges, what tools you’re using, and where automation could make the biggest impact. From there, we’ll map out a clear plan — no guesswork, no fluff.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "order": 2,
+    "category": "general"
+  },
+  {
+    "_type": "faq",
+    "_id": "faq-how-do-you-tailor-each-automation-to-fit-our-specific-workflows",
+    "question": "How do you tailor each automation to fit our specific workflows?",
+    "slug": {
+      "_type": "slug",
+      "current": "how-do-you-tailor-each-automation-to-fit-our-specific-workflows"
+    },
+    "answer": [
+      {
+        "_type": "block",
+        "_key": "iiz9z3",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "rlcczc",
+            "text": "We start every project by understanding your business logic, current tools, and pain points. From there, we map out a solution that works with — not against — your existing processes. Every automation is custom-built and tested with your team’s real-world scenarios.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "order": 3,
+    "category": "general"
+  },
+  {
+    "_type": "faq",
+    "_id": "faq-how-much-does-it-cost-to-run-an-automation-each-month",
+    "question": "How much does it cost to run an automation each month?",
+    "slug": {
+      "_type": "slug",
+      "current": "how-much-does-it-cost-to-run-an-automation-each-month"
+    },
+    "answer": [
+      {
+        "_type": "block",
+        "_key": "f9m9l",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "4zvqwq",
+            "text": "This can vary, but on average most of the flows are somewhere between $50-100 depending on number of tools used. Chat with us today and we can give you an estimate based on your needs.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "order": 4,
+    "category": "general"
+  },
+  {
+    "_type": "faq",
+    "_id": "faq-how-secure-is-the-data-flowing-through-your-automations",
+    "question": "How secure is the data flowing through your automations?",
+    "slug": {
+      "_type": "slug",
+      "current": "how-secure-is-the-data-flowing-through-your-automations"
+    },
+    "answer": [
+      {
+        "_type": "block",
+        "_key": "tbuscn",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "8g9ufp",
+            "text": "We take data security seriously. All automations follow best practices around encryption, access control, and environment isolation. We also deploy solutions in secure environments — whether that’s self-hosted or cloud-based — depending on your preferences.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "order": 5,
+    "category": "general"
+  },
+  {
+    "_type": "faq",
+    "_id": "faq-what-happens-after-the-automation-is-built-do-you-offer-support",
+    "question": "What happens after the automation is built? Do you offer support?",
+    "slug": {
+      "_type": "slug",
+      "current": "what-happens-after-the-automation-is-built-do-you-offer-support"
+    },
+    "answer": [
+      {
+        "_type": "block",
+        "_key": "27fwx",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "lcnzz8",
+            "text": "Yes. After launch, we offer ongoing support, maintenance, and optimisation packages. Whether you need help adjusting workflows, adding new features, or troubleshooting, we’re here to support you as your business evolves.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "order": 6,
+    "category": "general"
+  },
+  {
+    "_type": "faq",
+    "_id": "faq-what-kinds-of-businesses-do-you-work-with",
+    "question": "What kinds of businesses do you work with?",
+    "slug": {
+      "_type": "slug",
+      "current": "what-kinds-of-businesses-do-you-work-with"
+    },
+    "answer": [
+      {
+        "_type": "block",
+        "_key": "0zxla",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "5m5n1o",
+            "text": "We work primarily with small to medium-sized enterprises across a range of industries — from professional services and agencies to tech and logistics. If your business has repeatable workflows, disconnected systems, or too many manual tasks, we can help.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "order": 7,
+    "category": "general"
+  },
+  {
+    "_type": "faq",
+    "_id": "faq-what-tools-and-platforms-can-you-integrate-with",
+    "question": "What tools and platforms can you integrate with?",
+    "slug": {
+      "_type": "slug",
+      "current": "what-tools-and-platforms-can-you-integrate-with"
+    },
+    "answer": [
+      {
+        "_type": "block",
+        "_key": "4fpne",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "3trds",
+            "text": "n8n connects with hundreds of apps out of the box — from CRMs and spreadsheets to cloud storage, messaging tools, and APIs. We also build custom nodes and webhook solutions when needed. If your tool has an API, we can probably automate it.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "order": 8,
+    "category": "general"
+  },
+  {
+    "_type": "faq",
+    "_id": "faq-what-types-of-problems-can-n8n-automations-solve-for-my-business",
+    "question": "What types of problems can n8n automations solve for my business?",
+    "slug": {
+      "_type": "slug",
+      "current": "what-types-of-problems-can-n8n-automations-solve-for-my-business"
+    },
+    "answer": [
+      {
+        "_type": "block",
+        "_key": "6c3bdg",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "zwdh19",
+            "text": "Automations built with n8n are highly flexible. We’ve helped clients streamline lead routing, sync data between CRMs like Airtable, Notion, and NocoDB, set up Slack or email alerts from form submissions, and build custom webhook workflows. If a task is repetitive, manual, or time-sensitive, there's a good chance it can be automated.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "order": 9,
+    "category": "general"
+  }
+]

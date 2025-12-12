@@ -1,0 +1,47 @@
+[
+  {
+    "_type": "location",
+    "_id": "location-buenos-aires",
+    "name": "Buenos Aires",
+    "slug": {
+      "_type": "slug",
+      "current": "buenos-aires"
+    }
+  },
+  {
+    "_type": "location",
+    "_id": "location-california",
+    "name": "California",
+    "slug": {
+      "_type": "slug",
+      "current": "california"
+    }
+  },
+  {
+    "_type": "location",
+    "_id": "location-canada",
+    "name": "Canada",
+    "slug": {
+      "_type": "slug",
+      "current": "canada"
+    }
+  },
+  {
+    "_type": "location",
+    "_id": "location-london",
+    "name": "London",
+    "slug": {
+      "_type": "slug",
+      "current": "london"
+    }
+  },
+  {
+    "_type": "location",
+    "_id": "location-malmo",
+    "name": "Malmö",
+    "slug": {
+      "_type": "slug",
+      "current": "malmo"
+    }
+  }
+]

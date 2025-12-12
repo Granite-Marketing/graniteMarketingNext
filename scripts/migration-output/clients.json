@@ -1,0 +1,201 @@
+[
+  {
+    "_type": "client",
+    "_id": "client-dyland-watkins",
+    "name": "Dyland Watkins",
+    "slug": {
+      "_type": "slug",
+      "current": "dyland-watkins"
+    },
+    "authorName": "Dyland Watkins",
+    "company": "DJW Consulting",
+    "testimonial": [
+      {
+        "_type": "block",
+        "_key": "cywbx5",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "xr549a",
+            "text": "Stephen is a top-notch automation expert. He not only knows the latest AI and automation but also is a full stack developer which is incredible as you have work on these advanced projects.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "dateStarted": "2025-03-01",
+    "location": {
+      "_type": "reference",
+      "_ref": "location-california"
+    },
+    "headshot": {
+      "_type": "image",
+      "alt": "Dyland Watkins",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67fce14d01921c67913e5950_dylan.avif"
+    }
+  },
+  {
+    "_type": "client",
+    "_id": "client-kotada-yunus",
+    "name": "Kotada Yunus",
+    "slug": {
+      "_type": "slug",
+      "current": "kotada-yunus"
+    },
+    "authorName": "Kotada Yunus",
+    "company": "Aktarr",
+    "testimonial": [
+      {
+        "_type": "block",
+        "_key": "bfwc86",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "jhar2e",
+            "text": "My team used to spend every waking moment looking for content which meant we couldn't utilise our production studio. Now we have both, great content and we're making full use of our studio space.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "dateStarted": "2024-06-27",
+    "location": {
+      "_type": "reference",
+      "_ref": "location-malmo"
+    },
+    "companyLogo": {
+      "_type": "image",
+      "alt": "Aktarr logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67a4b8c7874f80b4dd63c115_aktarr-logo.svg"
+    },
+    "headshot": {
+      "_type": "image",
+      "alt": "Kotada Yunus",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67fa4e3861e24d76e75f9b45_kotada.avif"
+    }
+  },
+  {
+    "_type": "client",
+    "_id": "client-liyapa-sikazwe",
+    "name": "Liyapa Sikazwe",
+    "slug": {
+      "_type": "slug",
+      "current": "liyapa-sikazwe"
+    },
+    "authorName": "Liyapa Sikazwe",
+    "company": "Dose of Venture",
+    "testimonial": [
+      {
+        "_type": "block",
+        "_key": "ldf9tm",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "tli3c5",
+            "text": "Granite Marketing is both innovative and reliable. Their team took the time to understand our unique challenges and provided a customised solution that integrated with our existing tools, something that we believe hasn't been done before.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "dateStarted": "2025-01-02",
+    "location": {
+      "_type": "reference",
+      "_ref": "location-london"
+    },
+    "companyLogo": {
+      "_type": "image",
+      "alt": "Dose of Venture logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67ed49cf5f8cf691300971e6_YELLOW-01-2.avif"
+    },
+    "headshot": {
+      "_type": "image",
+      "alt": "Liyapa Sikazwe",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67fa4eac35fadc68fbce5992_pablo-linkedin.avif"
+    }
+  },
+  {
+    "_type": "client",
+    "_id": "client-nick-saraev",
+    "name": "Nick Saraev",
+    "slug": {
+      "_type": "slug",
+      "current": "nick-saraev"
+    },
+    "authorName": "Nick Saraev",
+    "company": "",
+    "testimonial": [
+      {
+        "_type": "block",
+        "_key": "7129vn",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "kj75is",
+            "text": "Stephen is a keen & active contributor to Make Money With Make. He consistently shared valuable insights on AI automation/web scraping, and delivered multiple in-depth presentations to our group of over 400 (to great acclaim!). He brings a technical edge to automation that sets him apart from most no/low-code devs. I’d hire him without hesitation.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "location": {
+      "_type": "reference",
+      "_ref": "location-canada"
+    },
+    "headshot": {
+      "_type": "image",
+      "alt": "Nick Saraev",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/6814d1dedbfcd1feda5b57de_nick-headshot.avif"
+    }
+  },
+  {
+    "_type": "client",
+    "_id": "client-santi-leoni",
+    "name": "Santi Leoni",
+    "slug": {
+      "_type": "slug",
+      "current": "santi-leoni"
+    },
+    "authorName": "Santi Leoni",
+    "company": "Pulpe Sense",
+    "testimonial": [
+      {
+        "_type": "block",
+        "_key": "a32rg",
+        "style": "normal",
+        "markDefs": [],
+        "children": [
+          {
+            "_type": "span",
+            "_key": "vax0u",
+            "text": "Working with Stephen was an exceptionally professional experience. He's highly responsible, structured, and consistently goes out of his way to make sure your project succeeds as intended. His communication is outstanding—even when things get challenging, he keeps you informed at every step. A solid 12/10 experience, I'd confidently recommend him to anyone looking for quality AI work.",
+            "marks": []
+          }
+        ]
+      }
+    ],
+    "dateStarted": "2025-01-08",
+    "location": {
+      "_type": "reference",
+      "_ref": "location-buenos-aires"
+    },
+    "companyLogo": {
+      "_type": "image",
+      "alt": "Pulpe Sense logo",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67fce2032492961dd21e4a6a_Pulp-Sense-Logo-_1_-p-500.avif"
+    },
+    "headshot": {
+      "_type": "image",
+      "alt": "Santi Leoni",
+      "_externalUrl": "https://cdn.prod.website-files.com/6765aea29edd9107ae8e0b01/67fce2140652b9c527e4456c_Screenshot%202025-04-14%20at%2011.21.50.avif"
+    }
+  }
+]
