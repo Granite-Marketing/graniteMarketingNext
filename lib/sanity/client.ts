@@ -1,6 +1,5 @@
 import { createClient } from "next-sanity";
-import imageUrlBuilder from "@sanity/image-url";
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { createImageUrlBuilder } from "@sanity/image-url";
 
 // Sanity configuration
 export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "0p8nq3lx";
@@ -16,14 +15,24 @@ export const client = createClient({
 });
 
 // Image URL builder
-const builder = imageUrlBuilder(client);
+const builder = createImageUrlBuilder({ projectId, dataset });
+
+// Type for image source (compatible with Sanity image references)
+interface SanityImageAsset {
+  _ref?: string;
+  _type?: string;
+  asset?: {
+    _ref?: string;
+    _type?: string;
+  };
+}
 
 /**
  * Generate image URL from Sanity image source
  * @param source - Sanity image reference
  * @returns Image URL builder for chaining (e.g., .width(800).url())
  */
-export function urlForImage(source: SanityImageSource) {
+export function urlForImage(source: SanityImageAsset) {
   return builder.image(source);
 }
 
@@ -32,12 +41,12 @@ export function urlForImage(source: SanityImageSource) {
  * @param source - Sanity image reference or object with asset._ref
  * @returns Image URL string
  */
-export function urlFor(source: SanityImageSource | { asset?: { _ref?: string } }): string {
+export function urlFor(source: SanityImageAsset | { _externalUrl?: string } | null | undefined): string {
   if (!source) return "";
   
   // Handle external URLs (from migration)
-  if (typeof source === "object" && "_externalUrl" in source) {
-    return (source as { _externalUrl: string })._externalUrl;
+  if ("_externalUrl" in source && source._externalUrl) {
+    return source._externalUrl;
   }
   
   try {
