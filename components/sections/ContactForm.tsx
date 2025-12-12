@@ -1,201 +1,149 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { EmailIcon, LocationIcon } from "@/components/icons";
+import React from "react";
+import { Button } from "@/components/ui/Button";
+import {
+  Input,
+  Label,
+  Textarea,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Checkbox,
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/ui";
+import { BiEnvelope, BiMap, BiPhone } from "react-icons/bi";
 
-interface FormData {
-	name: string;
-	email: string;
-	company: string;
-	message: string;
-}
-
-export default function ContactForm() {
-	const [formData, setFormData] = useState<FormData>({
-		name: "",
-		email: "",
-		company: "",
-		message: "",
-	});
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [submitStatus, setSubmitStatus] = useState<
-		"idle" | "success" | "error"
-	>("idle");
-
-	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		const { name, value } = e.target;
-		setFormData((prev) => ({ ...prev, [name]: value }));
-	};
-
-	const handleSubmit = async (e: FormEvent) => {
-		e.preventDefault();
-		setIsSubmitting(true);
-		setSubmitStatus("idle");
-
-		try {
-			// Placeholder for form submission
-			// In production, this would send to an API endpoint
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-			setSubmitStatus("success");
-			setFormData({ name: "", email: "", company: "", message: "" });
-		} catch {
-			setSubmitStatus("error");
-		} finally {
-			setIsSubmitting(false);
-		}
-	};
-
-	return (
-		<section id="contact-form" aria-labelledby="contact-heading">
-			<div className="px-6 padding-section-large">
-				<div className="container  grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-					{/* Left Column - Info */}
-					<div>
-						<h2 id="contact-heading" className="heading-style-h2 mb-6">
-							Let&apos;s Work Together
-						</h2>
-						<p className="text-size-medium text-brand-off-white mb-8">
-							Ready to automate your workflows and scale your operations? Tell
-							us about your project and we&apos;ll get back to you within 24
-							hours.
-						</p>
-
-						<address className="not-italic space-y-4">
-							<p className="flex items-center gap-3 text-brand-off-white">
-								<EmailIcon
-									size={20}
-									className="text-brand-green flex-shrink-0"
-								/>
-								<a
-									href="mailto:hello@granitemarketing.com"
-									className="hover:text-brand-green transition-colors"
-								>
-									hello@granitemarketing.com
-								</a>
-							</p>
-							<p className="flex items-center gap-3 text-brand-off-white">
-								<LocationIcon
-									size={20}
-									className="text-brand-green flex-shrink-0"
-								/>
-								<span>Remote-first, serving clients worldwide</span>
-							</p>
-						</address>
-					</div>
-
-					{/* Right Column - Form */}
-					<form onSubmit={handleSubmit} className="space-y-6">
-						<div>
-							<label
-								htmlFor="name"
-								className="block text-sm font-medium text-brand-white mb-2"
-							>
-								Your Name <span aria-hidden="true">*</span>
-								<span className="sr-only">(required)</span>
-							</label>
-							<input
-								type="text"
-								id="name"
-								name="name"
-								value={formData.name}
-								onChange={handleChange}
-								required
-								autoComplete="name"
-								placeholder="John Smith"
-								className="w-full px-4 py-3 bg-neutral-darker border border-neutral-dark rounded-lg text-brand-white placeholder-neutral-light focus:outline-none focus:border-brand-green transition-colors"
-							/>
-						</div>
-
-						<div>
-							<label
-								htmlFor="email"
-								className="block text-sm font-medium text-brand-white mb-2"
-							>
-								Email Address <span aria-hidden="true">*</span>
-								<span className="sr-only">(required)</span>
-							</label>
-							<input
-								type="email"
-								id="email"
-								name="email"
-								value={formData.email}
-								onChange={handleChange}
-								required
-								autoComplete="email"
-								placeholder="john@company.com"
-								className="w-full px-4 py-3 bg-neutral-darker border border-neutral-dark rounded-lg text-brand-white placeholder-neutral-light focus:outline-none focus:border-brand-green transition-colors"
-							/>
-						</div>
-
-						<div>
-							<label
-								htmlFor="company"
-								className="block text-sm font-medium text-brand-white mb-2"
-							>
-								Company
-							</label>
-							<input
-								type="text"
-								id="company"
-								name="company"
-								value={formData.company}
-								onChange={handleChange}
-								autoComplete="organization"
-								placeholder="Your Company"
-								className="w-full px-4 py-3 bg-neutral-darker border border-neutral-dark rounded-lg text-brand-white placeholder-neutral-light focus:outline-none focus:border-brand-green transition-colors"
-							/>
-						</div>
-
-						<div>
-							<label
-								htmlFor="message"
-								className="block text-sm font-medium text-brand-white mb-2"
-							>
-								Tell us about your project <span aria-hidden="true">*</span>
-								<span className="sr-only">(required)</span>
-							</label>
-							<textarea
-								id="message"
-								name="message"
-								value={formData.message}
-								onChange={handleChange}
-								required
-								rows={5}
-								placeholder="What workflows would you like to automate? What tools are you currently using?"
-								className="w-full px-4 py-3 bg-neutral-darker border border-neutral-dark rounded-lg text-brand-white placeholder-neutral-light focus:outline-none focus:border-brand-green transition-colors resize-none"
-							/>
-						</div>
-
-						{submitStatus === "success" && (
-							<div
-								role="alert"
-								className="p-4 bg-green-900/30 border border-green-700 rounded-lg text-green-400"
-							>
-								Thank you! We&apos;ll be in touch within 24 hours.
-							</div>
-						)}
-
-						{submitStatus === "error" && (
-							<div
-								role="alert"
-								className="p-4 bg-red-900/30 border border-red-700 rounded-lg text-red-400"
-							>
-								Something went wrong. Please try again or email us directly.
-							</div>
-						)}
-
-						<button
-							type="submit"
-							disabled={isSubmitting}
-							className="w-full bg-brand-green hover:bg-brand-green-light disabled:opacity-50 disabled:cursor-not-allowed text-black font-medium px-6 py-3 rounded-lg transition-colors"
-						>
-							{isSubmitting ? "Sending..." : "Send Message"}
-						</button>
-					</form>
-				</div>
-			</div>
-		</section>
-	);
+export function ContactForm() {
+  return (
+    <section id="contact" className="px-[5%] py-16 md:py-24 lg:py-28">
+      <div className="container grid grid-cols-1 items-start gap-y-12 md:grid-flow-row md:grid-cols-2 md:gap-x-12 lg:grid-flow-col lg:gap-x-20 lg:gap-y-16">
+        <div>
+          <header className="mb-6 md:mb-8">
+            <p className="mb-3 font-semibold md:mb-4">Send</p>
+            <h2 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
+              Your message
+            </h2>
+            <p className="md:text-md">
+              Fill in the details below and we'll respond quickly
+            </p>
+          </header>
+          <address className="grid grid-cols-1 gap-4 py-2 not-italic">
+            <div className="flex items-center gap-4">
+              <BiEnvelope className="size-6 flex-none" />
+              <a href="mailto:hello@granitemarketing.com">hello@granitemarketing.com</a>
+            </div>
+            <div className="flex items-center gap-4">
+              <BiPhone className="size-6 flex-none" />
+              <a href="tel:+44201234">+44 (0) 20 1234</a>
+            </div>
+            <div className="flex items-center gap-4">
+              <BiMap className="size-6 flex-none" />
+              <p>Unit 5, 42 Brick Lane, London E1 6RF</p>
+            </div>
+          </address>
+        </div>
+        <form className="grid max-w-lg grid-cols-1 grid-rows-[auto_auto] gap-6">
+          <div className="grid grid-cols-2 gap-6">
+            <div className="grid w-full items-center">
+              <Label htmlFor="firstName" className="mb-2">
+                First name
+              </Label>
+              <Input type="text" id="firstName" name="firstName" required />
+            </div>
+            <div className="grid w-full items-center">
+              <Label htmlFor="lastName" className="mb-2">
+                Last name
+              </Label>
+              <Input type="text" id="lastName" name="lastName" required />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="grid w-full items-center">
+              <Label htmlFor="email" className="mb-2">
+                Email
+              </Label>
+              <Input type="email" id="email" name="email" required />
+            </div>
+            <div className="grid w-full items-center">
+              <Label htmlFor="phone" className="mb-2">
+                Phone number
+              </Label>
+              <Input type="tel" id="phone" name="phone" />
+            </div>
+          </div>
+          <div className="grid w-full items-center">
+            <Label className="mb-2">What's your inquiry about</Label>
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select one..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="workflow-optimization">Workflow optimization</SelectItem>
+                <SelectItem value="new-automation">New automation build</SelectItem>
+                <SelectItem value="integration-support">Integration support</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid w-full items-center py-3 md:py-4">
+            <Label className="mb-3 md:mb-4">
+              What describes your situation
+            </Label>
+            <RadioGroup className="grid grid-cols-2 gap-x-6 gap-y-3.5">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="workflow-optimization" id="first_choice" />
+                <Label htmlFor="first_choice">Workflow optimization</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="new-automation" id="second_choice" />
+                <Label htmlFor="second_choice">New automation build</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="integration-support" id="third_choice" />
+                <Label htmlFor="third_choice">Integration support</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="technical-consultation" id="fourth_choice" />
+                <Label htmlFor="fourth_choice">Technical consultation</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="general-inquiry" id="fifth_choice" />
+                <Label htmlFor="fifth_choice">General inquiry</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="other" id="other" />
+                <Label htmlFor="other">Other</Label>
+              </div>
+            </RadioGroup>
+          </div>
+          <div className="grid w-full items-center">
+            <Label htmlFor="message" className="mb-2">
+              Message
+            </Label>
+            <Textarea
+              id="message"
+              name="message"
+              placeholder="Tell us about your project..."
+              className="min-h-[11.25rem] overflow-auto"
+              required
+            />
+          </div>
+          <div className="mb-3 flex items-center space-x-2 text-sm md:mb-4">
+            <Checkbox id="terms" name="terms" required />
+            <Label htmlFor="terms" className="cursor-pointer">
+              I agree to the terms
+            </Label>
+          </div>
+          <div>
+            <Button type="submit" title="Send">
+              Send
+            </Button>
+          </div>
+        </form>
+      </div>
+    </section>
+  );
 }

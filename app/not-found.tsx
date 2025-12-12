@@ -1,39 +1,25 @@
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import Button from "@/components/ui/Button";
+import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/Button";
 
 export default function NotFound() {
 	return (
-		<>
-			<Header />
-			<main
-				id="main"
-				className="main-wrapper pt-24 min-h-screen flex items-center"
-			>
-				<section className="section-404 w-full">
-					<div className="px-6 padding-section-large">
-						<div className="container  text-center">
-							<div className="mb-8">
-								<span className="text-8xl md:text-9xl font-bold text-brand-green font-heading">
-									404
-								</span>
-							</div>
-							<h1 className="heading-style-h2 mb-4">Page Not Found</h1>
-							<p className="text-size-medium text-brand-off-white mb-8 max-w-md mx-auto">
-								Sorry, the page you&apos;re looking for doesn&apos;t exist or
-								has been moved.
-							</p>
-							<div className="flex flex-col sm:flex-row gap-4 justify-center">
-								<Button href="/">Go Home</Button>
-								<Button href="/contact-us" variant="secondary">
-									Contact Us
-								</Button>
-							</div>
-						</div>
+		<main>
+			<section className="px-[5%] py-16 md:py-24 lg:py-28">
+				<div className="container">
+					<div className="mx-auto max-w-lg text-center">
+						<h1 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
+							404
+						</h1>
+						<p className="mb-8 text-lg md:text-xl">
+							The page you're looking for doesn't exist.
+						</p>
+						<Button variant="primary" asChild>
+							<Link href="/">Go home</Link>
+						</Button>
 					</div>
-				</section>
-			</main>
-			<Footer />
-		</>
+				</div>
+			</section>
+		</main>
 	);
 }

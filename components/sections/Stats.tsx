@@ -1,123 +1,91 @@
-"use client";
+import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/Button";
+import { RxChevronRight } from "react-icons/rx";
 
-import { useEffect, useRef, useState } from "react";
-
-interface StatItem {
-  number: number;
-  suffix: string;
-  prefix?: string;
-  title: string;
-  description: string;
-}
-
-const stats: StatItem[] = [
-  {
-    number: 20,
-    suffix: "+",
-    title: "Automations Deployed",
-    description: "We've delivered over 20 custom automations across a wide range of tools, workflows, and industries.",
-  },
-  {
-    number: 100,
-    suffix: "%",
-    title: "Customer Satisfaction",
-    description: "We build long-term relationships by solving real problems — and we haven't hit one we couldn't crack.",
-  },
-  {
-    number: 500,
-    suffix: "+",
-    title: "Hours Saved Monthly",
-    description: "Our automations free up teams to focus on what matters — strategy, creativity, and growth.",
-  },
-  {
-    number: 10,
-    suffix: "x",
-    title: "Productivity Boost",
-    description: "Clients see measurable gains in output without adding headcount or complexity.",
-  },
-];
-
-function CountUp({ 
-  end, 
-  prefix = "", 
-  suffix = "",
-  duration = 2000 
-}: { 
-  end: number; 
-  prefix?: string; 
-  suffix: string;
-  duration?: number;
-}) {
-  const [count, setCount] = useState(0);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          const startTime = Date.now();
-          const animate = () => {
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const easeOut = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.floor(easeOut * end));
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            }
-          };
-          requestAnimationFrame(animate);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [end, duration, hasAnimated]);
-
+export function Stats() {
   return (
-    <span ref={ref} className="text-5xl md:text-6xl font-bold text-brand-white font-heading block">
-      {prefix}{count}{suffix}
-    </span>
-  );
-}
-
-export default function Stats() {
-  return (
-    <section aria-labelledby="stats-heading">
-      <div className="px-6 padding-section-large">
-        <div className="container">
-          <header className="mb-12 max-w-2xl">
-            <h2 id="stats-heading" className="heading-style-h2 mb-4">Our results in numbers</h2>
-            <p className="text-size-medium text-brand-off-white">
-              We help businesses increase productivity and control through smart, 
-              scalable automation — and here&apos;s how it&apos;s going so far:
-            </p>
+    <section id="track-record" className="px-[5%] py-16 md:py-24 lg:py-28">
+      <div className="container">
+        <div className="mb-12 grid grid-cols-1 gap-y-5 md:mb-18 md:grid-cols-2 md:gap-x-12 lg:mb-20 lg:gap-x-20">
+          <header>
+            <p className="mb-3 font-semibold md:mb-4">Track record</p>
+            <h2 className="text-5xl font-bold md:text-7xl lg:text-8xl">
+              Built and proven across industries
+            </h2>
           </header>
-
-          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {stats.map((stat, index) => (
-              <li key={index} className="gradient-border p-6 h-full flex flex-col">
-                <CountUp 
-                  end={stat.number} 
-                  prefix={stat.prefix} 
-                  suffix={stat.suffix} 
-                />
-                <h3 className="text-lg font-semibold text-brand-white mt-4 mb-2">
-                  {stat.title}
-                </h3>
-                <p className="text-sm text-brand-off-white mt-auto">
-                  {stat.description}
-                </p>
-              </li>
-            ))}
-          </ul>
+          <div>
+            <p className="md:text-md">
+              We've delivered automations that stick. Real workflows for real
+              teams. The numbers speak to what happens when you build something
+              that actually solves the problem.
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-4 md:mt-8">
+              <Button title="Learn" variant="secondary" asChild>
+                <Link href="/case-studies">Learn</Link>
+              </Button>
+              <Button
+                title="Arrow"
+                variant="secondary"
+                className="flex items-center gap-2"
+                asChild
+              >
+                <Link href="/about-us">
+                  About us <RxChevronRight />
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
+        <ul className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <li className="border border-border-primary p-8 first:flex first:flex-col first:md:col-span-2 first:md:row-span-1 first:lg:col-span-1 first:lg:row-span-2">
+            <p className="mb-8 text-10xl font-bold leading-[1.3] md:mb-10 md:text-[4rem] lg:mb-12 lg:text-[5rem]">
+              20+
+            </p>
+            <h3 className="text-md font-bold leading-[1.4] md:text-xl mt-auto">
+              Automations deployed
+            </h3>
+            <p className="mt-2">
+              Custom workflows built across industries and tools
+            </p>
+          </li>
+          <li>
+            <img
+              className="aspect-[3/2] size-full object-cover"
+              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+              alt="Stats illustration"
+            />
+          </li>
+          <li className="border border-border-primary p-8">
+            <p className="mb-8 text-10xl font-bold leading-[1.3] md:mb-10 md:text-[4rem] lg:mb-12 lg:text-[5rem]">
+              20+
+            </p>
+            <h3 className="text-md font-bold leading-[1.4] md:text-xl">
+              Automations deployed
+            </h3>
+            <p className="mt-2">
+              Custom workflows built across industries and tools
+            </p>
+          </li>
+          <li className="border border-border-primary p-8 [&:nth-last-child(2)]:order-last [&:nth-last-child(2)]:md:order-none">
+            <p className="mb-8 text-10xl font-bold leading-[1.3] md:mb-10 md:text-[4rem] lg:mb-12 lg:text-[5rem]">
+              20+
+            </p>
+            <h3 className="text-md font-bold leading-[1.4] md:text-xl">
+              Automations deployed
+            </h3>
+            <p className="mt-2">
+              Custom workflows built across industries and tools
+            </p>
+          </li>
+          <li>
+            <img
+              className="aspect-[3/2] size-full object-cover"
+              src="https://d22po4pjz3o32e.cloudfront.net/placeholder-image.svg"
+              alt="Stats illustration"
+            />
+          </li>
+        </ul>
       </div>
     </section>
   );

@@ -7,44 +7,28 @@ const config: Config = {
     "./lib/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    container: {
-      center: true,
-      padding: "1.5rem",
-      screens: {
-        sm: "640px",
-        md: "768px",
-        lg: "1024px",
-        xl: "1280px",
-        "2xl": "1536px",
-      },
-    },
     extend: {
       colors: {
-        brand: {
-          black: "#111",
-          "off-black": "#1e1e1e",
-          white: "#ffffff",
-          "off-white": "#d1d1d1",
-          green: "#25995b",
-          "green-light": "#7adcaa",
-          blue: "#587ea4",
+        background: {
+          primary: "#ffffff",
+          secondary: "#f5f5f5",
         },
-        neutral: {
-          black: "#000000",
-          darkest: "#111111",
-          darker: "#222222",
-          dark: "#444444",
-          DEFAULT: "#666666",
-          light: "#aaaaaa",
-          lighter: "#cccccc",
-          lightest: "#eeeeee",
-          white: "#ffffff",
+        border: {
+          primary: "#000000",
+        },
+        text: {
+          primary: "#000000",
+          secondary: "#666666",
         },
       },
       fontFamily: {
-        heading: ["Chakra Petch", "Verdana", "sans-serif"],
-        body: ["Inter", "Arial", "sans-serif"],
-        mono: ["Share Tech Mono", "monospace"],
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+      },
+      fontSize: {
+        md: ["1.125rem", { lineHeight: "1.75rem" }],
+      },
+      spacing: {
+        "18": "4.5rem",
       },
     },
   },
@@ -52,4 +36,3 @@ const config: Config = {
 };
 
 export default config;
-

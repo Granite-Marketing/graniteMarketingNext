@@ -1,178 +1,42 @@
-import { Metadata } from "next";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import Button from "@/components/ui/Button";
-import { PlusIcon } from "@/components/icons";
-import Image from "next/image";
-import JsonLd from "@/components/seo/JsonLd";
-import {
-	generatePageMetadata,
-	getBreadcrumbSchema,
-	siteConfig,
-} from "@/lib/seo";
+import React from "react";
+import { generatePageMetadata } from "@/lib/seo/config";
+import type { Metadata } from "next";
 
-export const metadata: Metadata = generatePageMetadata("about", {
-	alternates: {
-		canonical: `${siteConfig.url}/about-us`,
-	},
-});
+export const metadata: Metadata = generatePageMetadata("about");
 
-const values = [
-	{
-		title: "Simplicity First",
-		description:
-			"We build automations that are easy to understand, maintain, and scale. No unnecessary complexity.",
-	},
-	{
-		title: "Results-Driven",
-		description:
-			"Every automation we build is measured by the time it saves and the problems it solves.",
-	},
-	{
-		title: "Partnership Approach",
-		description:
-			"We're not just vendors — we're partners invested in your long-term success.",
-	},
-	{
-		title: "Continuous Improvement",
-		description:
-			"We stay on top of the latest tools and techniques to deliver cutting-edge solutions.",
-	},
-];
-
-const tools = [
-	{ name: "n8n", src: "/images/n8n.avif" },
-	{ name: "Notion", src: "/images/notion.avif" },
-	{ name: "Langchain", src: "/images/langchain_1.avif" },
-	{ name: "Apify", src: "/images/apify.avif" },
-];
-
-export default function AboutPage() {
-	const breadcrumbs = getBreadcrumbSchema([
-		{ name: "Home", url: "/" },
-		{ name: "About Us", url: "/about-us" },
-	]);
-
-	return (
-		<>
-			<JsonLd data={breadcrumbs} />
-
-			<Header />
-			<main id="main" className="main-wrapper pt-24">
-				{/* Hero Section */}
-				<section className="section-about-hero">
-					<div className="px-6 padding-section-large">
-						<div className="container">
-							<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-								<div className="about-hero-content">
-									<h1 className="heading-style-h1 mb-6">
-										We make automation{" "}
-										<span className="text-brand-green">simple</span>
-									</h1>
-									<p className="text-size-large text-brand-off-white mb-8">
-										Granite Marketing helps businesses automate repetitive tasks
-										and build intelligent workflows using no-code and low-code
-										tools. We&apos;re obsessed with efficiency and passionate
-										about helping teams work smarter.
-									</p>
-									<Button href="#contact-form" icon={<PlusIcon size={20} />}>
-										Work With Us
-									</Button>
-								</div>
-								<div className="about-hero-image relative">
-									<div className="aspect-square rounded-xl overflow-hidden gradient-border">
-										<Image
-											src="/images/454shots_so_1.avif"
-											alt="Automation workflow visualization"
-											fill
-											className="object-cover"
-										/>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				{/* Values Section */}
-				<section className="section-values">
-					<div className="px-6 padding-section-large">
-						<div className="container">
-							<header className="section-header text-center mb-12 max-w-3xl mx-auto">
-								<h2 className="heading-style-h2 mb-4">Our Values</h2>
-								<p className="text-size-medium text-brand-off-white">
-									These principles guide everything we do, from how we build
-									automations to how we work with clients.
-								</p>
-							</header>
-
-							<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-								{values.map((value, index) => (
-									<div key={index} className="value-card gradient-border p-8">
-										<h3 className="heading-style-h4 text-brand-white mb-3">
-											{value.title}
-										</h3>
-										<p className="text-brand-off-white">{value.description}</p>
-									</div>
-								))}
-							</div>
-						</div>
-					</div>
-				</section>
-
-				{/* Tools Section */}
-				<section className="section-tools">
-					<div className="px-6 padding-section-large">
-						<div className="container">
-							<header className="section-header text-center mb-12 max-w-3xl mx-auto">
-								<h2 className="heading-style-h2 mb-4">Tools We Work With</h2>
-								<p className="text-size-medium text-brand-off-white">
-									We specialize in the best no-code and low-code platforms on
-									the market.
-								</p>
-							</header>
-
-							<div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-								{tools.map((tool, index) => (
-									<div
-										key={index}
-										className="tool-card flex flex-col items-center gap-4 p-6 gradient-border"
-									>
-										<div className="w-16 h-16 relative">
-											<Image
-												src={tool.src}
-												alt={tool.name}
-												fill
-												className="object-contain"
-											/>
-										</div>
-										<span className="text-brand-white font-medium">
-											{tool.name}
-										</span>
-									</div>
-								))}
-							</div>
-						</div>
-					</div>
-				</section>
-
-				{/* CTA Section */}
-				<section className="section-cta">
-					<div className="px-6 padding-section-large">
-						<div className="container  text-center">
-							<h2 className="heading-style-h2 mb-6">Ready to get started?</h2>
-							<p className="text-size-medium text-brand-off-white mb-8 max-w-2xl mx-auto">
-								Let&apos;s talk about how automation can transform your
-								business. Book a free discovery call today.
-							</p>
-							<Button href="/#contact-form" icon={<PlusIcon size={20} />}>
-								Get Started
-							</Button>
-						</div>
-					</div>
-				</section>
-			</main>
-			<Footer />
-		</>
-	);
+export default function AboutUsPage() {
+  return (
+    <main>
+      <section className="px-[5%] py-16 md:py-24 lg:py-28">
+        <div className="container">
+          <header className="mx-auto mb-12 w-full max-w-lg text-center md:mb-18 lg:mb-20">
+            <h1 className="mb-5 text-5xl font-bold md:mb-6 md:text-7xl lg:text-8xl">
+              About Us
+            </h1>
+            <p className="md:text-md">
+              We build flexible, AI-powered systems to reduce busywork and scale smarter.
+            </p>
+          </header>
+          <article className="mx-auto max-w-lg prose md:prose-md lg:prose-lg">
+            <p>
+              Granite Marketing specializes in creating custom automation solutions
+              that work the way your business does. We use no-code tools and n8n to
+              build workflows that connect your existing systems without requiring
+              custom development.
+            </p>
+            <p>
+              Our team understands that every business has unique processes. We listen
+              to how your team works, identify where time gets lost, and build
+              automations that fit seamlessly into your existing workflow.
+            </p>
+            <p>
+              Whether you need document processing, data extraction, API integrations,
+              or complete workflow automation, we deliver solutions that your team can
+              start using immediately.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+  );
 }

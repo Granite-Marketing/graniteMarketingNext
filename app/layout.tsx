@@ -1,39 +1,30 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { defaultMetadata } from "@/lib/seo";
-import JsonLd from "@/components/seo/JsonLd";
-import { getOrganizationSchema, getWebsiteSchema } from "@/lib/seo";
-import { Providers } from "@/components/providers";
+import { defaultMetadata } from "@/lib/seo/config";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+
+const inter = Inter({
+	subsets: ["latin"],
+	variable: "--font-inter",
+	display: "swap",
+});
 
 export const metadata: Metadata = defaultMetadata;
 
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 5,
-  themeColor: "#111111",
-};
-
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <head>
-        {/* Preconnect to external domains */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* JSON-LD structured data for organization and website */}
-        <JsonLd data={[getOrganizationSchema(), getWebsiteSchema()]} />
-      </head>
-      <body>
-        <Providers>
-          <div className="page-wrapper">{children}</div>
-        </Providers>
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en" className={inter.variable}>
+			<body className="font-sans antialiased">
+				<Header />
+				{children}
+				<Footer />
+			</body>
+		</html>
+	);
 }
