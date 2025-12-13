@@ -22,12 +22,6 @@ const faqs = [
 			"It starts with a quick discovery call. We'll talk through your current challenges, what tools you're using, and where automation could make the biggest impact. From there, we'll map out a clear plan — no guesswork, no fluff.",
 	},
 	{
-		question:
-			"How do you tailor each automation to fit our specific workflows?",
-		answer:
-			"We start every project by understanding your business logic, current tools, and pain points. From there, we map out a solution that works with — not against — your existing processes. Every automation is custom-built and tested with your team's real-world scenarios.",
-	},
-	{
 		question: "How much does it cost to run an automation each month?",
 		answer:
 			"This can vary, but on average most of the flows are somewhere between $50-100 depending on number of tools used. Chat with us today and we can give you an estimate based on your needs.",
