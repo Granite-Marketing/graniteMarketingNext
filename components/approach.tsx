@@ -136,13 +136,13 @@ export function Approach() {
 							{/* Background image with overlay */}
 							<div className="absolute inset-0">
 								<Image
-									src="/images/abstract-workflow-automation.jpg"
+									src="/images/langchain-ide.png"
 									width={800}
 									height={800}
 									alt="Process visualization"
 									className="w-full h-full object-cover opacity-40 absolute inset-0"
 								/>
-								<div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-background/80" />
+								<div className="absolute inset-0 bg-gradient-to-br from-background/60 via-background/20 to-background/60" />
 							</div>
 
 							{/* Centered analysis icon */}
