@@ -1,6 +1,7 @@
 "use client";
 import { Tag } from "@/components/ui/tag";
 import { Calendar, Clock, Users } from "lucide-react";
+import { NeuralBackground } from "@/components/ui/neutral-background";
 
 export function CTASection() {
 	return (
@@ -8,6 +9,10 @@ export function CTASection() {
 			id="contact"
 			className="py-32 bg-gradient-to-b from-background via-muted/10 to-background relative overflow-hidden"
 		>
+			<div className="absolute inset-0 z-0">
+				<NeuralBackground preset="accent" className="opacity-80" />
+			</div>
+
 			<div className="absolute inset-0 opacity-[0.02]">
 				<svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
 					<defs>
@@ -136,12 +141,12 @@ export function CTASection() {
 							{/* Additional CTA text below booking widget */}
 							<div className="mt-8 text-center">
 								<p className="text-sm text-muted-foreground mb-4">
-									Prefer to reach out directly?{" "}
+									Prefer to reach out directly? Email us at{" "}
 									<a
-										href="/contact"
+										href="mailto:hello@granitemarketing.co.uk"
 										className="text-primary hover:text-primary/80 transition-colors underline underline-offset-4"
 									>
-										Email us
+										hello@granitemarketing.co.uk
 									</a>
 								</p>
 								<div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
