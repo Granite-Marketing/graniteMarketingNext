@@ -3,6 +3,7 @@
 import type React from "react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
 
 const footerLinks = [
 	{ label: "Services", href: "/#services" },
@@ -34,8 +35,17 @@ export function Footer() {
 				<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
 					{/* Logo section */}
 					<div>
-						<Link href="/" className="flex items-center space-x-2">
-							<span className="font-bold text-xl italic">Logo</span>
+						<Link
+							href="/"
+							className="flex items-center space-x-2 rounded-full overflow-hidden p-1 bg-white"
+						>
+							<Image
+								src="/images/gm-logo.jpeg"
+								alt="Logo brand logo for Granite Marketing. The logo is a simple, modern, and clean logo that is easy to recognize and remember."
+								width={30}
+								height={30}
+								className="w-8 h-8 object-contain"
+							/>
 						</Link>
 					</div>
 

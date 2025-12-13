@@ -27,7 +27,7 @@ export function SplitSection() {
 							</Button>
 						</div>
 					</div>
-					<div className="relative aspect-square rounded-2xl overflow-hidden bg-muted flex items-center justify-center group cursor-pointer">
+					<div className="relative aspect-square rounded-2xl overflow-hidden bg-muted flex items-center justify-center group">
 						<Image
 							src="/images/kit-formerly-convertkit--CbLJAUI_js-unsplash copy.avif"
 							alt="Publishing workflow"
@@ -35,11 +35,11 @@ export function SplitSection() {
 							width={800}
 							height={800}
 						/>
-						<div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+						{/* <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
 							<div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
 								<Play className="w-6 h-6 text-black ml-1" fill="black" />
 							</div>
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>
