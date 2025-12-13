@@ -10,7 +10,7 @@ const footerLinks = [
 	{ label: "Testimonials", href: "/#testimonials" },
 	{ label: "Results", href: "/#results" },
 	{ label: "FAQs", href: "/#faq" },
-	{ label: "Blog", href: "/blog" },
+	// { label: "Blog", href: "/blog" },
 ];
 
 export function Footer() {

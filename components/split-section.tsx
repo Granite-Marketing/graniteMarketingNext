@@ -21,9 +21,6 @@ export function SplitSection() {
               <Button variant="outline" className="rounded-full bg-transparent">
                 Explore
               </Button>
-              <Button variant="ghost" className="rounded-full">
-                Arrow →
-              </Button>
             </div>
           </div>
           <div className="relative h-[400px] rounded-2xl overflow-hidden bg-muted flex items-center justify-center group cursor-pointer">

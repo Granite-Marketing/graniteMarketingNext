@@ -1,132 +1,42 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Tag } from "@/components/ui/tag"
+import { FolderKanban, Users, FileText, Bot, Search, GraduationCap } from "lucide-react"
 
 const capabilities = [
   {
-    icon: (
-      <svg
-        className="w-10 h-10 text-primary"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-        />
-      </svg>
-    ),
-    title: "Seamless n8n integrations",
-    description: "Your systems work together without friction or custom code.",
+    icon: <FolderKanban className="w-10 h-10 text-primary" />,
+    title: "Project management",
+    description: "Keep your systems in sync and your team aligned.",
     gradient: "from-primary/10 to-transparent",
   },
   {
-    icon: (
-      <svg
-        className="w-10 h-10 text-primary"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-        />
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-        />
-      </svg>
-    ),
-    title: "No-code workflow solutions",
-    description: "Build what you need without waiting for developers or learning to code.",
+    icon: <Users className="w-10 h-10 text-primary" />,
+    title: "Lead generation",
+    description: "Automated, multi-channel outreach that scales.",
     gradient: "from-tertiary/10 to-transparent",
   },
   {
-    icon: (
-      <svg
-        className="w-10 h-10 text-primary"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-        />
-      </svg>
-    ),
-    title: "AI-powered data extraction",
-    description: "Pull the information that matters from documents and data sources automatically.",
+    icon: <FileText className="w-10 h-10 text-primary" />,
+    title: "Content generation",
+    description: "Produce blogs, research, and social posts—on autopilot.",
     gradient: "from-accent/10 to-transparent",
   },
   {
-    icon: (
-      <svg
-        className="w-10 h-10 text-primary"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-    ),
-    title: "Lightning-fast deployment",
-    description: "Get your automations live in days, not months, with our rapid deployment process.",
+    icon: <Bot className="w-10 h-10 text-primary" />,
+    title: "AI Agents",
+    description: "Autonomous agents that handle the heavy lifting.",
     gradient: "from-primary/10 to-transparent",
   },
   {
-    icon: (
-      <svg
-        className="w-10 h-10 text-primary"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M9 12l3-3 3 3 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-        />
-      </svg>
-    ),
-    title: "Enterprise-grade security",
-    description: "Your data stays protected with industry-leading security standards and practices.",
+    icon: <Search className="w-10 h-10 text-primary" />,
+    title: "Research assistant",
+    description: "AI support to help you make smarter decisions.",
     gradient: "from-tertiary/10 to-transparent",
   },
   {
-    icon: (
-      <svg
-        className="w-10 h-10 text-primary"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
-        />
-      </svg>
-    ),
-    title: "Real-time analytics",
-    description: "Monitor your workflows with detailed insights and performance metrics in real-time.",
+    icon: <GraduationCap className="w-10 h-10 text-primary" />,
+    title: "Educational tools",
+    description: "Turn raw data into actionable learning content.",
     gradient: "from-accent/10 to-transparent",
   },
 ]

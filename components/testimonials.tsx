@@ -5,51 +5,51 @@ import { Tag } from "@/components/ui/tag";
 
 const testimonials = [
 	{
-		name: "Sarah Mitchell",
-		role: "Operations director, retail",
-		image: "/placeholder.svg?height=48&width=48",
+		name: "Liyapa Sikazwe",
+		role: "Founder, Dose of Venture",
+		image: "/images/liyapa-sikazwe.avif",
 		content:
-			"The automation runs while we sleep. What took three people all morning now happens in minutes.",
+			"Granite Marketing is both innovative and reliable. Their team took the time to understand our unique challenges and provided a customised solution that integrated with our existing tools.",
 		rating: 5,
 	},
 	{
-		name: "Marcus Webb",
-		role: "Operations lead, e-commerce",
-		image: "/placeholder.svg?height=48&width=48",
+		name: "Nick Saraev",
+		role: "Nick Saraev",
+		image: "/images/nick-headshot.avif",
 		content:
-			"Granite Marketing didn't just build us a tool. They understood our process and made it faster without changing how we work.",
+			"Stephen is a keen & active contributor to Make Money With Make. He consistently shared valuable insights on AI automation and delivered multiple in-depth presentations to our group of over 400.",
 		rating: 5,
 	},
 	{
-		name: "David Park",
-		role: "Founder, SaaS startup",
-		image: "/placeholder.svg?height=48&width=48",
+		name: "Santi Leoni",
+		role: "Founder, Pulpe Sense",
+		image: "/images/santi-leoni.avif",
 		content:
-			"Setup was clean. Deployment was faster. The workflow just works the way we do.",
+			"Working with Stephen was an exceptionally professional experience. He's highly responsible, structured, and his communication is outstanding—even when things get challenging.",
 		rating: 5,
 	},
 	{
-		name: "James Chen",
-		role: "CEO, logistics firm",
-		image: "/placeholder.svg?height=48&width=48",
+		name: "Dyland Watkins",
+		role: "Founder, DJW Consulting",
+		image: "/images/dylan.avif",
 		content:
-			"We cut our data entry time in half. The automation handles what used to take our team hours every morning.",
+			"Stephen is a top-notch automation expert. He not only knows the latest AI and automation but also is a full stack developer which is incredible for advanced projects.",
 		rating: 5,
 	},
 	{
-		name: "Elena Rodriguez",
-		role: "Director, marketing agency",
-		image: "/placeholder.svg?height=48&width=48",
+		name: "Kotada Yunus",
+		role: "Founder, Aktarr",
+		image: "/images/kotada.avif",
 		content:
-			"Granite Marketing built exactly what we needed without overcomplicating it. Our team reclaimed ten hours a week and never looked back.",
+			"My team used to spend every waking moment looking for content which meant we couldn't utilise our production studio. Now we have both, great content and we're making full use of our studio space.",
 		rating: 5,
 	},
 	{
-		name: "Priya Kapoor",
-		role: "VP operations, finance",
-		image: "/placeholder.svg?height=48&width=48",
+		name: "Naill Al-Sibai",
+		role: "Founder, Sib Co. Ltd",
+		image: "/images/naill-al-sibai.png",
 		content:
-			"We stopped managing data entry and started managing growth instead.",
+			"Granite Marketing were easy to work with and delivered to a high standard. Communication was smooth, the process was straightforward, and the final result was exactly what we had in mind. Everything was delivered one time, with no unnecessary back-and-forth. I’d happily recommend to anyone looking for a solid, reliable web build.",
 		rating: 5,
 	},
 ];
@@ -74,14 +74,17 @@ export function Testimonials() {
 					{/* Desktop: 3 columns, Tablet: 2 columns, Mobile: 1 column */}
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
 						{/* Left column - 2 cards with offset on desktop */}
-						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur lg:mt-6">
+						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur h-full">
 							<CardContent className="p-8">
 								<div className="flex mb-4">
 									{Array.from({ length: testimonials[0].rating }).map(
 										(_, i) => (
 											<Star
 												key={i}
-												className="w-5 h-5 fill-foreground text-foreground"
+												className="w-5 h-5 fill-primary"
+												style={{
+													stroke: "none",
+												}}
 											/>
 										)
 									)}
@@ -112,14 +115,17 @@ export function Testimonials() {
 							</CardContent>
 						</Card>
 
-						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur">
+						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur h-full">
 							<CardContent className="p-8">
 								<div className="flex mb-4">
 									{Array.from({ length: testimonials[3].rating }).map(
 										(_, i) => (
 											<Star
 												key={i}
-												className="w-5 h-5 fill-foreground text-foreground"
+												className="w-5 h-5 fill-primary"
+												style={{
+													stroke: "none",
+												}}
 											/>
 										)
 									)}
@@ -151,14 +157,17 @@ export function Testimonials() {
 						</Card>
 
 						{/* Middle column - 2 cards, no offset */}
-						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur lg:mt-6">
+						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur h-full">
 							<CardContent className="p-8">
 								<div className="flex mb-4">
 									{Array.from({ length: testimonials[1].rating }).map(
 										(_, i) => (
 											<Star
 												key={i}
-												className="w-5 h-5 fill-foreground text-foreground"
+												className="w-5 h-5 fill-primary"
+												style={{
+													stroke: "none",
+												}}
 											/>
 										)
 									)}
@@ -189,14 +198,17 @@ export function Testimonials() {
 							</CardContent>
 						</Card>
 
-						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur">
+						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur h-full">
 							<CardContent className="p-8">
 								<div className="flex mb-4">
 									{Array.from({ length: testimonials[4].rating }).map(
 										(_, i) => (
 											<Star
 												key={i}
-												className="w-5 h-5 fill-foreground text-foreground"
+												className="w-5 h-5 fill-primary"
+												style={{
+													stroke: "none",
+												}}
 											/>
 										)
 									)}
@@ -228,14 +240,17 @@ export function Testimonials() {
 						</Card>
 
 						{/* Right column - 2 cards with offset on desktop */}
-						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur lg:-mt-6">
+						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur h-full">
 							<CardContent className="p-8">
 								<div className="flex mb-4">
 									{Array.from({ length: testimonials[2].rating }).map(
 										(_, i) => (
 											<Star
 												key={i}
-												className="w-5 h-5 fill-foreground text-foreground"
+												className="w-5 h-5 fill-primary"
+												style={{
+													stroke: "none",
+												}}
 											/>
 										)
 									)}
@@ -266,14 +281,17 @@ export function Testimonials() {
 							</CardContent>
 						</Card>
 
-						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur">
+						<Card className="hover:shadow-xl transition-shadow duration-300 bg-card/80 backdrop-blur h-full">
 							<CardContent className="p-8">
 								<div className="flex mb-4">
 									{Array.from({ length: testimonials[5].rating }).map(
 										(_, i) => (
 											<Star
 												key={i}
-												className="w-5 h-5 fill-foreground text-foreground"
+												className="w-5 h-5 fill-primary"
+												style={{
+													stroke: "none",
+												}}
 											/>
 										)
 									)}

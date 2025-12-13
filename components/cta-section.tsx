@@ -1,9 +1,31 @@
 "use client";
+import { useState, useEffect, useRef } from "react";
 import { Tag } from "@/components/ui/tag";
 import { Calendar, Clock, Users } from "lucide-react";
 import { NeuralBackground } from "@/components/ui/neutral-background";
 
 export function CTASection() {
+	const [shouldLoadCalendar, setShouldLoadCalendar] = useState(false);
+	const calendarRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		if (!calendarRef.current) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries[0].isIntersecting) {
+					setShouldLoadCalendar(true);
+					observer.disconnect();
+				}
+			},
+			{ threshold: 0.1 }
+		);
+
+		observer.observe(calendarRef.current);
+
+		return () => observer.disconnect();
+	}, []);
+
 	return (
 		<section
 			id="contact"
@@ -92,50 +114,63 @@ export function CTASection() {
 						<div className="absolute -inset-4 bg-gradient-to-br from-primary/10 via-tertiary/5 to-primary/10 rounded-3xl blur-2xl" />
 
 						<div className="relative backdrop-blur-sm bg-card/50 border-2 border-border/50 rounded-3xl p-8 md:p-12 shadow-2xl">
-							{/* Placeholder for Cal.com iframe */}
-							<div className="relative aspect-video md:aspect-[16/10] rounded-xl overflow-hidden bg-gradient-to-br from-muted/50 to-muted/20 border border-border/30">
-								{/* Placeholder content */}
-								<div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
-									<div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6">
-										<Calendar className="w-10 h-10 text-primary" />
-									</div>
-									<h3 className="mb-3">Calendar Booking Widget</h3>
-									<p className="text-muted-foreground mb-6 max-w-md">
-										Cal.com iframe embed will be placed here for seamless
-										appointment scheduling
-									</p>
-									<div className="inline-flex items-center gap-2 text-sm text-muted-foreground bg-muted/30 px-4 py-2 rounded-full border border-border/30">
-										<div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-										Integration Ready
-									</div>
-								</div>
+							<div
+								ref={calendarRef}
+								className="relative aspect-video md:aspect-[16/10] rounded-xl overflow-hidden bg-gradient-to-br from-muted/50 to-muted/20 border border-border/30"
+							>
+								{shouldLoadCalendar ? (
+									<iframe
+										src="https://cal.com/sanindo/30min"
+										className="w-full h-full border-0 rounded-xl"
+										title="Book a meeting"
+										loading="lazy"
+									/>
+								) : (
+									<>
+										{/* Placeholder content */}
+										<div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+											<div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+												<Calendar className="w-10 h-10 text-primary" />
+											</div>
+											<h3 className="mb-3">Calendar Booking Widget</h3>
+											<p className="text-muted-foreground mb-6 max-w-md">
+												Cal.com iframe embed will be placed here for seamless
+												appointment scheduling
+											</p>
+											<div className="inline-flex items-center gap-2 text-sm text-muted-foreground bg-muted/30 px-4 py-2 rounded-full border border-border/30">
+												<div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+												Loading calendar...
+											</div>
+										</div>
 
-								{/* Decorative grid overlay */}
-								<div className="absolute inset-0 opacity-[0.03]">
-									<svg
-										className="w-full h-full"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<defs>
-											<pattern
-												id="cal-grid"
-												x="0"
-												y="0"
-												width="40"
-												height="40"
-												patternUnits="userSpaceOnUse"
+										{/* Decorative grid overlay */}
+										<div className="absolute inset-0 opacity-[0.03]">
+											<svg
+												className="w-full h-full"
+												xmlns="http://www.w3.org/2000/svg"
 											>
-												<path
-													d="M 40 0 L 0 0 0 40"
-													fill="none"
-													stroke="currentColor"
-													strokeWidth="1"
-												/>
-											</pattern>
-										</defs>
-										<rect width="100%" height="100%" fill="url(#cal-grid)" />
-									</svg>
-								</div>
+												<defs>
+													<pattern
+														id="cal-grid"
+														x="0"
+														y="0"
+														width="40"
+														height="40"
+														patternUnits="userSpaceOnUse"
+													>
+														<path
+															d="M 40 0 L 0 0 0 40"
+															fill="none"
+															stroke="currentColor"
+															strokeWidth="1"
+														/>
+													</pattern>
+												</defs>
+												<rect width="100%" height="100%" fill="url(#cal-grid)" />
+											</svg>
+										</div>
+									</>
+								)}
 							</div>
 
 							{/* Additional CTA text below booking widget */}

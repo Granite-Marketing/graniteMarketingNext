@@ -31,7 +31,7 @@ export function StatsSection() {
         {/* Bento Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
           {/* Large stat card */}
-          <Card className="p-8 bg-card border-border hover:shadow-lg transition-shadow row-span-2">
+          <Card className="p-8 bg-card border-border hover:shadow-lg transition-shadow md:row-span-2">
             <div className="h-full flex flex-col">
               <div className="text-7xl font-bold mb-4">20+</div>
               <div className="mt-auto">
