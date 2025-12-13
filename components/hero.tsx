@@ -43,7 +43,7 @@ export function Hero() {
 							automations that work the way you do.
 						</p>
 
-						<div className="flex flex-col flex-wrap gap-4 justify-center items-center">
+						<div className="flex flex-wrap gap-4 justify-center items-center">
 							<Button
 								size="lg"
 								className="group relative rounded-full px-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
