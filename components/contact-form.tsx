@@ -13,7 +13,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-export function CTASection() {
+export function ContactForm() {
 	return (
 		<section
 			id="contact"

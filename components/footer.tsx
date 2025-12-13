@@ -1,56 +1,83 @@
-import Link from "next/link"
-import { Separator } from "@/components/ui/separator"
+"use client";
+
+import type React from "react";
+import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 const footerLinks = [
-  { label: "About us", href: "#about" },
-  { label: "Blog", href: "#blog" },
-  { label: "Contact us", href: "#contact" },
-  { label: "Advanced ocr", href: "#" },
-  { label: "Home", href: "/" },
-]
+	{ label: "Services", href: "/#services" },
+	{ label: "Process", href: "/#process" },
+	{ label: "Testimonials", href: "/#testimonials" },
+	{ label: "Results", href: "/#results" },
+	{ label: "FAQs", href: "/#faq" },
+	{ label: "Blog", href: "/blog" },
+];
 
 export function Footer() {
-  return (
-    <footer className="bg-background border-t border-border py-16">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
-          {/* Logo section */}
-          <div>
-            <Link href="/" className="flex items-center space-x-2">
-              <span className="font-bold text-xl italic">Logo</span>
-            </Link>
-          </div>
+	const handleSmoothScroll = (
+		e: React.MouseEvent<HTMLAnchorElement>,
+		href: string
+	) => {
+		if (href.startsWith("/#")) {
+			e.preventDefault();
+			const id = href.substring(2);
+			const element = document.getElementById(id);
+			if (element) {
+				element.scrollIntoView({ behavior: "smooth", block: "start" });
+			}
+		}
+	};
 
-          <nav>
-            <ul className="flex flex-wrap gap-x-8 gap-y-3">
-              {footerLinks.map((link) => (
-                <li key={link.label}>
-                  <Link href={link.href} className="text-muted-foreground hover:text-foreground transition-colors">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
+	return (
+		<footer className="bg-background border-t border-border py-16">
+			<div className="container mx-auto px-4">
+				<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
+					{/* Logo section */}
+					<div>
+						<Link href="/" className="flex items-center space-x-2">
+							<span className="font-bold text-xl italic">Logo</span>
+						</Link>
+					</div>
 
-        <Separator className="mb-8" />
+					<nav>
+						<ul className="flex flex-wrap gap-x-8 gap-y-3">
+							{footerLinks.map((link) => (
+								<li key={link.label}>
+									<Link
+										href={link.href}
+										onClick={(e) => handleSmoothScroll(e, link.href)}
+										className="text-muted-foreground hover:text-foreground transition-colors"
+									>
+										{link.label}
+									</Link>
+								</li>
+							))}
+						</ul>
+					</nav>
+				</div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <div>© {new Date().getFullYear()} Granite Marketing. All rights reserved.</div>
-          <div className="flex gap-6">
-            <Link href="#" className="hover:text-foreground transition-colors">
-              Privacy
-            </Link>
-            <Link href="#" className="hover:text-foreground transition-colors">
-              Cookies settings
-            </Link>
-            <Link href="#" className="hover:text-foreground transition-colors">
-              Cookies
-            </Link>
-          </div>
-        </div>
-      </div>
-    </footer>
-  )
+				<Separator className="mb-8" />
+
+				<div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
+					<div>
+						© {new Date().getFullYear()} Granite Marketing. All rights reserved.
+					</div>
+					<div className="flex gap-6">
+						<Link
+							href="/privacy"
+							className="hover:text-foreground transition-colors"
+						>
+							Privacy
+						</Link>
+						<Link
+							href="/cookies"
+							className="hover:text-foreground transition-colors"
+						>
+							Cookies
+						</Link>
+					</div>
+				</div>
+			</div>
+		</footer>
+	);
 }

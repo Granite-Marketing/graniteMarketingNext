@@ -136,12 +136,12 @@ export function CTASection() {
 							{/* Additional CTA text below booking widget */}
 							<div className="mt-8 text-center">
 								<p className="text-sm text-muted-foreground mb-4">
-									Prefer to reach out directly? Email us at{" "}
+									Prefer to reach out directly?{" "}
 									<a
-										href="mailto:hello@granitemarketing.co.uk"
+										href="/contact"
 										className="text-primary hover:text-primary/80 transition-colors underline underline-offset-4"
 									>
-										hello@granitemarketing.co.uk
+										Email us
 									</a>
 								</p>
 								<div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
