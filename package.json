@@ -10,6 +10,7 @@
     "migrate": "npx tsx scripts/migrate-content.ts"
   },
   "dependencies": {
+    "@calcom/embed-react": "^1.5.3",
     "@gsap/react": "^2.1.1",
     "@hookform/resolvers": "^3.10.0",
     "@portabletext/react": "^3.2.0",

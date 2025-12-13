@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Tag } from "@/components/ui/tag";
 import { Calendar, Clock, Users } from "lucide-react";
 import { NeuralBackground } from "@/components/ui/neutral-background";
+import Cal, { getCalApi } from "@calcom/embed-react";
 
 export function CTASection() {
 	const [shouldLoadCalendar, setShouldLoadCalendar] = useState(false);
@@ -25,6 +26,15 @@ export function CTASection() {
 
 		return () => observer.disconnect();
 	}, []);
+
+	useEffect(() => {
+		if (!shouldLoadCalendar) return;
+
+		(async function () {
+			const cal = await getCalApi({ namespace: "30min" });
+			cal("ui", { hideEventTypeDetails: false, layout: "month_view" });
+		})();
+	}, [shouldLoadCalendar]);
 
 	return (
 		<section
@@ -116,14 +126,18 @@ export function CTASection() {
 						<div className="relative backdrop-blur-sm bg-card/50 border-2 border-border/50 rounded-3xl p-8 md:p-12 shadow-2xl">
 							<div
 								ref={calendarRef}
-								className="relative aspect-video md:aspect-[16/10] rounded-xl overflow-hidden bg-gradient-to-br from-muted/50 to-muted/20 border border-border/30"
+								className="relative min-h-[400px] md:aspect-[16/10] rounded-xl overflow-hidden bg-gradient-to-br from-muted/50 to-muted/20 border border-border/30"
 							>
 								{shouldLoadCalendar ? (
-									<iframe
-										src="https://cal.com/sanindo/30min"
-										className="w-full h-full border-0 rounded-xl"
-										title="Book a meeting"
-										loading="lazy"
+									<Cal
+										namespace="30min"
+										calLink="sanindo/30min"
+										style={{
+											width: "100%",
+											height: "100%",
+											overflow: "scroll",
+										}}
+										config={{ layout: "month_view" }}
 									/>
 								) : (
 									<>
@@ -166,7 +180,11 @@ export function CTASection() {
 														/>
 													</pattern>
 												</defs>
-												<rect width="100%" height="100%" fill="url(#cal-grid)" />
+												<rect
+													width="100%"
+													height="100%"
+													fill="url(#cal-grid)"
+												/>
 											</svg>
 										</div>
 									</>
@@ -176,12 +194,12 @@ export function CTASection() {
 							{/* Additional CTA text below booking widget */}
 							<div className="mt-8 text-center">
 								<p className="text-sm text-muted-foreground mb-4">
-									Prefer to reach out directly? Email us at{" "}
+									Prefer to reach out directly?{" "}
 									<a
-										href="mailto:hello@granitemarketing.co.uk"
+										href="/contact"
 										className="text-primary hover:text-primary/80 transition-colors underline underline-offset-4"
 									>
-										hello@granitemarketing.co.uk
+										Email us
 									</a>
 								</p>
 								<div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
