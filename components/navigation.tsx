@@ -95,7 +95,7 @@ export function Navigation() {
 						</Button>
 					</SheetTrigger>
 					<SheetContent side="right" className="w-[300px]">
-						<div className="flex flex-col space-y-6 mt-8">
+						<div className="flex flex-col space-y-6 mt-8 p-8">
 							{navLinks.map((link) => (
 								<Link
 									key={link.href}
