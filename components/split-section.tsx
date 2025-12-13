@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
 import { Tag } from "@/components/ui/tag";
 import Image from "next/image";
+import Link from "next/link";
 
 export function SplitSection() {
 	return (
@@ -22,8 +23,12 @@ export function SplitSection() {
 							changing how you already work.
 						</p>
 						<div className="flex gap-4">
-							<Button variant="outline" className="rounded-full bg-transparent">
-								Explore
+							<Button
+								variant="outline"
+								className="rounded-full bg-transparent"
+								asChild
+							>
+								<Link href="/#testimonials">Testimonials</Link>
 							</Button>
 						</div>
 					</div>

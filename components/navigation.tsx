@@ -91,7 +91,7 @@ export function Navigation() {
 							href="/#contact"
 							onClick={(e) => handleSmoothScroll(e, "/#contact")}
 						>
-							Start
+							Get Started
 						</Link>
 					</Button>
 				</div>
@@ -125,7 +125,7 @@ export function Navigation() {
 									href="/#contact"
 									onClick={(e) => handleSmoothScroll(e, "/#contact")}
 								>
-									Start
+									Get Started
 								</Link>
 							</Button>
 						</div>
