@@ -247,7 +247,7 @@ export function Hero() {
 							<Button
 								size="lg"
 								variant="outline"
-								className="rounded-full px-8 bg-transparent hover:bg-primary/5 border-border/50 hover:border-primary/50 transition-all duration-300 hover:scale-105"
+								className="rounded-full px-8 bg-transparent hover:bg-primary/5 border-border/50 hover:border-primary/50 hover:text-primary transition-all duration-300 hover:scale-105"
 								asChild
 							>
 								<Link href="#services">Learn</Link>
