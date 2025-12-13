@@ -1,178 +1,158 @@
-"use client"
-
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+"use client";
+import { Tag } from "@/components/ui/tag";
+import { Calendar, Clock, Users } from "lucide-react";
 
 export function CTASection() {
-  return (
-    <section
-      id="contact"
-      className="py-24 bg-gradient-to-b from-background via-muted/5 to-background relative overflow-hidden"
-    >
-      <div className="absolute inset-0 opacity-[0.015]">
-        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="contact-grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="currentColor" strokeWidth="1" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#contact-grid)" />
-        </svg>
-      </div>
+	return (
+		<section
+			id="contact"
+			className="py-32 bg-gradient-to-b from-background via-muted/10 to-background relative overflow-hidden"
+		>
+			<div className="absolute inset-0 opacity-[0.02]">
+				<svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+					<defs>
+						<pattern
+							id="booking-grid"
+							x="0"
+							y="0"
+							width="60"
+							height="60"
+							patternUnits="userSpaceOnUse"
+						>
+							<path
+								d="M 60 0 L 0 0 0 60"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="1"
+							/>
+						</pattern>
+					</defs>
+					<rect width="100%" height="100%" fill="url(#booking-grid)" />
+				</svg>
+			</div>
 
-      <div className="container mx-auto px-4 relative">
-        <div className="grid lg:grid-cols-2 gap-16 items-start max-w-6xl mx-auto">
-          <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-br from-primary/5 to-tertiary/5 rounded-3xl blur-3xl" />
-            <div className="relative backdrop-blur-sm bg-card/30 border border-border/30 rounded-2xl p-8">
-              <p className="text-sm uppercase tracking-wider text-muted-foreground mb-3">Send</p>
-              <h2 className="text-4xl md:text-5xl font-normal mb-6 text-balance">Your message</h2>
-              <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                Fill in the details below and we'll respond quickly
-              </p>
+			<div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse" />
+			<div className="absolute bottom-20 right-10 w-96 h-96 bg-tertiary/5 rounded-full blur-3xl animate-pulse" />
 
-              <div className="space-y-6">
-                <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-colors duration-300">
-                  <div className="text-muted-foreground">✉</div>
-                  <div>
-                    <div className="font-medium">hello@granitemarketing.co.uk</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-colors duration-300">
-                  <div className="text-muted-foreground">📞</div>
-                  <div>
-                    <div className="font-medium">+44 (0) 20 1234</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-colors duration-300">
-                  <div className="text-muted-foreground">📍</div>
-                  <div>
-                    <div className="font-medium">Unit 5, 42 Brick Lane, London E1 6RF</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+			<div className="container mx-auto px-4 relative">
+				<div className="max-w-6xl mx-auto">
+					<div className="text-center mb-16">
+						<Tag variant="sectionLabel" className="mb-6">
+							Let's Talk
+						</Tag>
+						<h2 className="mb-6 text-balance">
+							Ready to transform your workflow?
+						</h2>
+						<p className="text-xl text-muted-foreground max-w-2xl mx-auto text-balance leading-relaxed">
+							Book a free consultation call to discuss your automation needs.
+							We'll explore how we can streamline your operations and boost
+							efficiency.
+						</p>
+					</div>
 
-          <div className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="firstName" className="text-sm mb-2 block">
-                  First name
-                </Label>
-                <Input id="firstName" className="bg-background focus:ring-2 focus:ring-primary/50" />
-              </div>
-              <div>
-                <Label htmlFor="lastName" className="text-sm mb-2 block">
-                  Last name
-                </Label>
-                <Input id="lastName" className="bg-background focus:ring-2 focus:ring-primary/50" />
-              </div>
-            </div>
+					<div className="grid md:grid-cols-3 gap-6 mb-16">
+						<div className="group p-6 rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+							<div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+								<Calendar className="w-6 h-6 text-primary" />
+							</div>
+							<h3 className="mb-2">Flexible Scheduling</h3>
+							<p className="text-muted-foreground">
+								Choose a time that works best for you from our available slots
+							</p>
+						</div>
 
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="email" className="text-sm mb-2 block">
-                  Email
-                </Label>
-                <Input id="email" type="email" className="bg-background focus:ring-2 focus:ring-primary/50" />
-              </div>
-              <div>
-                <Label htmlFor="phone" className="text-sm mb-2 block">
-                  Phone number
-                </Label>
-                <Input id="phone" type="tel" className="bg-background focus:ring-2 focus:ring-primary/50" />
-              </div>
-            </div>
+						<div className="group p-6 rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+							<div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+								<Clock className="w-6 h-6 text-primary" />
+							</div>
+							<h3 className="mb-2">30-Minute Session</h3>
+							<p className="text-muted-foreground">
+								Enough time to understand your needs and explore solutions
+							</p>
+						</div>
 
-            <div>
-              <Label htmlFor="inquiry" className="text-sm mb-2 block">
-                What's your inquiry about
-              </Label>
-              <Select>
-                <SelectTrigger id="inquiry" className="bg-background focus:ring-2 focus:ring-primary/50">
-                  <SelectValue placeholder="Select one..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="workflow">Workflow optimization</SelectItem>
-                  <SelectItem value="integration">Integration support</SelectItem>
-                  <SelectItem value="consultation">Technical consultation</SelectItem>
-                  <SelectItem value="general">General inquiry</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+						<div className="group p-6 rounded-2xl border border-border/50 bg-card/30 backdrop-blur-sm hover:border-primary/30 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5">
+							<div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+								<Users className="w-6 h-6 text-primary" />
+							</div>
+							<h3 className="mb-2">Expert Guidance</h3>
+							<p className="text-muted-foreground">
+								Connect directly with our automation specialists
+							</p>
+						</div>
+					</div>
 
-            <div>
-              <Label className="text-sm mb-3 block">What describes your situation</Label>
-              <div className="grid md:grid-cols-2 gap-3">
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="workflow" className="focus:ring-2 focus:ring-primary/50" />
-                  <label htmlFor="workflow" className="text-sm cursor-pointer">
-                    Workflow optimization
-                  </label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="automation" className="focus:ring-2 focus:ring-primary/50" />
-                  <label htmlFor="automation" className="text-sm cursor-pointer">
-                    New automation build
-                  </label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="support" className="focus:ring-2 focus:ring-primary/50" />
-                  <label htmlFor="support" className="text-sm cursor-pointer">
-                    Integration support
-                  </label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="consultation" className="focus:ring-2 focus:ring-primary/50" />
-                  <label htmlFor="consultation" className="text-sm cursor-pointer">
-                    Technical consultation
-                  </label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="inquiry" className="focus:ring-2 focus:ring-primary/50" />
-                  <label htmlFor="inquiry" className="text-sm cursor-pointer">
-                    General inquiry
-                  </label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="other" className="focus:ring-2 focus:ring-primary/50" />
-                  <label htmlFor="other" className="text-sm cursor-pointer">
-                    Other
-                  </label>
-                </div>
-              </div>
-            </div>
+					<div className="relative">
+						{/* Glass morphism container */}
+						<div className="absolute -inset-4 bg-gradient-to-br from-primary/10 via-tertiary/5 to-primary/10 rounded-3xl blur-2xl" />
 
-            <div>
-              <Label htmlFor="message" className="text-sm mb-2 block">
-                Message
-              </Label>
-              <Textarea
-                id="message"
-                placeholder="Tell us about your project..."
-                rows={5}
-                className="bg-background resize-none focus:ring-2 focus:ring-primary/50"
-              />
-            </div>
+						<div className="relative backdrop-blur-sm bg-card/50 border-2 border-border/50 rounded-3xl p-8 md:p-12 shadow-2xl">
+							{/* Placeholder for Cal.com iframe */}
+							<div className="relative aspect-video md:aspect-[16/10] rounded-xl overflow-hidden bg-gradient-to-br from-muted/50 to-muted/20 border border-border/30">
+								{/* Placeholder content */}
+								<div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+									<div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-6">
+										<Calendar className="w-10 h-10 text-primary" />
+									</div>
+									<h3 className="mb-3">Calendar Booking Widget</h3>
+									<p className="text-muted-foreground mb-6 max-w-md">
+										Cal.com iframe embed will be placed here for seamless
+										appointment scheduling
+									</p>
+									<div className="inline-flex items-center gap-2 text-sm text-muted-foreground bg-muted/30 px-4 py-2 rounded-full border border-border/30">
+										<div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+										Integration Ready
+									</div>
+								</div>
 
-            <div className="flex items-center space-x-2">
-              <Checkbox id="terms" className="focus:ring-2 focus:ring-primary/50" />
-              <label htmlFor="terms" className="text-sm cursor-pointer">
-                I agree to the terms
-              </label>
-            </div>
+								{/* Decorative grid overlay */}
+								<div className="absolute inset-0 opacity-[0.03]">
+									<svg
+										className="w-full h-full"
+										xmlns="http://www.w3.org/2000/svg"
+									>
+										<defs>
+											<pattern
+												id="cal-grid"
+												x="0"
+												y="0"
+												width="40"
+												height="40"
+												patternUnits="userSpaceOnUse"
+											>
+												<path
+													d="M 40 0 L 0 0 0 40"
+													fill="none"
+													stroke="currentColor"
+													strokeWidth="1"
+												/>
+											</pattern>
+										</defs>
+										<rect width="100%" height="100%" fill="url(#cal-grid)" />
+									</svg>
+								</div>
+							</div>
 
-            <Button type="submit" size="lg" className="rounded-full px-8 bg-primary text-white hover:bg-primary/80">
-              Send
-            </Button>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
+							{/* Additional CTA text below booking widget */}
+							<div className="mt-8 text-center">
+								<p className="text-sm text-muted-foreground mb-4">
+									Prefer to reach out directly? Email us at{" "}
+									<a
+										href="mailto:hello@granitemarketing.co.uk"
+										className="text-primary hover:text-primary/80 transition-colors underline underline-offset-4"
+									>
+										hello@granitemarketing.co.uk
+									</a>
+								</p>
+								<div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+									<div className="w-1.5 h-1.5 rounded-full bg-primary" />
+									<span>Usually responds within 24 hours</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+	);
 }
