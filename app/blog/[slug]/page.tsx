@@ -1,39 +1,35 @@
-import React from "react";
-import { BlogPostHeader } from "@/components/sections/BlogPostHeader";
-import { BlogPostContent } from "@/components/sections/BlogPostContent";
-import { BlogPostCTA } from "@/components/sections/BlogPostCTA";
-import { RelatedPosts } from "@/components/sections/RelatedPosts";
-import { generatePageMetadata } from "@/lib/seo/config";
-import type { Metadata } from "next";
+import { Navigation } from "@/components/navigation"
+import { BlogPostHero } from "@/components/blog-post-hero"
+import { BlogPostContent } from "@/components/blog-post-content"
+import { BlogCtaBanner } from "@/components/blog-cta-banner"
+import { RelatedPosts } from "@/components/related-posts"
+import { Footer } from "@/components/footer"
+import { getPostBySlug, getAllPosts } from "@/lib/blog-data"
+import { notFound } from "next/navigation"
 
-interface BlogPostPageProps {
-  params: Promise<{ slug: string }>;
+export async function generateStaticParams() {
+  const posts = getAllPosts()
+  return posts.map((post) => ({
+    slug: post.slug,
+  }))
 }
 
-export async function generateMetadata({
-  params,
-}: BlogPostPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  return {
-    title: `${slug} | Blog`,
-    description: "Read our latest blog post about automation and workflows",
-  };
-}
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const post = getPostBySlug(slug)
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
-  const { slug } = await params;
+  if (!post) {
+    notFound()
+  }
 
   return (
-    <main>
-      <BlogPostHeader
-        title="Advanced OCR with Llamaindex extraction and n8n"
-        date="15 Jan 2025"
-        readTime="6 min read"
-        category="Automation"
-      />
-      <BlogPostContent category="Automation" />
-      <BlogPostCTA />
-      <RelatedPosts />
-    </main>
-  );
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      <BlogPostHero post={post} />
+      <BlogPostContent content={post.content || ""} />
+      <BlogCtaBanner />
+      <RelatedPosts currentPostId={post.id} />
+      <Footer />
+    </div>
+  )
 }

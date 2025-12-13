@@ -1,80 +1,60 @@
-import React from "react";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+import * as React from 'react'
+import { Slot } from '@radix-ui/react-slot'
+import { cva, type VariantProps } from 'class-variance-authority'
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "link";
-  size?: "sm" | "md" | "lg" | "link";
-  title?: string;
-  asChild?: boolean;
-  iconRight?: React.ReactNode;
-}
+import { cn } from '@/lib/utils'
 
-export function Button({
-  children,
-  className,
-  variant = "primary",
-  size = "md",
-  title,
-  asChild,
-  iconRight,
-  ...props
-}: ButtonProps) {
-  const baseClasses = cn(
-    "inline-flex items-center justify-center whitespace-nowrap rounded-md font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-    {
-      // Primary - black background, white text
-      "bg-text-primary text-background-primary hover:opacity-90":
-        variant === "primary",
-      // Secondary - border, transparent background
-      "border border-border-primary bg-transparent text-text-primary hover:bg-background-secondary":
-        variant === "secondary",
-      // Link - no border, just text
-      "border-transparent bg-transparent text-text-primary hover:underline underline-offset-4":
-        variant === "link" || size === "link",
-      // Sizes
-      "h-9 px-4 text-sm": size === "sm" && variant !== "link",
-      "h-10 px-6 text-base": (size === "md" || size === undefined) && variant !== "link",
-      "h-12 px-8 text-lg": size === "lg" && variant !== "link",
-      "gap-2": iconRight,
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive:
+          'bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
+        outline:
+          'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
+        secondary:
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+        ghost:
+          'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
+        link: 'text-primary underline-offset-4 hover:underline',
+      },
+      size: {
+        default: 'h-9 px-4 py-2 has-[>svg]:px-3',
+        sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
+        lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
+        icon: 'size-9',
+        'icon-sm': 'size-8',
+        'icon-lg': 'size-10',
+      },
     },
-    className
-  );
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  },
+)
 
-  if (asChild && React.isValidElement(children)) {
-    const child = children as React.ReactElement<any>;
-    // Extract button-specific props that shouldn't be passed to Link/anchor
-    const { type, onClick, onMouseEnter, onTouchStart, ...safeProps } = props as any;
-    const linkContent = (
-      <>
-        {child.props.children}
-        {iconRight && <span>{iconRight}</span>}
-      </>
-    );
-    return React.cloneElement(child, {
-      className: cn(baseClasses, child.props?.className),
-      title,
-      ...safeProps,
-      children: linkContent,
-    });
-  }
-
-  const content = (
-    <>
-      {children}
-      {iconRight && <span>{iconRight}</span>}
-    </>
-  );
+function Button({
+  className,
+  variant,
+  size,
+  asChild = false,
+  ...props
+}: React.ComponentProps<'button'> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean
+  }) {
+  const Comp = asChild ? Slot : 'button'
 
   return (
-    <button
-      type="button"
-      className={baseClasses}
-      title={title}
+    <Comp
+      data-slot="button"
+      className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    >
-      {content}
-    </button>
-  );
+    />
+  )
 }
+
+export { Button, buttonVariants }

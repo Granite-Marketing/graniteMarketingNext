@@ -1,30 +1,31 @@
-import React from "react";
-import { Hero } from "@/components/sections/Hero";
-import { Services } from "@/components/sections/Services";
-import { VideoContent } from "@/components/sections/VideoContent";
-import { Stats } from "@/components/sections/Stats";
-import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
-import { Testimonials } from "@/components/sections/Testimonials";
-import { LogoMarquee } from "@/components/sections/LogoMarquee";
-import { FAQ } from "@/components/sections/FAQ";
-import { ContactForm } from "@/components/sections/ContactForm";
-import { generatePageMetadata } from "@/lib/seo/config";
-import type { Metadata } from "next";
+import { Navigation } from "@/components/navigation";
+import { Hero } from "@/components/hero";
+import { Capabilities } from "@/components/capabilities";
+import { Integrations } from "@/components/integrations";
+import { SplitSection } from "@/components/split-section";
+import { StatsSection } from "@/components/stats-section";
+import { Approach } from "@/components/approach";
+import { Testimonials } from "@/components/testimonials";
+import { FAQ } from "@/components/faq";
+import { CTASection } from "@/components/cta-section";
+import { Footer } from "@/components/footer";
 
-export const metadata: Metadata = generatePageMetadata("home");
-
-export default function HomePage() {
-  return (
-    <main>
-      <Hero />
-      <Services />
-      <VideoContent />
-      <Stats />
-      <ProcessTimeline />
-      <Testimonials />
-      <LogoMarquee />
-      <FAQ />
-      <ContactForm />
-    </main>
-  );
+export default function Home() {
+	return (
+		<>
+			<Navigation />
+			<main className="min-h-screen">
+				<Hero />
+				<Capabilities />
+				<Integrations />
+				<SplitSection />
+				<StatsSection />
+				<Approach />
+				<Testimonials />
+				<FAQ />
+				<CTASection />
+			</main>
+			<Footer />
+		</>
+	);
 }
