@@ -40,6 +40,26 @@ export type BlogPostCard = {
 	categories?: { id: string; name: string; slug: string }[];
 };
 
+export type CaseStudyTechStackItem = {
+	title: string;
+	integrationType?: string;
+};
+
+export type CaseStudyCard = {
+	id: string;
+	title: string;
+	slug: string;
+	client?: string;
+	industryName?: string;
+	excerpt?: string;
+	mainImageUrl?: string;
+	hasWalkthrough: boolean;
+	walkthroughUrl?: string;
+	techStack: CaseStudyTechStackItem[];
+	primaryResultLabel?: string;
+	resultLabels: string[];
+};
+
 export function getImageUrl(source: SanityImageSource | null | undefined) {
 	if (!source) return "";
 	// Delegate to the more robust helper that understands _externalUrl
@@ -97,5 +117,47 @@ export function adaptBlogPostToCard(doc: any): BlogPostCard {
 				name: cat.name,
 				slug: cat.slug?.current ?? "",
 			})) ?? [],
+	};
+}
+
+export function adaptCaseStudyToCard(doc: any): CaseStudyCard {
+	const results = (doc.results ?? []) as any[];
+
+	const resultLabels: string[] =
+		results
+			.map((res) => {
+				const value = res?.value as string | undefined;
+				const metric = res?.metric as string | undefined;
+
+				if (value && metric) return `${value} ${metric}`;
+				return value ?? metric ?? "";
+			})
+			.filter((label) => Boolean(label)) ?? [];
+
+	const primaryResultLabel = resultLabels[0];
+
+	const tools: CaseStudyTechStackItem[] =
+		(doc.techStack ?? [])
+			.map((tool: any) => ({
+				title: tool?.name as string,
+				integrationType: tool?.integrationType as string | undefined,
+			}))
+			.filter((item: CaseStudyTechStackItem): item is CaseStudyTechStackItem =>
+				Boolean(item.title)
+			) ?? [];
+
+	return {
+		id: doc._id,
+		title: doc.title,
+		slug: doc.slug?.current ?? "",
+		client: doc.client?.name ?? doc.clientName ?? doc.client,
+		industryName: doc.industry?.name ?? doc.industryName,
+		excerpt: doc.excerpt,
+		mainImageUrl: getImageUrl(doc.featuredImage),
+		hasWalkthrough: Boolean(doc.loomUrl),
+		walkthroughUrl: doc.loomUrl,
+		techStack: tools,
+		primaryResultLabel,
+		resultLabels,
 	};
 }

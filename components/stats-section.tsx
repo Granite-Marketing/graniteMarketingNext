@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export function StatsSection() {
 	return (
-		<section id="results" className="py-24 bg-background">
+		<section id="stats" className="py-24 bg-background">
 			<div className="container mx-auto px-4">
 				<div className="mb-16">
 					<Tag variant="sectionLabel" className="mb-4">

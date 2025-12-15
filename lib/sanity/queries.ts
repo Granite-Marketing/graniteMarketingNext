@@ -1,5 +1,6 @@
 import { client } from "./client";
 import { fetchQuery } from "./lib/fetch";
+import { adaptCaseStudyToCard } from "./lib/adapters";
 
 // =============================================================================
 // BLOG POSTS
@@ -120,17 +121,35 @@ export async function getBlogPostsByCategory(categorySlug: string) {
 
 export async function getCaseStudies() {
 	return fetchQuery(`
-    *[_type == "caseStudy" && !(_id in path("drafts.**"))] | order(_createdAt desc) {
+    *[_type == "caseStudy" && !(_id in path("drafts.**"))] | order(sortOrder asc, _createdAt desc) {
       _id,
       title,
       slug,
-      client,
-      industry,
+      client->{
+        _id,
+        name,
+        company
+      },
+      industry->{
+        _id,
+        name,
+        slug,
+        country,
+        region
+      },
       excerpt,
       featuredImage {
         asset,
         alt
       },
+      loomUrl,
+      techStack[]->{
+        _id,
+        name,
+        slug,
+        integrationType
+      },
+      showOnHome,
       results[] {
         metric,
         value,
@@ -147,8 +166,18 @@ export async function getCaseStudy(slug: string) {
       _id,
       title,
       slug,
-      client,
-      industry,
+      client->{
+        _id,
+        name,
+        company
+      },
+      industry->{
+        _id,
+        name,
+        slug,
+        country,
+        region
+      },
       excerpt,
       challenge,
       solution,
@@ -160,6 +189,17 @@ export async function getCaseStudy(slug: string) {
         metric,
         value,
         description
+      },
+      techStack[]->{
+        _id,
+        name,
+        slug,
+        integrationType,
+        description,
+        logo{
+          asset,
+          alt
+        }
       },
       images[] {
         asset,
@@ -178,7 +218,11 @@ export async function getCaseStudy(slug: string) {
       techStack[] {
         title,
         description,
-        imageUrl
+        image {
+          asset,
+          alt
+        },
+        integrationType
       },
       loomUrl,
       seo {
@@ -193,7 +237,7 @@ export async function getCaseStudy(slug: string) {
 
 export async function getCaseStudySlugs() {
 	const slugs = await fetchQuery<string[]>(`
-    *[_type == "caseStudy" && !(_id in path("drafts.**"))].slug.current
+    *[_type == "caseStudy" && !(_id in path("drafts.**"))] | order(sortOrder asc, _createdAt desc).slug.current
   `);
 	return slugs.map((slug) => ({ slug }));
 }
@@ -417,16 +461,63 @@ export async function getAuthor(slug: string) {
 // COMPOSED HELPERS FOR MARKETING PAGES
 // =============================================================================
 
+export async function getHomepageCaseStudies(limit = 3) {
+	const docs: any[] = await fetchQuery(
+		`
+    *[_type == "caseStudy" && showOnHome == true && !(_id in path("drafts.**"))]
+      | order(sortOrder asc, _createdAt desc) [0...$limit]{
+      _id,
+      title,
+      slug,
+      client->{
+        _id,
+        name,
+        company
+      },
+      industry->{
+        _id,
+        name,
+        slug,
+        country,
+        region
+      },
+      excerpt,
+      featuredImage{
+        asset,
+        alt
+      },
+      loomUrl,
+      techStack[]->{
+        _id,
+        name,
+        slug,
+        integrationType
+      },
+      results[]{
+        metric,
+        value,
+        description
+      }
+    }
+  `,
+		{ limit }
+	);
+
+	return docs.map((doc) => adaptCaseStudyToCard(doc));
+}
+
 export async function getHomeContent() {
-	const [featuredLogos, testimonials, faqs] = await Promise.all([
+	const [featuredLogos, testimonials, faqs, caseStudies] = await Promise.all([
 		getFeaturedLogos(10),
 		getClients(),
 		getFAQs("general"),
+		getHomepageCaseStudies(3),
 	]);
 
 	return {
 		featuredLogos,
 		testimonials,
 		faqs,
+		caseStudies,
 	};
 }

@@ -9,6 +9,7 @@ import { Testimonials } from "@/components/testimonials";
 import { FAQ } from "@/components/faq";
 import { CTASection } from "@/components/cta-section";
 import { Footer } from "@/components/footer";
+import { CaseStudySection } from "@/components/case-study-section";
 import { getHomeContent } from "@/lib/sanity/queries";
 import {
 	adaptClientTestimonial,
@@ -16,7 +17,7 @@ import {
 } from "@/lib/sanity/lib/adapters";
 
 export default async function Home() {
-	const homeContent = await getHomeContent();
+	const homeContent = (await getHomeContent()) as any;
 
 	const testimonials =
 		homeContent.testimonials?.map((client: any) =>
@@ -34,7 +35,10 @@ export default async function Home() {
 				{/* Will come back to this later. */}
 				{/* <Integrations /> */}
 				<SplitSection />
-				<StatsSection />
+				{/* <StatsSection /> */}
+				{homeContent.caseStudies?.length > 0 && (
+					<CaseStudySection caseStudies={homeContent.caseStudies} />
+				)}
 				<Approach />
 				{testimonials.length > 1 && (
 					<Testimonials testimonials={testimonials} />

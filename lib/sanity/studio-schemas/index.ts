@@ -353,6 +353,81 @@ const logoList = defineType({
 });
 
 // =============================================================================
+// TOOL / INTEGRATION SCHEMA
+// =============================================================================
+const tool = defineType({
+	name: "tool",
+	title: "🧩 Tool / Integration",
+	type: "document",
+	fields: [
+		defineField({
+			name: "name",
+			title: "Tool Name",
+			type: "string",
+			validation: (Rule) => Rule.required(),
+		}),
+		defineField({
+			name: "slug",
+			title: "Slug",
+			type: "slug",
+			options: {
+				source: "name",
+				maxLength: 96,
+			},
+			validation: (Rule) => Rule.required(),
+		}),
+		defineField({
+			name: "integrationType",
+			title: "Integration Type",
+			type: "string",
+			options: {
+				list: [
+					{ title: "API", value: "api" },
+					{ title: "CMS", value: "cms" },
+					{ title: "CRM", value: "crm" },
+					{ title: "Analytics", value: "analytics" },
+					{ title: "Ads / Marketing", value: "ads" },
+					{ title: "Database / Warehouse", value: "database" },
+					{ title: "Internal / No-code", value: "internal" },
+				],
+				layout: "dropdown",
+			},
+		}),
+		defineField({
+			name: "description",
+			title: "Short Description",
+			type: "text",
+			rows: 3,
+		}),
+		defineField({
+			name: "logo",
+			title: "Logo / Icon",
+			type: "image",
+			options: { hotspot: true },
+			fields: [
+				defineField({
+					name: "alt",
+					type: "string",
+					title: "Alternative Text",
+				}),
+			],
+		}),
+		defineField({
+			name: "website",
+			title: "Website URL",
+			type: "url",
+		}),
+	],
+	preview: {
+		select: {
+			title: "name",
+			subtitle: "integrationType",
+			media: "logo",
+		},
+	},
+});
+
+// =============================================================================
 // BLOG POST SCHEMA
 // =============================================================================
 const blogPost = defineType({
@@ -421,6 +496,13 @@ const blogPost = defineType({
 			title: "Excerpt",
 			type: "text",
 			rows: 3,
+		}),
+		defineField({
+			name: "sortOrder",
+			title: "Sort Order",
+			type: "number",
+			description:
+				"Lower numbers appear first. Leave empty to fall back to created date.",
 		}),
 		defineField({
 			name: "content",
@@ -543,12 +625,18 @@ const caseStudy = defineType({
 		defineField({
 			name: "client",
 			title: "Client Name",
-			type: "string",
+			type: "reference",
+			to: [{ type: "client" }],
+			description:
+				"Link to the client associated with this automation. Existing string values will continue to work via migrations/fallbacks.",
 		}),
 		defineField({
 			name: "industry",
-			title: "Industry",
-			type: "string",
+			title: "Industry / Location",
+			type: "reference",
+			to: [{ type: "location" }],
+			description:
+				"Select the primary location/industry context for this automation (used on cards & filters).",
 		}),
 		defineField({
 			name: "featuredImage",
@@ -594,29 +682,12 @@ const caseStudy = defineType({
 			type: "array",
 			of: [
 				defineArrayMember({
-					type: "object",
-					fields: [
-						defineField({ name: "title", type: "string", title: "Tool Name" }),
-						defineField({
-							name: "description",
-							type: "string",
-							title: "Description",
-						}),
-						defineField({
-							name: "image",
-							type: "image",
-							title: "Image",
-							options: { hotspot: true },
-						}),
-					],
-					preview: {
-						select: {
-							title: "title",
-							media: "image",
-						},
-					},
+					type: "reference",
+					to: [{ type: "tool" }],
 				}),
 			],
+			description:
+				"Select tools/integrations from the shared library. This will be reused across automations.",
 		}),
 		defineField({
 			name: "results",
@@ -661,6 +732,13 @@ const caseStudy = defineType({
 			title: "Client Testimonial",
 			type: "reference",
 			to: [{ type: "client" }],
+		}),
+		defineField({
+			name: "showOnHome",
+			title: "Show on Homepage",
+			type: "boolean",
+			description:
+				"Enable to feature this case study in the homepage case study section.",
 		}),
 		defineField({
 			name: "seo",
@@ -709,6 +787,7 @@ export const schemaTypes = [
 	client,
 	faq,
 	logoList,
+	tool,
 	blogPost,
 	caseStudy,
 ];
