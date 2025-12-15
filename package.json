@@ -7,7 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate": "npx tsx scripts/migrate-content.ts"
+    "migrate": "npx tsx scripts/migrate-content.ts",
+    "migrate:categories": "npx tsx scripts/migrate-categories.ts",
+    "migrate:locations": "npx tsx scripts/migrate-locations.ts",
+    "migrate:clients": "npx tsx scripts/migrate-clients.ts",
+    "migrate:logo-list": "npx tsx scripts/migrate-logo-list.ts",
+    "migrate:faqs": "npx tsx scripts/migrate-faqs.ts",
+    "migrate:case-studies": "npx tsx scripts/migrate-case-studies.ts",
+    "migrate:blog-posts": "npx tsx scripts/migrate-blog-posts.ts",
+    "migrate:ndjson": "npx tsx scripts/migrate-from-ndjson.ts",
+    "migrate:all": "npx tsx scripts/migrate-all.ts"
   },
   "dependencies": {
     "@calcom/embed-react": "^1.5.3",
@@ -85,6 +94,7 @@
     "csv-parse": "^5.6.0",
     "eslint": "^9.0.0",
     "eslint-config-next": "^16.0.0",
+    "jsdom": "^27.3.0",
     "postcss": "^8.5",
     "tailwindcss": "^4.1.9",
     "tsx": "^4.19.0",
