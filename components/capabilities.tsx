@@ -27,7 +27,7 @@ const capabilities = [
 	{
 		icon: <FileText className="w-10 h-10 text-primary" />,
 		title: "Content generation",
-		description: "Produce blogs, research, and social posts—on autopilot.",
+		description: "Produce blogs, research, and social posts on autopilot.",
 		gradient: "from-accent/10 to-transparent",
 	},
 	{

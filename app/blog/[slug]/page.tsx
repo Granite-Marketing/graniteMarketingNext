@@ -12,6 +12,8 @@ import {
 } from "@/lib/sanity/queries";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
 import type { PortableTextBlock } from "@portabletext/types";
+import type { Metadata } from "next";
+import { siteConfig, pageMetadata } from "@/lib/seo";
 
 export async function generateStaticParams() {
 	const slugs = await getBlogPostSlugs();
@@ -28,7 +30,62 @@ type SanityBlogPostDetail = {
 	featuredImage?: unknown;
 	categories?: { name?: string }[];
 	author?: { name?: string };
+	seo?: {
+		metaTitle?: string;
+		metaDescription?: string;
+	};
 };
+
+export async function generateMetadata({
+	params,
+}: {
+	params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+	const { slug } = await params;
+	const post = (await getBlogPost(slug)) as SanityBlogPostDetail | null;
+
+	if (!post) {
+		// Fallback to generic blog metadata if post is missing
+		const blogMeta = pageMetadata.blog;
+		return {
+			title: blogMeta.title,
+			description: blogMeta.description,
+		};
+	}
+
+	const metaTitle = post.seo?.metaTitle || post.title;
+	const metaDescription =
+		post.seo?.metaDescription || post.excerpt || pageMetadata.blog.description;
+
+	const imageUrl =
+		getImageUrl(post.featuredImage as any) || siteConfig.defaultImage;
+	const canonicalUrl = `${siteConfig.url}/blog/${slug}`;
+
+	return {
+		title: metaTitle,
+		description: metaDescription,
+		openGraph: {
+			title: metaTitle,
+			description: metaDescription,
+			url: canonicalUrl,
+			type: "article",
+			images: [
+				{
+					url: imageUrl,
+					width: 1200,
+					height: 630,
+					alt: metaTitle,
+				},
+			],
+		},
+		twitter: {
+			card: "summary_large_image",
+			title: metaTitle,
+			description: metaDescription,
+			images: [imageUrl],
+		},
+	};
+}
 
 export default async function BlogPostPage({
 	params,
