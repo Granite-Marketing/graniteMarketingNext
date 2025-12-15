@@ -2,30 +2,42 @@
 
 import { Button } from "@/components/ui/button"
 import { SearchX } from "lucide-react"
-import { getAllPosts } from "@/lib/blog-data"
-
 import { useState, useMemo, useRef, useEffect } from "react"
 import { BlogCard } from "@/components/blog-card"
 import { BlogFilter } from "@/components/blog-filter"
 
-export function BlogGrid() {
+interface BlogGridPost {
+  id: string | number
+  slug: string
+  title: string
+  description: string
+  category: string
+  date: string
+  readTime: string
+  image: string
+  featured?: boolean
+}
+
+interface BlogGridProps {
+  posts: BlogGridPost[]
+}
+
+export function BlogGrid({ posts }: BlogGridProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const gridSectionRef = useRef<HTMLDivElement>(null)
   const previousPostCountRef = useRef<number>(0)
 
-  const blogPosts = getAllPosts()
-
   const categories = useMemo(() => {
-    const uniqueCategories = Array.from(new Set(blogPosts.map((post) => post.category)))
+    const uniqueCategories = Array.from(new Set(posts.map((post) => post.category)))
     return uniqueCategories.sort()
-  }, [])
+  }, [posts])
 
   const filteredPosts = useMemo(() => {
     if (selectedCategories.length === 0) {
-      return blogPosts
+      return posts
     }
-    return blogPosts.filter((post) => selectedCategories.includes(post.category))
-  }, [selectedCategories])
+    return posts.filter((post) => selectedCategories.includes(post.category))
+  }, [posts, selectedCategories])
 
   const featuredPost = filteredPosts.find((post) => post.featured)
   const regularPosts = filteredPosts.filter((post) => !post.featured)

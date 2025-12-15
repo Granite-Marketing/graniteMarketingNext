@@ -2,59 +2,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { Tag } from "@/components/ui/tag";
+import type { TestimonialItem } from "@/lib/sanity/lib/adapters";
+import { PortableTextRenderer } from "@/lib/sanity/components/PortableTextRenderer";
 
-const testimonials = [
-	{
-		name: "Liyapa Sikazwe",
-		role: "Founder, Dose of Venture",
-		image: "/images/liyapa-sikazwe.avif",
-		content:
-			"Granite Marketing is both innovative and reliable. Their team took the time to understand our unique challenges and provided a customised solution that integrated with our existing tools.",
-		rating: 5,
-	},
-	{
-		name: "Nick Saraev",
-		role: "Nick Saraev",
-		image: "/images/nick-headshot.avif",
-		content:
-			"Stephen is a keen & active contributor to Make Money With Make. He consistently shared valuable insights on AI automation and delivered multiple in-depth presentations to our group of over 400.",
-		rating: 5,
-	},
-	{
-		name: "Santi Leoni",
-		role: "Founder, Pulpe Sense",
-		image: "/images/santi-leoni.avif",
-		content:
-			"Working with Stephen was an exceptionally professional experience. He's highly responsible, structured, and his communication is outstanding—even when things get challenging.",
-		rating: 5,
-	},
-	{
-		name: "Dyland Watkins",
-		role: "Founder, DJW Consulting",
-		image: "/images/dylan.avif",
-		content:
-			"Stephen is a top-notch automation expert. He not only knows the latest AI and automation but also is a full stack developer which is incredible for advanced projects.",
-		rating: 5,
-	},
-	{
-		name: "Kotada Yunus",
-		role: "Founder, Aktarr",
-		image: "/images/kotada.avif",
-		content:
-			"My team used to spend every waking moment looking for content which meant we couldn't utilise our production studio. Now we have both, great content and we're making full use of our studio space.",
-		rating: 5,
-	},
-	{
-		name: "Naill Al-Sibai",
-		role: "Founder, Sib Co. Ltd",
-		image: "/images/naill-al-sibai.png",
-		content:
-			"Granite Marketing were easy to work with and delivered to a high standard. Communication was smooth, the process was straightforward, and the final result was exactly what we had in mind. Everything was delivered one time, with no unnecessary back-and-forth. I’d happily recommend to anyone looking for a solid, reliable web build.",
-		rating: 5,
-	},
-];
+interface TestimonialsProps {
+	testimonials: TestimonialItem[];
+}
 
-export function Testimonials() {
+export function Testimonials({ testimonials }: TestimonialsProps) {
 	return (
 		<section id="testimonials" className="py-24 bg-muted/30 overflow-hidden">
 			<div className="container mx-auto px-4">
@@ -95,20 +50,20 @@ export function Testimonials() {
 								<div className="flex items-center gap-4">
 									<Avatar className="h-12 w-12">
 										<AvatarImage
-											src={testimonials[0].image || "/placeholder.svg"}
-											alt={testimonials[0].name}
+											src={testimonials[0].headshotUrl || "/placeholder.svg"}
+											alt={testimonials[0].authorName}
 										/>
 										<AvatarFallback>
-											{testimonials[0].name
+											{testimonials[0].authorName
 												.split(" ")
 												.map((n) => n[0])
 												.join("")}
 										</AvatarFallback>
 									</Avatar>
 									<div>
-										<div className="font-semibold">{testimonials[0].name}</div>
+										<div className="font-semibold">{testimonials[0].authorName}</div>
 										<div className="text-sm text-muted-foreground">
-											{testimonials[0].role}
+											{testimonials[0].company ?? testimonials[0].role}
 										</div>
 									</div>
 								</div>
@@ -136,20 +91,20 @@ export function Testimonials() {
 								<div className="flex items-center gap-4">
 									<Avatar className="h-12 w-12">
 										<AvatarImage
-											src={testimonials[3].image || "/placeholder.svg"}
-											alt={testimonials[3].name}
+											src={testimonials[3].headshotUrl || "/placeholder.svg"}
+											alt={testimonials[3].authorName}
 										/>
 										<AvatarFallback>
-											{testimonials[3].name
+											{testimonials[3].authorName
 												.split(" ")
 												.map((n) => n[0])
 												.join("")}
 										</AvatarFallback>
 									</Avatar>
 									<div>
-										<div className="font-semibold">{testimonials[3].name}</div>
+										<div className="font-semibold">{testimonials[3].authorName}</div>
 										<div className="text-sm text-muted-foreground">
-											{testimonials[3].role}
+											{testimonials[3].company ?? testimonials[3].role}
 										</div>
 									</div>
 								</div>
@@ -178,20 +133,20 @@ export function Testimonials() {
 								<div className="flex items-center gap-4">
 									<Avatar className="h-12 w-12">
 										<AvatarImage
-											src={testimonials[1].image || "/placeholder.svg"}
-											alt={testimonials[1].name}
+											src={testimonials[1].headshotUrl || "/placeholder.svg"}
+											alt={testimonials[1].authorName}
 										/>
 										<AvatarFallback>
-											{testimonials[1].name
+											{testimonials[1].authorName
 												.split(" ")
 												.map((n) => n[0])
 												.join("")}
 										</AvatarFallback>
 									</Avatar>
 									<div>
-										<div className="font-semibold">{testimonials[1].name}</div>
+										<div className="font-semibold">{testimonials[1].authorName}</div>
 										<div className="text-sm text-muted-foreground">
-											{testimonials[1].role}
+											{testimonials[1].company ?? testimonials[1].role}
 										</div>
 									</div>
 								</div>
@@ -219,20 +174,20 @@ export function Testimonials() {
 								<div className="flex items-center gap-4">
 									<Avatar className="h-12 w-12">
 										<AvatarImage
-											src={testimonials[4].image || "/placeholder.svg"}
-											alt={testimonials[4].name}
+											src={testimonials[4].headshotUrl || "/placeholder.svg"}
+											alt={testimonials[4].authorName}
 										/>
 										<AvatarFallback>
-											{testimonials[4].name
+											{testimonials[4].authorName
 												.split(" ")
 												.map((n) => n[0])
 												.join("")}
 										</AvatarFallback>
 									</Avatar>
 									<div>
-										<div className="font-semibold">{testimonials[4].name}</div>
+										<div className="font-semibold">{testimonials[4].authorName}</div>
 										<div className="text-sm text-muted-foreground">
-											{testimonials[4].role}
+											{testimonials[4].company ?? testimonials[4].role}
 										</div>
 									</div>
 								</div>
@@ -261,20 +216,20 @@ export function Testimonials() {
 								<div className="flex items-center gap-4">
 									<Avatar className="h-12 w-12">
 										<AvatarImage
-											src={testimonials[2].image || "/placeholder.svg"}
-											alt={testimonials[2].name}
+											src={testimonials[2].headshotUrl || "/placeholder.svg"}
+											alt={testimonials[2].authorName}
 										/>
 										<AvatarFallback>
-											{testimonials[2].name
+											{testimonials[2].authorName
 												.split(" ")
 												.map((n) => n[0])
 												.join("")}
 										</AvatarFallback>
 									</Avatar>
 									<div>
-										<div className="font-semibold">{testimonials[2].name}</div>
+										<div className="font-semibold">{testimonials[2].authorName}</div>
 										<div className="text-sm text-muted-foreground">
-											{testimonials[2].role}
+											{testimonials[2].company ?? testimonials[2].role}
 										</div>
 									</div>
 								</div>
@@ -302,20 +257,20 @@ export function Testimonials() {
 								<div className="flex items-center gap-4">
 									<Avatar className="h-12 w-12">
 										<AvatarImage
-											src={testimonials[5].image || "/placeholder.svg"}
-											alt={testimonials[5].name}
+											src={testimonials[5].headshotUrl || "/placeholder.svg"}
+											alt={testimonials[5].authorName}
 										/>
 										<AvatarFallback>
-											{testimonials[5].name
+											{testimonials[5].authorName
 												.split(" ")
 												.map((n) => n[0])
 												.join("")}
 										</AvatarFallback>
 									</Avatar>
 									<div>
-										<div className="font-semibold">{testimonials[5].name}</div>
+										<div className="font-semibold">{testimonials[5].authorName}</div>
 										<div className="text-sm text-muted-foreground">
-											{testimonials[5].role}
+											{testimonials[5].company ?? testimonials[5].role}
 										</div>
 									</div>
 								</div>

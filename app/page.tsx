@@ -9,8 +9,20 @@ import { Testimonials } from "@/components/testimonials";
 import { FAQ } from "@/components/faq";
 import { CTASection } from "@/components/cta-section";
 import { Footer } from "@/components/footer";
+import { getHomeContent } from "@/lib/sanity/queries";
+import { adaptClientTestimonial, adaptFAQItem } from "@/lib/sanity/lib/adapters";
 
-export default function Home() {
+export default async function Home() {
+	const homeContent = await getHomeContent();
+
+	const testimonials =
+		homeContent.testimonials?.map((client: any) =>
+			adaptClientTestimonial(client, client.location?.name)
+		) ?? [];
+
+	const faqs =
+		homeContent.faqs?.map((faq: any) => adaptFAQItem(faq)) ?? [];
+
 	return (
 		<>
 			<Navigation />
@@ -22,8 +34,10 @@ export default function Home() {
 				<SplitSection />
 				<StatsSection />
 				<Approach />
-				<Testimonials />
-				<FAQ />
+				{testimonials.length >= 6 && (
+					<Testimonials testimonials={testimonials.slice(0, 6)} />
+				)}
+				<FAQ faqs={faqs} />
 				<CTASection />
 			</main>
 			<Footer />

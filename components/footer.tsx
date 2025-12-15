@@ -11,7 +11,7 @@ const footerLinks = [
 	{ label: "Process", href: "/#process" },
 	{ label: "Testimonials", href: "/#testimonials" },
 	{ label: "FAQs", href: "/#faq" },
-	// { label: "Blog", href: "/blog" },
+	{ label: "Blog", href: "/blog" },
 ];
 
 export function Footer() {

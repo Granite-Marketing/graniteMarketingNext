@@ -1,21 +1,19 @@
 import { client } from "./client";
+import { fetchQuery } from "./lib/fetch";
 
 // =============================================================================
 // BLOG POSTS
 // =============================================================================
 
 export async function getBlogPosts() {
-  return client.fetch(`
+	return fetchQuery(`
     *[_type == "blogPost" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
       _id,
       title,
       slug,
       excerpt,
       publishedAt,
-      featuredImage {
-        asset,
-        alt
-      },
+      featuredImage,
       categories[]-> {
         _id,
         name,
@@ -29,10 +27,16 @@ export async function getBlogPosts() {
   `);
 }
 
-export async function getBlogPost(slug: string) {
-  return client.fetch(
-    `
-    *[_type == "blogPost" && slug.current == $slug][0] {
+export async function getBlogPost(slug?: string) {
+	if (!slug) {
+		return null;
+	}
+
+	const safeSlug = slug.replace(/"/g, '\\"');
+
+	return fetchQuery(
+		`
+    *[_type == "blogPost" && slug.current == "${safeSlug}"][0] {
       _id,
       title,
       slug,
@@ -40,10 +44,7 @@ export async function getBlogPost(slug: string) {
       content,
       publishedAt,
       "updatedAt": _updatedAt,
-      featuredImage {
-        asset,
-        alt
-      },
+      featuredImage,
       categories[]-> {
         _id,
         name,
@@ -59,20 +60,20 @@ export async function getBlogPost(slug: string) {
         metaDescription
       }
     }
-  `,
-    { slug }
-  );
+  `
+	);
 }
 
 export async function getBlogPostSlugs() {
-  return client.fetch(`
+	const slugs = await fetchQuery<string[]>(`
     *[_type == "blogPost" && !(_id in path("drafts.**"))].slug.current
-  `).then((slugs: string[]) => slugs.map((slug) => ({ slug })));
+  `);
+	return slugs.map((slug) => ({ slug }));
 }
 
 export async function getFeaturedBlogPosts(limit = 3) {
-  return client.fetch(
-    `
+	return fetchQuery(
+		`
     *[_type == "blogPost" && featured == true && !(_id in path("drafts.**"))] | order(publishedAt desc) [0...$limit] {
       _id,
       title,
@@ -85,13 +86,13 @@ export async function getFeaturedBlogPosts(limit = 3) {
       }
     }
   `,
-    { limit }
-  );
+		{ limit }
+	);
 }
 
 export async function getBlogPostsByCategory(categorySlug: string) {
-  return client.fetch(
-    `
+	return fetchQuery(
+		`
     *[_type == "blogPost" && $categorySlug in categories[]->slug.current && !(_id in path("drafts.**"))] | order(publishedAt desc) {
       _id,
       title,
@@ -109,8 +110,8 @@ export async function getBlogPostsByCategory(categorySlug: string) {
       }
     }
   `,
-    { categorySlug }
-  );
+		{ categorySlug }
+	);
 }
 
 // =============================================================================
@@ -118,7 +119,7 @@ export async function getBlogPostsByCategory(categorySlug: string) {
 // =============================================================================
 
 export async function getCaseStudies() {
-  return client.fetch(`
+	return fetchQuery(`
     *[_type == "caseStudy" && !(_id in path("drafts.**"))] | order(_createdAt desc) {
       _id,
       title,
@@ -140,8 +141,8 @@ export async function getCaseStudies() {
 }
 
 export async function getCaseStudy(slug: string) {
-  return client.fetch(
-    `
+	return fetchQuery(
+		`
     *[_type == "caseStudy" && slug.current == $slug][0] {
       _id,
       title,
@@ -186,14 +187,15 @@ export async function getCaseStudy(slug: string) {
       }
     }
   `,
-    { slug }
-  );
+		{ slug }
+	);
 }
 
 export async function getCaseStudySlugs() {
-  return client.fetch(`
+	const slugs = await fetchQuery<string[]>(`
     *[_type == "caseStudy" && !(_id in path("drafts.**"))].slug.current
-  `).then((slugs: string[]) => slugs.map((slug) => ({ slug })));
+  `);
+	return slugs.map((slug) => ({ slug }));
 }
 
 // =============================================================================
@@ -201,7 +203,7 @@ export async function getCaseStudySlugs() {
 // =============================================================================
 
 export async function getCategories() {
-  return client.fetch(`
+	return fetchQuery(`
     *[_type == "category" && !(_id in path("drafts.**"))] | order(name asc) {
       _id,
       name,
@@ -212,8 +214,8 @@ export async function getCategories() {
 }
 
 export async function getCategory(slug: string) {
-  return client.fetch(
-    `
+	return fetchQuery(
+		`
     *[_type == "category" && slug.current == $slug][0] {
       _id,
       name,
@@ -221,8 +223,8 @@ export async function getCategory(slug: string) {
       description
     }
   `,
-    { slug }
-  );
+		{ slug }
+	);
 }
 
 // =============================================================================
@@ -230,7 +232,7 @@ export async function getCategory(slug: string) {
 // =============================================================================
 
 export async function getClients() {
-  return client.fetch(`
+	return fetchQuery(`
     *[_type == "client" && !(_id in path("drafts.**"))] | order(dateStarted desc) {
       _id,
       name,
@@ -256,8 +258,8 @@ export async function getClients() {
 }
 
 export async function getClient(slug: string) {
-  return client.fetch(
-    `
+	return fetchQuery(
+		`
     *[_type == "client" && slug.current == $slug][0] {
       _id,
       name,
@@ -281,8 +283,8 @@ export async function getClient(slug: string) {
       }
     }
   `,
-    { slug }
-  );
+		{ slug }
+	);
 }
 
 // =============================================================================
@@ -290,9 +292,9 @@ export async function getClient(slug: string) {
 // =============================================================================
 
 export async function getFAQs(category?: string) {
-  const categoryFilter = category ? ` && category == "${category}"` : "";
-  
-  return client.fetch(`
+	const categoryFilter = category ? ` && category == "${category}"` : "";
+
+	const query = `
     *[_type == "faq" && !(_id in path("drafts.**"))${categoryFilter}] | order(order asc) {
       _id,
       question,
@@ -301,12 +303,14 @@ export async function getFAQs(category?: string) {
       order,
       category
     }
-  `);
+  `;
+
+	return fetchQuery(query);
 }
 
 export async function getFAQ(slug: string) {
-  return client.fetch(
-    `
+	return fetchQuery(
+		`
     *[_type == "faq" && slug.current == $slug][0] {
       _id,
       question,
@@ -315,8 +319,8 @@ export async function getFAQ(slug: string) {
       category
     }
   `,
-    { slug }
-  );
+		{ slug }
+	);
 }
 
 // =============================================================================
@@ -324,7 +328,7 @@ export async function getFAQ(slug: string) {
 // =============================================================================
 
 export async function getLocations() {
-  return client.fetch(`
+	return fetchQuery(`
     *[_type == "location" && !(_id in path("drafts.**"))] | order(name asc) {
       _id,
       name,
@@ -340,7 +344,7 @@ export async function getLocations() {
 // =============================================================================
 
 export async function getLogoList() {
-  return client.fetch(`
+	return fetchQuery(`
     *[_type == "logoList" && !(_id in path("drafts.**"))] | order(sortOrder asc) {
       _id,
       clientName,
@@ -357,8 +361,8 @@ export async function getLogoList() {
 }
 
 export async function getFeaturedLogos(limit = 10) {
-  return client.fetch(
-    `
+	return fetchQuery(
+		`
     *[_type == "logoList" && featured == true && !(_id in path("drafts.**"))] | order(sortOrder asc) [0...$limit] {
       _id,
       clientName,
@@ -370,8 +374,8 @@ export async function getFeaturedLogos(limit = 10) {
       website
     }
   `,
-    { limit }
-  );
+		{ limit }
+	);
 }
 
 // =============================================================================
@@ -379,7 +383,7 @@ export async function getFeaturedLogos(limit = 10) {
 // =============================================================================
 
 export async function getAuthors() {
-  return client.fetch(`
+	return fetchQuery(`
     *[_type == "author" && !(_id in path("drafts.**"))] | order(name asc) {
       _id,
       name,
@@ -393,8 +397,8 @@ export async function getAuthors() {
 }
 
 export async function getAuthor(slug: string) {
-  return client.fetch(
-    `
+	return fetchQuery(
+		`
     *[_type == "author" && slug.current == $slug][0] {
       _id,
       name,
@@ -405,6 +409,24 @@ export async function getAuthor(slug: string) {
       social
     }
   `,
-    { slug }
-  );
+		{ slug }
+	);
+}
+
+// =============================================================================
+// COMPOSED HELPERS FOR MARKETING PAGES
+// =============================================================================
+
+export async function getHomeContent() {
+	const [featuredLogos, testimonials, faqs] = await Promise.all([
+		getFeaturedLogos(10),
+		getClients(),
+		getFAQs("general"),
+	]);
+
+	return {
+		featuredLogos,
+		testimonials,
+		faqs,
+	};
 }
