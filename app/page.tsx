@@ -14,10 +14,17 @@ import { getHomeContent } from "@/lib/sanity/queries";
 import {
 	adaptClientTestimonial,
 	adaptFAQItem,
+	adaptLogoListItem,
+	type LogoItem,
 } from "@/lib/sanity/lib/adapters";
 
 export default async function Home() {
 	const homeContent = (await getHomeContent()) as any;
+
+	const logos: LogoItem[] =
+		homeContent.featuredLogos?.map((logoDoc: any) =>
+			adaptLogoListItem(logoDoc)
+		) ?? [];
 
 	const testimonials =
 		homeContent.testimonials?.map((client: any) =>
@@ -30,7 +37,7 @@ export default async function Home() {
 		<>
 			<Navigation />
 			<main className="min-h-screen">
-				<Hero />
+				<Hero logos={logos} />
 				<Capabilities />
 				{/* Will come back to this later. */}
 				{/* <Integrations /> */}

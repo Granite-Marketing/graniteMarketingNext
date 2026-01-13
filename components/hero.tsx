@@ -1,8 +1,14 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Tag } from "@/components/ui/tag";
+import type { LogoItem } from "@/lib/sanity/lib/adapters";
+import { LogoList } from "@/components/logo-list";
 
-export function Hero() {
+type HeroProps = {
+	logos?: LogoItem[];
+};
+
+export function Hero({ logos }: HeroProps) {
 	return (
 		<section
 			id="hero"
@@ -28,8 +34,8 @@ export function Hero() {
 			{/* </CHANGE> */}
 
 			<div className="container mx-auto px-4 z-10 relative">
-				<div className="max-w-4xl mx-auto text-center py-12 md:py-20 relative">
-					<div className="relative z-10">
+				<div className="max-w-4xl mx-auto text-center py-12 md:py-20 relative border border-border/50 rounded-xl p-8">
+					<article className="relative z-10">
 						<Tag variant="sectionLabel" className="mb-6">
 							AI-Powered Automation
 						</Tag>
@@ -43,27 +49,37 @@ export function Hero() {
 							automations that work the way you do.
 						</p>
 
-						<div className="flex flex-wrap gap-4 justify-center items-center">
-							<Button
-								size="lg"
-								className="group relative rounded-full px-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
-								asChild
-							>
-								<Link href="#contact">
-									<span className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] animate-shimmer transition-all group-hover:animate-shimmer" />
-									<span className="relative z-10">Get Started</span>
-								</Link>
-							</Button>
-							<Button
-								size="lg"
-								variant="outline"
-								className="rounded-full px-8 bg-transparent hover:bg-primary/5 border-border/50 hover:border-primary/50 hover:text-primary transition-all duration-300 hover:scale-105"
-								asChild
-							>
-								<Link href="#services">Learn More</Link>
-							</Button>
-						</div>
-					</div>
+						<footer className="flex flex-col items-center gap-8">
+							<div className="flex flex-wrap gap-4 justify-center items-center">
+								<Button
+									size="lg"
+									className="group relative rounded-full px-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
+									asChild
+								>
+									<Link href="#contact">
+										<span className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] animate-shimmer transition-all group-hover:animate-shimmer" />
+										<span className="relative z-10">Get Started</span>
+									</Link>
+								</Button>
+								<Button
+									size="lg"
+									variant="outline"
+									className="rounded-full px-8 bg-transparent hover:bg-primary/5 border-border/50 hover:border-primary/50 hover:text-primary transition-all duration-300 hover:scale-105"
+									asChild
+								>
+									<Link href="#services">Services</Link>
+								</Button>
+							</div>
+
+							{logos && logos.length > 0 && (
+								<LogoList
+									logos={logos}
+									label="Trusted By"
+									className="w-full max-w-3xl md:mt-6"
+								/>
+							)}
+						</footer>
+					</article>
 				</div>
 			</div>
 		</section>
