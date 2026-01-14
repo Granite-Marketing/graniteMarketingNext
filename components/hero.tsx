@@ -122,7 +122,7 @@ export function Hero({ logos }: HeroProps) {
 			{/* </CHANGE> */}
 
 			<div className="container mx-auto z-10 relative md:px-4">
-				<div className="max-w-4xl mx-auto text-center py-12 md:py-20 relative border border-border/50 rounded-xl md:p-8">
+				<div className="max-w-4xl mx-auto text-center px-6 py-12 md:py-20 relative border border-border/50 rounded-xl md:p-8">
 					{/* Reflective border animation overlay */}
 					<svg
 						className="absolute inset-0 w-full h-full pointer-events-none rounded-xl z-20"
