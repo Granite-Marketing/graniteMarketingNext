@@ -20,12 +20,17 @@ export function Hero({ logos }: HeroProps) {
 			if (!borderRef.current) return;
 
 			const path = borderRef.current;
-			// We need to wait for a tick to ensure the rect is rendered so getTotalLength works
-			const pathLength = path.getTotalLength() || 1000;
+
+			// Safari Mobile fix: If getTotalLength() is 0 on mount,
+			// we calculate it based on the bounding box.
+			let pathLength = path.getTotalLength();
+			if (!pathLength || pathLength === 0) {
+				const bbox = path.getBBox();
+				pathLength = (bbox.width + bbox.height) * 2;
+			}
 
 			// Define segments for the "torch" effect
 			// sideDash is the visible highlight, sideGap is the space between them
-			// We use a pattern of [dash, gap, dash, gap] to have two highlights (Top/Bottom or Left/Right)
 			const sideDash = pathLength * 0.2;
 			const sideGap = pathLength * 0.4;
 
@@ -95,7 +100,7 @@ export function Hero({ logos }: HeroProps) {
 	return (
 		<section
 			id="hero"
-			className="relative py-32 px-4 md:px-8 bg-muted/30 border-b border-border/40 overflow-hidden"
+			className="relative py-32 md:px-8 bg-muted/30 border-b border-border/40 overflow-hidden"
 		>
 			<div className="absolute inset-0 z-0">
 				{/* Base gradient layer */}
@@ -116,8 +121,8 @@ export function Hero({ logos }: HeroProps) {
 			</div>
 			{/* </CHANGE> */}
 
-			<div className="container mx-auto px-4 z-10 relative">
-				<div className="max-w-4xl mx-auto text-center py-12 md:py-20 relative border border-border/50 rounded-xl p-8">
+			<div className="container mx-auto z-10 relative md:px-4">
+				<div className="max-w-4xl mx-auto text-center py-12 md:py-20 relative border border-border/50 rounded-xl md:p-8">
 					{/* Reflective border animation overlay */}
 					<svg
 						className="absolute inset-0 w-full h-full pointer-events-none rounded-xl z-20"
@@ -132,7 +137,8 @@ export function Hero({ logos }: HeroProps) {
 							height="100%"
 							rx="12"
 							fill="none"
-							stroke="var(--primary)"
+							stroke="currentColor"
+							className="text-primary"
 							strokeWidth="1.2"
 							vectorEffect="non-scaling-stroke"
 							strokeLinecap="round"
