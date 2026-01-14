@@ -100,7 +100,7 @@ export function Hero({ logos }: HeroProps) {
 	return (
 		<section
 			id="hero"
-			className="relative py-32 md:px-8 bg-muted/30 border-b border-border/40 overflow-hidden"
+			className="relative pt-20 pb-32 md:py-32 md:px-8 bg-muted/30 border-b border-border/40 overflow-hidden"
 		>
 			<div className="absolute inset-0 z-0">
 				{/* Base gradient layer */}
