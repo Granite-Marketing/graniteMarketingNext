@@ -1,14 +1,97 @@
+"use client";
+
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Tag } from "@/components/ui/tag";
 import type { LogoItem } from "@/lib/sanity/lib/adapters";
 import { LogoList } from "@/components/logo-list";
+import { useGSAP, gsap } from "@/lib/animations/gsap-config";
 
 type HeroProps = {
 	logos?: LogoItem[];
 };
 
 export function Hero({ logos }: HeroProps) {
+	const borderRef = useRef<SVGRectElement>(null);
+
+	useGSAP(
+		() => {
+			if (!borderRef.current) return;
+
+			const path = borderRef.current;
+			// We need to wait for a tick to ensure the rect is rendered so getTotalLength works
+			const pathLength = path.getTotalLength() || 1000;
+
+			// Define segments for the "torch" effect
+			// sideDash is the visible highlight, sideGap is the space between them
+			// We use a pattern of [dash, gap, dash, gap] to have two highlights (Top/Bottom or Left/Right)
+			const sideDash = pathLength * 0.2;
+			const sideGap = pathLength * 0.4;
+
+			const tl = gsap.timeline({ repeat: -1 });
+
+			// Phase 1: Top and Bottom sweep
+			tl.set(path, {
+				strokeDasharray: `${sideDash} ${sideGap} ${sideDash} ${sideGap}`,
+				strokeDashoffset: 0,
+				opacity: 0,
+			})
+				.to(path, {
+					opacity: 0.2,
+					duration: 0.5,
+					ease: "power2.inOut",
+				})
+				.to(
+					path,
+					{
+						strokeDashoffset: -pathLength * 0.15,
+						duration: 2,
+						ease: "power2.inOut",
+					},
+					"-=0.25"
+				)
+				.to(
+					path,
+					{
+						opacity: 0,
+						duration: 0.5,
+						ease: "power2.inOut",
+					},
+					"-=0.25"
+				)
+
+				// Phase 2: Left and Right sweep
+				.set(path, {
+					strokeDashoffset: -pathLength * 0.25, // Shift to vertical sides
+				})
+				.to(path, {
+					opacity: 0.2,
+					duration: 0.5,
+					ease: "power2.inOut",
+				})
+				.to(
+					path,
+					{
+						strokeDashoffset: -pathLength * 0.4,
+						duration: 2,
+						ease: "power2.inOut",
+					},
+					"-=0.25"
+				)
+				.to(
+					path,
+					{
+						opacity: 0,
+						duration: 0.5,
+						ease: "power2.inOut",
+					},
+					"-=0.25"
+				);
+		},
+		{ scope: borderRef }
+	);
+
 	return (
 		<section
 			id="hero"
@@ -35,6 +118,27 @@ export function Hero({ logos }: HeroProps) {
 
 			<div className="container mx-auto px-4 z-10 relative">
 				<div className="max-w-4xl mx-auto text-center py-12 md:py-20 relative border border-border/50 rounded-xl p-8">
+					{/* Reflective border animation overlay */}
+					<svg
+						className="absolute inset-0 w-full h-full pointer-events-none rounded-xl z-20"
+						aria-hidden="true"
+						style={{ overflow: "visible" }}
+					>
+						<rect
+							ref={borderRef}
+							x="0"
+							y="0"
+							width="100%"
+							height="100%"
+							rx="12"
+							fill="none"
+							stroke="var(--primary)"
+							strokeWidth="1.2"
+							vectorEffect="non-scaling-stroke"
+							strokeLinecap="round"
+							style={{ mixBlendMode: "screen", opacity: 0 }}
+						/>
+					</svg>
 					<article className="relative z-10">
 						<Tag variant="sectionLabel" className="mb-6">
 							AI-Powered Automation
