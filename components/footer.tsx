@@ -32,25 +32,25 @@ export function Footer() {
 	return (
 		<footer className="bg-background border-t border-border py-16">
 			<div className="container mx-auto px-4">
-				<div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
+				<div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-12">
 					{/* Logo section */}
 					<div>
 						<Link
 							href="/"
-							className="flex items-center space-x-2 rounded-full overflow-hidden p-1 bg-white"
+							className="flex items-center rounded-full border border-border/60 overflow-hidden"
 						>
 							<Image
-								src="/images/gm-logo.jpeg"
+								src="/images/granite-marketing-new-logo.png"
 								alt="Logo brand logo for Granite Marketing. The logo is a simple, modern, and clean logo that is easy to recognize and remember."
-								width={30}
-								height={30}
-								className="w-8 h-8 object-contain"
+								width={48}
+								height={48}
+								className="w-12 h-12 object-contain"
 							/>
 						</Link>
 					</div>
 
 					<nav>
-						<ul className="flex flex-wrap gap-x-8 gap-y-3">
+						<ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
 							{footerLinks.map((link) => (
 								<li key={link.label}>
 									<Link

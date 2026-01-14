@@ -55,14 +55,14 @@ export function Navigation() {
 			<nav className="container mx-auto px-4 h-16 flex items-center justify-between">
 				<Link
 					href="/"
-					className="flex items-center space-x-2 rounded-full overflow-hidden p-1 bg-white"
+					className="flex items-center rounded-full border border-border/60 overflow-hidden"
 				>
 					<Image
-						src="/images/gm-logo.jpeg"
+						src="/images/granite-marketing-new-logo.png"
 						alt="Logo brand logo for Granite Marketing. The logo is a simple, modern, and clean logo that is easy to recognize and remember."
-						width={30}
-						height={30}
-						className="w-8 h-8 object-contain"
+						width={48}
+						height={48}
+						className="w-12 h-12 object-contain"
 					/>
 				</Link>
 
