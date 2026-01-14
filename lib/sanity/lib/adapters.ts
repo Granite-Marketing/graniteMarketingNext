@@ -45,6 +45,11 @@ export type CaseStudyTechStackItem = {
 	integrationType?: string;
 };
 
+export type CaseStudyResult = {
+	value: string;
+	label: string;
+};
+
 export type CaseStudyCard = {
 	id: string;
 	title: string;
@@ -58,6 +63,7 @@ export type CaseStudyCard = {
 	techStack: CaseStudyTechStackItem[];
 	primaryResultLabel?: string;
 	resultLabels: string[];
+	results: CaseStudyResult[];
 };
 
 export function getImageUrl(source: SanityImageSource | null | undefined) {
@@ -121,18 +127,16 @@ export function adaptBlogPostToCard(doc: any): BlogPostCard {
 }
 
 export function adaptCaseStudyToCard(doc: any): CaseStudyCard {
-	const results = (doc.results ?? []) as any[];
+	const resultsData = (doc.results ?? []) as any[];
 
-	const resultLabels: string[] =
-		results
-			.map((res) => {
-				const value = res?.value as string | undefined;
-				const metric = res?.metric as string | undefined;
+	const results: CaseStudyResult[] = resultsData
+		.map((res) => ({
+			value: res?.value as string,
+			label: res?.metric as string,
+		}))
+		.filter((res) => Boolean(res.value && res.label));
 
-				if (value && metric) return `${value} ${metric}`;
-				return value ?? metric ?? "";
-			})
-			.filter((label) => Boolean(label)) ?? [];
+	const resultLabels: string[] = results.map((res) => `${res.value} ${res.label}`);
 
 	const primaryResultLabel = resultLabels[0];
 
@@ -159,5 +163,6 @@ export function adaptCaseStudyToCard(doc: any): CaseStudyCard {
 		techStack: tools,
 		primaryResultLabel,
 		resultLabels,
+		results,
 	};
 }
