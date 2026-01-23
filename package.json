@@ -15,6 +15,7 @@
     "migrate:faqs": "npx tsx scripts/migrate-faqs.ts",
     "migrate:case-studies": "npx tsx scripts/migrate-case-studies.ts",
     "migrate:blog-posts": "npx tsx scripts/migrate-blog-posts.ts",
+    "migrate:tools": "npx tsx scripts/migrate-tools.ts",
     "migrate:ndjson": "npx tsx scripts/migrate-from-ndjson.ts",
     "migrate:all": "npx tsx scripts/migrate-all.ts"
   },

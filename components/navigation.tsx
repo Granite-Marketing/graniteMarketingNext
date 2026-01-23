@@ -21,8 +21,10 @@ const navLinks = [
 
 export function Navigation() {
 	const [isScrolled, setIsScrolled] = useState(false);
+	const [isMounted, setIsMounted] = useState(false);
 
 	useEffect(() => {
+		setIsMounted(true);
 		const handleScroll = () => {
 			setIsScrolled(window.scrollY > 20);
 		};
@@ -97,40 +99,42 @@ export function Navigation() {
 				</div>
 
 				{/* Mobile Navigation */}
-				<Sheet>
-					<SheetTrigger asChild className="md:hidden">
-						<Button variant="ghost" size="icon">
-							<Menu className="h-6 w-6" />
-							<span className="sr-only">Open menu</span>
-						</Button>
-					</SheetTrigger>
-					<SheetContent side="right" className="w-[300px]">
-						<div className="flex flex-col space-y-6 mt-8 p-8">
-							{navLinks.map((link) => (
-								<Link
-									key={link.href}
-									href={link.href}
-									onClick={(e) => handleSmoothScroll(e, link.href)}
-									className="text-lg font-medium hover:text-primary transition-colors"
-								>
-									{link.label}
-								</Link>
-							))}
-							<Button
-								variant="default"
-								asChild
-								className="w-full rounded-full bg-primary text-primary-foreground font-semibold shadow-lg"
-							>
-								<Link
-									href="/#contact"
-									onClick={(e) => handleSmoothScroll(e, "/#contact")}
-								>
-									Get Started
-								</Link>
+				{isMounted && (
+					<Sheet>
+						<SheetTrigger asChild className="md:hidden">
+							<Button variant="ghost" size="icon">
+								<Menu className="h-6 w-6" />
+								<span className="sr-only">Open menu</span>
 							</Button>
-						</div>
-					</SheetContent>
-				</Sheet>
+						</SheetTrigger>
+						<SheetContent side="right" className="w-[300px]">
+							<div className="flex flex-col space-y-6 mt-8 p-8">
+								{navLinks.map((link) => (
+									<Link
+										key={link.href}
+										href={link.href}
+										onClick={(e) => handleSmoothScroll(e, link.href)}
+										className="text-lg font-medium hover:text-primary transition-colors"
+									>
+										{link.label}
+									</Link>
+								))}
+								<Button
+									variant="default"
+									asChild
+									className="w-full rounded-full bg-primary text-primary-foreground font-semibold shadow-lg"
+								>
+									<Link
+										href="/#contact"
+										onClick={(e) => handleSmoothScroll(e, "/#contact")}
+									>
+										Get Started
+									</Link>
+								</Button>
+							</div>
+						</SheetContent>
+					</Sheet>
+				)}
 			</nav>
 		</header>
 	);

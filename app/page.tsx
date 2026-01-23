@@ -1,7 +1,7 @@
 import { Navigation } from "@/components/navigation";
 import { Hero } from "@/components/hero";
 import { Capabilities } from "@/components/capabilities";
-import { Integrations } from "@/components/integrations";
+import { ToolsLogoList } from "@/components/tools-logo-list";
 import { SplitSection } from "@/components/split-section";
 import { StatsSection } from "@/components/stats-section";
 import { Approach } from "@/components/approach";
@@ -10,7 +10,7 @@ import { FAQ } from "@/components/faq";
 import { CTASection } from "@/components/cta-section";
 import { Footer } from "@/components/footer";
 import { CaseStudySection } from "@/components/case-study-section";
-import { getHomeContent } from "@/lib/sanity/queries";
+import { getHomeContent, getTools } from "@/lib/sanity/queries";
 import {
 	adaptClientTestimonial,
 	adaptFAQItem,
@@ -19,7 +19,10 @@ import {
 } from "@/lib/sanity/lib/adapters";
 
 export default async function Home() {
-	const homeContent = (await getHomeContent()) as any;
+	const [homeContent, tools] = await Promise.all([
+		getHomeContent(),
+		getTools(),
+	]) as [any, any];
 
 	const logos: LogoItem[] =
 		homeContent.featuredLogos?.map((logoDoc: any) =>
@@ -39,8 +42,7 @@ export default async function Home() {
 			<main className="min-h-screen">
 				<Hero logos={logos} />
 				<Capabilities />
-				{/* Will come back to this later. */}
-				{/* <Integrations /> */}
+				{tools && tools.length > 0 && <ToolsLogoList tools={tools} />}
 				<SplitSection />
 				{/* <StatsSection /> */}
 				{homeContent.caseStudies?.length > 0 && (

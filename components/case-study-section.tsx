@@ -85,35 +85,7 @@ function CaseStudyCardItem({ study }: CaseStudyCardItemProps) {
 							className="object-cover transition-transform duration-700 group-hover:scale-110"
 						/>
 					) : ( */}
-					<div className="relative flex h-full items-center justify-center overflow-hidden bg-emerald-950/20">
-						{/* Geometric Texture Background */}
-						<div className="absolute inset-0 opacity-10">
-							<svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
-								<defs>
-									<pattern
-										id={`pattern-${study.id}`}
-										x="0"
-										y="0"
-										width="40"
-										height="40"
-										patternUnits="userSpaceOnUse"
-									>
-										<path
-											d="M0 40L40 0M-10 10L10 -10M30 50L50 30"
-											stroke="currentColor"
-											strokeWidth="1"
-											fill="none"
-										/>
-									</pattern>
-								</defs>
-								<rect
-									width="100%"
-									height="100%"
-									fill={`url(#pattern-${study.id})`}
-								/>
-							</svg>
-						</div>
-
+					<div className="relative flex h-full items-center justify-center overflow-hidden bg-muted">
 						{results.length > 0 ? (
 							<div className="relative z-10 flex flex-col items-center text-center">
 								<span className="text-5xl font-bold tracking-tight text-emerald-400">

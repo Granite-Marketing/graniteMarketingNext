@@ -423,6 +423,27 @@ export async function getFeaturedLogos(limit = 10) {
 }
 
 // =============================================================================
+// TOOLS
+// =============================================================================
+
+export async function getTools() {
+	return fetchQuery(`
+    *[_type == "tool" && !(_id in path("drafts.**"))] | order(name asc) {
+      _id,
+      name,
+      slug,
+      integrationType,
+      description,
+      logo {
+        asset,
+        alt
+      },
+      website
+    }
+  `);
+}
+
+// =============================================================================
 // AUTHORS
 // =============================================================================
 

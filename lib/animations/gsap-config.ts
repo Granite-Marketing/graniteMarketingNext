@@ -6,7 +6,7 @@ import { useGSAP } from "@gsap/react";
 
 // Register GSAP plugins
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, useGSAP);
+  gsap.registerPlugin(ScrollTrigger);
 }
 
 // Default animation settings

@@ -121,4 +121,15 @@ export interface BlogPostInput {
   color?: string;
 }
 
+export interface ToolInput {
+  _type: "tool";
+  _id: string;
+  name: string;
+  slug: SlugValue;
+  integrationType?: string;
+  description?: string;
+  logo?: ExternalImage;
+  website?: string;
+}
+
 
