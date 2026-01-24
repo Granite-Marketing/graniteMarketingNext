@@ -45,7 +45,7 @@ export function HeroBorderAnimation() {
 						duration: 2,
 						ease: "power2.inOut",
 					},
-					"-=0.25"
+					"-=0.25",
 				)
 				.to(
 					path,
@@ -54,7 +54,7 @@ export function HeroBorderAnimation() {
 						duration: 0.5,
 						ease: "power2.inOut",
 					},
-					"-=0.25"
+					"-=0.25",
 				)
 
 				// Phase 2: Left and Right sweep
@@ -73,7 +73,7 @@ export function HeroBorderAnimation() {
 						duration: 2,
 						ease: "power2.inOut",
 					},
-					"-=0.25"
+					"-=0.25",
 				)
 				.to(
 					path,
@@ -82,10 +82,10 @@ export function HeroBorderAnimation() {
 						duration: 0.5,
 						ease: "power2.inOut",
 					},
-					"-=0.25"
+					"-=0.25",
 				);
 		},
-		{ scope: borderRef }
+		{ scope: borderRef },
 	);
 
 	return (
@@ -104,7 +104,7 @@ export function HeroBorderAnimation() {
 				fill="none"
 				stroke="currentColor"
 				className="text-primary"
-				strokeWidth="1.2"
+				strokeWidth="1.6"
 				vectorEffect="non-scaling-stroke"
 				strokeLinecap="round"
 				style={{ mixBlendMode: "screen", opacity: 0 }}

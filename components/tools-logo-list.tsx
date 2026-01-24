@@ -244,7 +244,7 @@ function ToolLogoItem({ tool, isVisible, delay }: ToolLogoItemProps) {
 					rx="12"
 					ry="12"
 					fill="none"
-					strokeWidth="1.5"
+					strokeWidth="1.8"
 					strokeLinecap="round"
 					strokeLinejoin="round"
 					style={{
