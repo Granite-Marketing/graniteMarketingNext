@@ -4,7 +4,9 @@ type FetchOptions = {
 	revalidateSeconds?: number;
 };
 
-const defaultRevalidate = process.env.USE_CACHE === "true" ? 3600 : 0;
+// Detect environment - development has no caching for immediate updates
+const isDevelopment = process.env.NODE_ENV === "development";
+const defaultRevalidate = isDevelopment ? 0 : 3600;
 
 export async function fetchQuery<T>(
 	query: string,

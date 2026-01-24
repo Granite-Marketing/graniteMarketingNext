@@ -25,7 +25,7 @@ export function RelatedPosts({ posts, currentSlug }: RelatedPostsProps) {
 						<div className="flex items-center gap-2 justify-center mb-6">
 							<div className="h-px w-20 bg-gradient-to-r from-transparent to-border" />
 							<Tag
-								variant="label"
+								variant="sectionLabel"
 								size="sm"
 								className="uppercase tracking-wider"
 							>

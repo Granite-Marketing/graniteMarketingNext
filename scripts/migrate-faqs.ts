@@ -10,7 +10,7 @@ async function main() {
       if (raw._type !== "faq" || typeof raw._id !== "string") {
         return null;
       }
-      return raw as FaqInput;
+      return raw as unknown as FaqInput;
     },
     getId: (doc) => doc._id,
   });

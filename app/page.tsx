@@ -18,6 +18,9 @@ import {
 	type LogoItem,
 } from "@/lib/sanity/lib/adapters";
 
+// ISR with 30 minute revalidation for homepage content
+export const revalidate = 1800;
+
 export default async function Home() {
 	const [homeContent, tools] = await Promise.all([
 		getHomeContent(),

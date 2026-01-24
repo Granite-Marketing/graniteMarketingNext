@@ -9,6 +9,10 @@ export const metadata = {
 		"Get in touch with Granite Marketing. Fill out our contact form to discuss your AI automation needs, workflow optimization, or general inquiries.",
 };
 
+// Fully static page - never revalidate
+export const dynamic = "force-static";
+export const revalidate = false;
+
 export default function ContactPage() {
 	return (
 		<>

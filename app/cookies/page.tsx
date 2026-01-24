@@ -6,6 +6,10 @@ export const metadata = {
 	description: "Cookie policy for Granite Marketing.",
 };
 
+// Fully static page - never revalidate
+export const dynamic = "force-static";
+export const revalidate = false;
+
 export default function CookiesPage() {
 	return (
 		<>

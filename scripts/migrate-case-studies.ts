@@ -10,7 +10,7 @@ async function main() {
       if (raw._type !== "caseStudy" || typeof raw._id !== "string") {
         return null;
       }
-      return raw as CaseStudyInput;
+      return raw as unknown as CaseStudyInput;
     },
     getId: (doc) => doc._id,
   });

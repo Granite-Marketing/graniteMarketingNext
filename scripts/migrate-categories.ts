@@ -11,7 +11,7 @@ async function main() {
         return null;
       }
 
-      return raw as CategoryInput;
+      return raw as unknown as CategoryInput;
     },
     getId: (doc) => doc._id,
   });

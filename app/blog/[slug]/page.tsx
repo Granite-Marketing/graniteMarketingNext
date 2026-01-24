@@ -15,6 +15,9 @@ import type { PortableTextBlock } from "@portabletext/types";
 import type { Metadata } from "next";
 import { siteConfig, pageMetadata } from "@/lib/seo";
 
+// ISR with 1 hour revalidation for blog posts
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
 	const slugs = await getBlogPostSlugs();
 	return slugs;

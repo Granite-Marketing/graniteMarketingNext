@@ -98,7 +98,14 @@ export async function runMigration<T extends { _type?: string }>(
       continue;
     }
 
-    transaction = transaction.createOrReplace({ ...doc, _id: id });
+    // Ensure _type is present for Sanity document
+    const docWithType = { ...doc, _id: id };
+    if (!docWithType._type) {
+      stats.skipped += 1;
+      continue;
+    }
+
+    transaction = transaction.createOrReplace(docWithType as typeof docWithType & { _type: string });
     stats.processed += 1;
   }
 

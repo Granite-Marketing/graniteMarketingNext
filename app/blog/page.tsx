@@ -12,6 +12,9 @@ export const metadata = {
 		"Discover the latest insights, tutorials, and best practices in AI automation, workflow optimization, and business process improvement.",
 };
 
+// ISR with 1 hour revalidation for blog listing
+export const revalidate = 3600;
+
 type SanityBlogPost = {
 	_id: string;
 	slug?: { current?: string };
@@ -52,7 +55,6 @@ export default async function BlogPage() {
 				<BlogHero />
 				<BlogGrid posts={posts} />
 				<CTASection />
-				<Footer />
 			</main>
 			<Footer />
 		</>

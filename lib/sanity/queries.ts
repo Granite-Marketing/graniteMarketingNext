@@ -7,7 +7,8 @@ import { adaptCaseStudyToCard } from "./lib/adapters";
 // =============================================================================
 
 export async function getBlogPosts() {
-	return fetchQuery(`
+	return fetchQuery(
+		`
     *[_type == "blogPost" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
       _id,
       title,
@@ -25,7 +26,10 @@ export async function getBlogPosts() {
         image
       }
     }
-  `);
+  `,
+		{},
+		{ revalidateSeconds: 3600 }
+	);
 }
 
 export async function getBlogPost(slug?: string) {
@@ -61,14 +65,20 @@ export async function getBlogPost(slug?: string) {
         metaDescription
       }
     }
-  `
+  `,
+		{},
+		{ revalidateSeconds: 3600 }
 	);
 }
 
 export async function getBlogPostSlugs() {
-	const slugs = await fetchQuery<string[]>(`
+	const slugs = await fetchQuery<string[]>(
+		`
     *[_type == "blogPost" && !(_id in path("drafts.**"))].slug.current
-  `);
+  `,
+		{},
+		{ revalidateSeconds: 3600 }
+	);
 	return slugs.map((slug) => ({ slug }));
 }
 
@@ -87,7 +97,8 @@ export async function getFeaturedBlogPosts(limit = 3) {
       }
     }
   `,
-		{ limit }
+		{ limit },
+		{ revalidateSeconds: 3600 }
 	);
 }
 
@@ -111,7 +122,8 @@ export async function getBlogPostsByCategory(categorySlug: string) {
       }
     }
   `,
-		{ categorySlug }
+		{ categorySlug },
+		{ revalidateSeconds: 3600 }
 	);
 }
 
@@ -120,7 +132,8 @@ export async function getBlogPostsByCategory(categorySlug: string) {
 // =============================================================================
 
 export async function getCaseStudies() {
-	return fetchQuery(`
+	return fetchQuery(
+		`
     *[_type == "caseStudy" && !(_id in path("drafts.**"))] | order(sortOrder asc, _createdAt desc) {
       _id,
       title,
@@ -156,7 +169,10 @@ export async function getCaseStudies() {
         description
       }
     }
-  `);
+  `,
+		{},
+		{ revalidateSeconds: 1800 }
+	);
 }
 
 export async function getCaseStudy(slug: string) {
@@ -231,14 +247,19 @@ export async function getCaseStudy(slug: string) {
       }
     }
   `,
-		{ slug }
+		{ slug },
+		{ revalidateSeconds: 1800 }
 	);
 }
 
 export async function getCaseStudySlugs() {
-	const slugs = await fetchQuery<string[]>(`
+	const slugs = await fetchQuery<string[]>(
+		`
     *[_type == "caseStudy" && !(_id in path("drafts.**"))] | order(sortOrder asc, _createdAt desc).slug.current
-  `);
+  `,
+		{},
+		{ revalidateSeconds: 1800 }
+	);
 	return slugs.map((slug) => ({ slug }));
 }
 
@@ -247,14 +268,18 @@ export async function getCaseStudySlugs() {
 // =============================================================================
 
 export async function getCategories() {
-	return fetchQuery(`
+	return fetchQuery(
+		`
     *[_type == "category" && !(_id in path("drafts.**"))] | order(name asc) {
       _id,
       name,
       slug,
       description
     }
-  `);
+  `,
+		{},
+		{ revalidateSeconds: 7200 }
+	);
 }
 
 export async function getCategory(slug: string) {
@@ -267,7 +292,8 @@ export async function getCategory(slug: string) {
       description
     }
   `,
-		{ slug }
+		{ slug },
+		{ revalidateSeconds: 7200 }
 	);
 }
 
@@ -276,7 +302,8 @@ export async function getCategory(slug: string) {
 // =============================================================================
 
 export async function getClients() {
-	return fetchQuery(`
+	return fetchQuery(
+		`
     *[_type == "client" && !(_id in path("drafts.**"))] | order(dateStarted desc) {
       _id,
       name,
@@ -298,7 +325,10 @@ export async function getClients() {
         slug
       }
     }
-  `);
+  `,
+		{},
+		{ revalidateSeconds: 1800 }
+	);
 }
 
 export async function getClient(slug: string) {
@@ -327,7 +357,8 @@ export async function getClient(slug: string) {
       }
     }
   `,
-		{ slug }
+		{ slug },
+		{ revalidateSeconds: 1800 }
 	);
 }
 
@@ -349,7 +380,7 @@ export async function getFAQs(category?: string) {
     }
   `;
 
-	return fetchQuery(query);
+	return fetchQuery(query, {}, { revalidateSeconds: 7200 });
 }
 
 export async function getFAQ(slug: string) {
@@ -363,7 +394,8 @@ export async function getFAQ(slug: string) {
       category
     }
   `,
-		{ slug }
+		{ slug },
+		{ revalidateSeconds: 7200 }
 	);
 }
 
@@ -372,7 +404,8 @@ export async function getFAQ(slug: string) {
 // =============================================================================
 
 export async function getLocations() {
-	return fetchQuery(`
+	return fetchQuery(
+		`
     *[_type == "location" && !(_id in path("drafts.**"))] | order(name asc) {
       _id,
       name,
@@ -380,7 +413,10 @@ export async function getLocations() {
       country,
       region
     }
-  `);
+  `,
+		{},
+		{ revalidateSeconds: 7200 }
+	);
 }
 
 // =============================================================================
@@ -388,7 +424,8 @@ export async function getLocations() {
 // =============================================================================
 
 export async function getLogoList() {
-	return fetchQuery(`
+	return fetchQuery(
+		`
     *[_type == "logoList" && !(_id in path("drafts.**"))] | order(sortOrder asc) {
       _id,
       clientName,
@@ -401,7 +438,10 @@ export async function getLogoList() {
       website,
       featured
     }
-  `);
+  `,
+		{},
+		{ revalidateSeconds: 7200 }
+	);
 }
 
 export async function getFeaturedLogos(limit = 10) {
@@ -418,7 +458,8 @@ export async function getFeaturedLogos(limit = 10) {
       website
     }
   `,
-		{ limit }
+		{ limit },
+		{ revalidateSeconds: 1800 }
 	);
 }
 
@@ -427,7 +468,8 @@ export async function getFeaturedLogos(limit = 10) {
 // =============================================================================
 
 export async function getTools() {
-	return fetchQuery(`
+	return fetchQuery(
+		`
     *[_type == "tool" && !(_id in path("drafts.**"))] | order(name asc) {
       _id,
       name,
@@ -440,7 +482,10 @@ export async function getTools() {
       },
       website
     }
-  `);
+  `,
+		{},
+		{ revalidateSeconds: 7200 }
+	);
 }
 
 // =============================================================================
@@ -448,7 +493,8 @@ export async function getTools() {
 // =============================================================================
 
 export async function getAuthors() {
-	return fetchQuery(`
+	return fetchQuery(
+		`
     *[_type == "author" && !(_id in path("drafts.**"))] | order(name asc) {
       _id,
       name,
@@ -458,7 +504,10 @@ export async function getAuthors() {
       role,
       social
     }
-  `);
+  `,
+		{},
+		{ revalidateSeconds: 7200 }
+	);
 }
 
 export async function getAuthor(slug: string) {
@@ -474,7 +523,8 @@ export async function getAuthor(slug: string) {
       social
     }
   `,
-		{ slug }
+		{ slug },
+		{ revalidateSeconds: 7200 }
 	);
 }
 
@@ -521,7 +571,8 @@ export async function getHomepageCaseStudies(limit = 3) {
       }
     }
   `,
-		{ limit }
+		{ limit },
+		{ revalidateSeconds: 1800 }
 	);
 
 	return docs.map((doc) => adaptCaseStudyToCard(doc));

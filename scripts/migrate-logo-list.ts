@@ -10,7 +10,7 @@ async function main() {
       if (raw._type !== "logoList" || typeof raw._id !== "string") {
         return null;
       }
-      return raw as LogoListInput;
+      return raw as unknown as LogoListInput;
     },
     getId: (doc) => doc._id,
   });

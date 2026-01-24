@@ -10,7 +10,7 @@ async function main() {
       if (raw._type !== "blogPost" || typeof raw._id !== "string") {
         return null;
       }
-      return raw as BlogPostInput;
+      return raw as unknown as BlogPostInput;
     },
     getId: (doc) => doc._id,
   });

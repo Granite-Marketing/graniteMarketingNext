@@ -10,7 +10,7 @@ async function main() {
       if (raw._type !== "location" || typeof raw._id !== "string") {
         return null;
       }
-      return raw as LocationInput;
+      return raw as unknown as LocationInput;
     },
     getId: (doc) => doc._id,
   });
