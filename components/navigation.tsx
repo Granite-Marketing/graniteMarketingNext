@@ -3,8 +3,9 @@
 import type React from "react";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -20,8 +21,10 @@ const navLinks = [
 ];
 
 export function Navigation() {
+	const pathname = usePathname();
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMounted, setIsMounted] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 
 	useEffect(() => {
 		setIsMounted(true);
@@ -36,14 +39,32 @@ export function Navigation() {
 		e: React.MouseEvent<HTMLAnchorElement>,
 		href: string
 	) => {
-		if (href.startsWith("/#")) {
+		// Only intercept hash links when on homepage
+		if (href.startsWith("/#") && pathname === "/") {
 			e.preventDefault();
 			const id = href.substring(2);
 			const element = document.getElementById(id);
 			if (element) {
-				element.scrollIntoView({ behavior: "smooth", block: "start" });
+				// Scroll with offset for fixed header
+				const headerOffset = 100;
+				const elementPosition = element.getBoundingClientRect().top;
+				const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+				window.scrollTo({
+					top: offsetPosition,
+					behavior: "smooth",
+				});
 			}
 		}
+		// If on other pages, let browser handle navigation naturally
+	};
+
+	const handleNavClick = (
+		e: React.MouseEvent<HTMLAnchorElement>,
+		href: string
+	) => {
+		handleSmoothScroll(e, href);
+		setIsOpen(false); // Close mobile menu
 	};
 
 	return (
@@ -100,7 +121,7 @@ export function Navigation() {
 
 				{/* Mobile Navigation */}
 				{isMounted && (
-					<Sheet>
+					<Sheet open={isOpen} onOpenChange={setIsOpen}>
 						<SheetTrigger asChild className="md:hidden">
 							<Button variant="ghost" size="icon">
 								<Menu className="h-6 w-6" />
@@ -108,12 +129,13 @@ export function Navigation() {
 							</Button>
 						</SheetTrigger>
 						<SheetContent side="right" className="w-[300px]">
+							<SheetTitle className="sr-only">Navigation Menu</SheetTitle>
 							<div className="flex flex-col space-y-6 mt-8 p-8">
 								{navLinks.map((link) => (
 									<Link
 										key={link.href}
 										href={link.href}
-										onClick={(e) => handleSmoothScroll(e, link.href)}
+										onClick={(e) => handleNavClick(e, link.href)}
 										className="text-lg font-medium hover:text-primary transition-colors"
 									>
 										{link.label}
@@ -126,7 +148,7 @@ export function Navigation() {
 								>
 									<Link
 										href="/#contact"
-										onClick={(e) => handleSmoothScroll(e, "/#contact")}
+										onClick={(e) => handleNavClick(e, "/#contact")}
 									>
 										Get Started
 									</Link>
