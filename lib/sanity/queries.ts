@@ -124,6 +124,94 @@ export async function getBlogPostsByCategory(categorySlug: string) {
 }
 
 // =============================================================================
+// WORKFLOW TEMPLATES
+// =============================================================================
+
+export async function getWorkflowTemplates() {
+	return fetchQuery(
+		`
+    *[_type == "workflowTemplate" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
+      _id,
+      title,
+      slug,
+      excerpt,
+      content,
+      publishedAt,
+      featured,
+      sortOrder,
+      featuredImage,
+      "workflowJsonUrl": workflowJson.asset->url,
+      n8nUrl,
+      youtubeUrl,
+      loomUrl,
+      categories[]-> {
+        _id,
+        name,
+        slug
+      },
+      author-> {
+        name,
+        image
+      }
+    }
+  `,
+		{}
+	);
+}
+
+export async function getWorkflowTemplate(slug?: string) {
+	if (!slug) {
+		return null;
+	}
+
+	const safeSlug = slug.replace(/"/g, '\\"');
+
+	return fetchQuery(
+		`
+    *[_type == "workflowTemplate" && slug.current == "${safeSlug}"][0] {
+      _id,
+      title,
+      slug,
+      excerpt,
+      content,
+      publishedAt,
+      "updatedAt": _updatedAt,
+      featuredImage,
+      "workflowJsonUrl": workflowJson.asset->url,
+      n8nUrl,
+      youtubeUrl,
+      loomUrl,
+      categories[]-> {
+        _id,
+        name,
+        slug
+      },
+      author-> {
+        name,
+        image,
+        bio
+      },
+      seo {
+        metaTitle,
+        metaDescription
+      }
+    }
+  `,
+		{}
+	);
+}
+
+export async function getWorkflowTemplateSlugs() {
+	const slugs = await fetchQuery<string[]>(
+		`
+    *[_type == "workflowTemplate" && !(_id in path("drafts.**"))].slug.current
+  `,
+		{}
+	);
+	return slugs.map((slug) => ({ slug }));
+}
+
+// =============================================================================
 // CASE STUDIES
 // =============================================================================
 

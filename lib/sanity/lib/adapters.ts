@@ -40,6 +40,20 @@ export type BlogPostCard = {
 	categories?: { id: string; name: string; slug: string }[];
 };
 
+export type WorkflowTemplateCard = {
+	id: string;
+	title: string;
+	slug: string;
+	excerpt?: string;
+	publishedAt?: string;
+	featuredImageUrl?: string;
+	categories?: { id: string; name: string; slug: string }[];
+	workflowJsonUrl?: string;
+	n8nUrl?: string;
+	youtubeUrl?: string;
+	loomUrl?: string;
+};
+
 export type CaseStudyTechStackItem = {
 	title: string;
 	integrationType?: string;
@@ -123,6 +137,27 @@ export function adaptBlogPostToCard(doc: any): BlogPostCard {
 				name: cat.name,
 				slug: cat.slug?.current ?? "",
 			})) ?? [],
+	};
+}
+
+export function adaptWorkflowTemplateToCard(doc: any): WorkflowTemplateCard {
+	return {
+		id: doc._id,
+		title: doc.title,
+		slug: doc.slug?.current ?? "",
+		excerpt: doc.excerpt,
+		publishedAt: doc.publishedAt,
+		featuredImageUrl: getImageUrl(doc.featuredImage),
+		categories:
+			doc.categories?.map((cat: any) => ({
+				id: cat._id,
+				name: cat.name,
+				slug: cat.slug?.current ?? "",
+			})) ?? [],
+		workflowJsonUrl: doc.workflowJsonUrl,
+		n8nUrl: doc.n8nUrl,
+		youtubeUrl: doc.youtubeUrl,
+		loomUrl: doc.loomUrl,
 	};
 }
 

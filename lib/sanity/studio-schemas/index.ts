@@ -775,6 +775,243 @@ const caseStudy = defineType({
 });
 
 // =============================================================================
+// WORKFLOW CATEGORY SCHEMA
+// =============================================================================
+const workflowCategory = defineType({
+	name: "workflowCategory",
+	title: "🗂️ Workflow Category",
+	type: "document",
+	fields: [
+		defineField({
+			name: "name",
+			title: "Name",
+			type: "string",
+			validation: (Rule) => Rule.required(),
+		}),
+		defineField({
+			name: "slug",
+			title: "Slug",
+			type: "slug",
+			options: {
+				source: "name",
+				maxLength: 96,
+			},
+			validation: (Rule) => Rule.required(),
+		}),
+		defineField({
+			name: "description",
+			title: "Description",
+			type: "text",
+			rows: 3,
+		}),
+	],
+	preview: {
+		select: {
+			title: "name",
+		},
+	},
+});
+
+// =============================================================================
+// WORKFLOW TEMPLATE SCHEMA
+// =============================================================================
+const workflowTemplate = defineType({
+	name: "workflowTemplate",
+	title: "⚙️ Workflow Template",
+	type: "document",
+	fields: [
+		defineField({
+			name: "title",
+			title: "Title",
+			type: "string",
+			validation: (Rule) => Rule.required(),
+		}),
+		defineField({
+			name: "slug",
+			title: "Slug",
+			type: "slug",
+			options: {
+				source: "title",
+				maxLength: 96,
+			},
+			validation: (Rule) => Rule.required(),
+		}),
+		defineField({
+			name: "author",
+			title: "Author",
+			type: "reference",
+			to: [{ type: "author" }],
+		}),
+		defineField({
+			name: "featuredImage",
+			title: "Featured Image",
+			type: "image",
+			options: {
+				hotspot: true,
+			},
+			fields: [
+				defineField({
+					name: "alt",
+					type: "string",
+					title: "Alternative Text",
+				}),
+			],
+		}),
+		defineField({
+			name: "categories",
+			title: "Categories",
+			type: "array",
+			of: [
+				defineArrayMember({
+					type: "reference",
+					to: [{ type: "workflowCategory" }],
+				}),
+			],
+		}),
+		defineField({
+			name: "publishedAt",
+			title: "Published At",
+			type: "datetime",
+		}),
+		defineField({
+			name: "featured",
+			title: "Featured",
+			type: "boolean",
+			description: "Show in featured sections",
+		}),
+		defineField({
+			name: "excerpt",
+			title: "Excerpt",
+			type: "text",
+			rows: 3,
+		}),
+		defineField({
+			name: "sortOrder",
+			title: "Sort Order",
+			type: "number",
+			description:
+				"Lower numbers appear first. Leave empty to fall back to created date.",
+		}),
+		defineField({
+			name: "workflowJson",
+			title: "Workflow JSON File",
+			type: "file",
+			description:
+				"Upload the n8n workflow JSON export. Users can download or copy this from the template page.",
+			options: {
+				accept: ".json",
+			},
+		}),
+		defineField({
+			name: "n8nUrl",
+			title: "n8n Template URL",
+			type: "url",
+		}),
+		defineField({
+			name: "youtubeUrl",
+			title: "YouTube URL",
+			type: "url",
+		}),
+		defineField({
+			name: "loomUrl",
+			title: "Loom URL",
+			type: "url",
+		}),
+		defineField({
+			name: "content",
+			title: "Content",
+			type: "array",
+			of: [
+				defineArrayMember({
+					type: "block",
+					styles: [
+						{ title: "Normal", value: "normal" },
+						{ title: "H2", value: "h2" },
+						{ title: "H3", value: "h3" },
+						{ title: "H4", value: "h4" },
+						{ title: "Quote", value: "blockquote" },
+					],
+					marks: {
+						decorators: [
+							{ title: "Bold", value: "strong" },
+							{ title: "Italic", value: "em" },
+							{ title: "Code", value: "code" },
+						],
+						annotations: [
+							{
+								title: "Link",
+								name: "link",
+								type: "object",
+								fields: [
+									{
+										title: "URL",
+										name: "href",
+										type: "url",
+									},
+									{
+										title: "Open in new tab",
+										name: "blank",
+										type: "boolean",
+									},
+								],
+							},
+						],
+					},
+				}),
+				defineArrayMember({
+					type: "image",
+					options: { hotspot: true },
+					fields: [
+						defineField({
+							name: "alt",
+							type: "string",
+							title: "Alternative Text",
+						}),
+						defineField({
+							name: "caption",
+							type: "string",
+							title: "Caption",
+						}),
+					],
+				}),
+			],
+		}),
+		defineField({
+			name: "seo",
+			title: "SEO",
+			type: "object",
+			fields: [
+				defineField({
+					name: "metaTitle",
+					title: "Meta Title",
+					type: "string",
+				}),
+				defineField({
+					name: "metaDescription",
+					title: "Meta Description",
+					type: "text",
+					rows: 3,
+				}),
+			],
+		}),
+	],
+	preview: {
+		select: {
+			title: "title",
+			author: "author.name",
+			media: "featuredImage",
+		},
+		prepare(selection) {
+			const { author } = selection;
+			return {
+				...selection,
+				subtitle: author && `by ${author}`,
+			};
+		},
+	},
+});
+
+// =============================================================================
 // EXPORT ALL SCHEMAS
 // =============================================================================
 export const schemaTypes = [
@@ -782,6 +1019,7 @@ export const schemaTypes = [
 	author,
 	category,
 	location,
+	workflowCategory,
 
 	// Content types
 	client,
@@ -790,4 +1028,5 @@ export const schemaTypes = [
 	tool,
 	blogPost,
 	caseStudy,
+	workflowTemplate,
 ];

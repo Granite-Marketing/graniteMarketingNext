@@ -21,6 +21,7 @@ const navLinks = [
 	{ href: "/#testimonials", label: "Testimonials" },
 	{ href: "/#faq", label: "FAQs" },
 	{ href: "/blog", label: "Blog" },
+	{ href: "/templates", label: "Templates" },
 ];
 
 type NavigationClientProps = {

@@ -30,11 +30,11 @@ export function FooterClient({ logo }: FooterClientProps) {
 
 	const handleSmoothScroll = (
 		e: React.MouseEvent<HTMLAnchorElement>,
-		href: string
+		href: string,
 	) => {
 		if (href.startsWith("/#")) {
 			const id = href.substring(2);
-			
+
 			// If on homepage, prevent default and scroll
 			if (pathname === "/") {
 				e.preventDefault();
@@ -74,6 +74,7 @@ export function FooterClient({ logo }: FooterClientProps) {
 								{ label: "Testimonials", href: "/#testimonials" },
 								{ label: "FAQs", href: "/#faq" },
 								{ label: "Blog", href: "/blog" },
+								{ href: "/templates", label: "Templates" },
 							].map((link) => (
 								<li key={link.label}>
 									<Link

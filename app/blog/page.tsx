@@ -1,5 +1,5 @@
 import { Navigation } from "@/components/navigation";
-import { BlogHero } from "@/components/blog-hero";
+import { ContentHero } from "@/components/content-hero";
 import { BlogGrid } from "@/components/blog-grid";
 import { CTASection } from "@/components/cta-section";
 import { Footer } from "@/components/footer";
@@ -55,7 +55,12 @@ export default async function BlogPage() {
 		<>
 			<Navigation />
 			<main className="min-h-screen">
-				<BlogHero />
+				<ContentHero
+					tag="Blog & Insights"
+					heading="Automation insights that matter"
+					subtitle="Stay ahead with the latest strategies, case studies, and best practices in AI-powered workflow automation."
+					patternId="blog-grid"
+				/>
 				<BlogGrid posts={posts} />
 				<CTASection />
 			</main>

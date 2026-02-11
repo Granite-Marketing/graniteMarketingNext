@@ -3,26 +3,28 @@
 import { Button } from "@/components/ui/button"
 import { SearchX } from "lucide-react"
 import { useState, useMemo, useRef, useEffect } from "react"
-import { BlogCard } from "@/components/blog-card"
+import { TemplateCard } from "@/components/template-card"
 import { ContentFilter } from "@/components/content-filter"
 
-interface BlogGridPost {
+interface TemplateGridPost {
   id: string | number
   slug: string
   title: string
   description: string
   category: string
   date: string
-  readTime: string
   image: string
   featured?: boolean
+  n8nUrl?: string
+  youtubeUrl?: string
+  loomUrl?: string
 }
 
-interface BlogGridProps {
-  posts: BlogGridPost[]
+interface TemplateGridProps {
+  posts: TemplateGridPost[]
 }
 
-export function BlogGrid({ posts }: BlogGridProps) {
+export function TemplateGrid({ posts }: TemplateGridProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const gridSectionRef = useRef<HTMLDivElement>(null)
   const previousPostCountRef = useRef<number>(0)
@@ -56,17 +58,17 @@ export function BlogGrid({ posts }: BlogGridProps) {
           <div className="mb-16">
             <div className="flex items-center gap-2 mb-8">
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
-              <span className="text-sm uppercase tracking-wider text-muted-foreground">Featured Article</span>
+              <span className="text-sm uppercase tracking-wider text-muted-foreground">Featured Template</span>
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
             </div>
-            <BlogCard post={featuredPost} featured />
+            <TemplateCard post={featuredPost} featured />
           </div>
         )}
 
         <div className="mb-12">
           <div className="flex items-center gap-2 mb-8">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
-            <span className="text-sm uppercase tracking-wider text-muted-foreground">Latest Posts</span>
+            <span className="text-sm uppercase tracking-wider text-muted-foreground">All Templates</span>
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
           </div>
 
@@ -74,12 +76,13 @@ export function BlogGrid({ posts }: BlogGridProps) {
             categories={categories}
             selectedCategories={selectedCategories}
             onCategoryChange={setSelectedCategories}
+            label="category"
           />
 
           {regularPosts.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {regularPosts.map((post) => (
-                <BlogCard key={post.id} post={post} />
+                <TemplateCard key={post.id} post={post} />
               ))}
             </div>
           ) : (
@@ -90,11 +93,11 @@ export function BlogGrid({ posts }: BlogGridProps) {
                     <SearchX className="w-8 h-8 text-muted-foreground" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-semibold mb-3 text-foreground">No posts found</h3>
+                <h3 className="text-2xl font-semibold mb-3 text-foreground">No templates found</h3>
                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                  We couldn't find any posts matching your selected{" "}
-                  {selectedCategories.length === 1 ? "category" : "categories"}. Try selecting different topics or view
-                  all posts.
+                  We couldn&apos;t find any templates matching your selected{" "}
+                  {selectedCategories.length === 1 ? "category" : "categories"}. Try selecting different categories or
+                  view all templates.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Button
@@ -102,7 +105,7 @@ export function BlogGrid({ posts }: BlogGridProps) {
                     className="bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 hover:text-primary-foreground"
                     onClick={() => setSelectedCategories([])}
                   >
-                    View all posts
+                    View all templates
                   </Button>
                   <Button
                     variant="outline"

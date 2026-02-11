@@ -1,7 +1,7 @@
 import { Navigation } from "@/components/navigation";
 import { BlogPostHero } from "@/components/blog-post-hero";
-import { BlogPostContent } from "@/components/blog-post-content";
-import { BlogCtaBanner } from "@/components/blog-cta-banner";
+import { PostContent } from "@/components/post-content";
+import { ContentCtaBanner } from "@/components/content-cta-banner";
 import { RelatedPosts } from "@/components/related-posts";
 import { Footer } from "@/components/footer";
 import { notFound } from "next/navigation";
@@ -124,8 +124,8 @@ export default async function BlogPostPage({
 		<div className="min-h-screen bg-background">
 			<Navigation />
 			<BlogPostHero post={heroPost} />
-			<BlogPostContent content={(post.content ?? []) as PortableTextBlock[]} />
-			<BlogCtaBanner />
+			<PostContent content={(post.content ?? []) as PortableTextBlock[]} />
+			<ContentCtaBanner />
 			<RelatedPosts posts={related as any[]} currentSlug={post.slug.current} />
 			<Footer />
 		</div>

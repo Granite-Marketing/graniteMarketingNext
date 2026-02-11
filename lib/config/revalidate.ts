@@ -23,6 +23,16 @@ export const BLOG_REVALIDATE = isDevelopment ? 0 : 3600;
 export const BLOG_POST_REVALIDATE = isDevelopment ? 0 : 3600;
 
 /**
+ * Templates listing page revalidation (1 hour in production)
+ */
+export const TEMPLATES_REVALIDATE = isDevelopment ? 0 : 3600;
+
+/**
+ * Individual template post revalidation (1 hour in production)
+ */
+export const TEMPLATE_POST_REVALIDATE = isDevelopment ? 0 : 3600;
+
+/**
  * Static pages that never need revalidation
  * (contact, privacy, cookies, etc.)
  */

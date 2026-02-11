@@ -18,7 +18,7 @@ interface BlogPostHeroProps {
 
 export function BlogPostHero({ post }: BlogPostHeroProps) {
 	return (
-		<section className="relative py-24 bg-gradient-to-b from-background via-background to-muted/10 overflow-hidden">
+		<section className="relative pt-24 md:pb-24 bg-gradient-to-b from-background via-background to-muted/10 overflow-hidden">
 			{/* Decorative background elements */}
 			<div className="absolute inset-0 overflow-hidden pointer-events-none">
 				<div className="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
