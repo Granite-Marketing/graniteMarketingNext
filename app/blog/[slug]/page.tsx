@@ -15,6 +15,7 @@ import type { PortableTextBlock } from "@portabletext/types";
 import type { Metadata } from "next";
 import { siteConfig, pageMetadata } from "@/lib/seo";
 import { BLOG_POST_REVALIDATE } from "@/lib/config/revalidate";
+import { calculateReadTime } from "@/lib/utils/read-time";
 
 // ISR with 1 hour revalidation for blog posts (disabled in development)
 export const revalidate = BLOG_POST_REVALIDATE;
@@ -115,7 +116,7 @@ export default async function BlogPostPage({
 					day: "numeric",
 				})
 			: "",
-		readTime: "5 min read",
+		readTime: calculateReadTime((post.content ?? []) as PortableTextBlock[]),
 		author: post.author?.name ?? "Granite Marketing",
 		image: getImageUrl(post.featuredImage as any) || "",
 	};

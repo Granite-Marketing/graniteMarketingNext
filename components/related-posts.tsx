@@ -5,6 +5,8 @@ import { ArrowRight, Clock, Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
+import { calculateReadTime } from "@/lib/utils/read-time";
+import type { PortableTextBlock } from "@portabletext/types";
 
 interface RelatedPostsProps {
 	posts: any[];
@@ -96,7 +98,9 @@ export function RelatedPosts({ posts, currentSlug }: RelatedPostsProps) {
 												className="flex items-center gap-1"
 											>
 												<Clock className="w-3 h-3" />
-												{"5 min read"}
+												{calculateReadTime(
+													(post.content ?? []) as PortableTextBlock[]
+												)}
 											</Tag>
 										</div>
 

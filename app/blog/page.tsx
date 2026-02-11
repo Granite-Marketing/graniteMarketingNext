@@ -6,6 +6,8 @@ import { Footer } from "@/components/footer";
 import { getBlogPosts } from "@/lib/sanity/queries";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
 import { BLOG_REVALIDATE } from "@/lib/config/revalidate";
+import { calculateReadTime } from "@/lib/utils/read-time";
+import type { PortableTextBlock } from "@portabletext/types";
 
 export const metadata = {
 	title: "Blog - Granite Marketing | AI Automation Insights",
@@ -21,6 +23,7 @@ type SanityBlogPost = {
 	slug?: { current?: string };
 	title: string;
 	excerpt?: string;
+	content?: PortableTextBlock[];
 	publishedAt?: string;
 	featuredImage?: unknown;
 	categories?: { name?: string }[];
@@ -44,7 +47,7 @@ export default async function BlogPage() {
 						day: "numeric",
 					})
 				: "",
-			readTime: "5 min read",
+			readTime: calculateReadTime((post.content ?? []) as PortableTextBlock[]),
 			image: getImageUrl(post.featuredImage as any) ?? "",
 			featured: post.featured ?? false,
 		})) ?? [];

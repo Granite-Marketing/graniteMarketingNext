@@ -14,6 +14,7 @@ export async function getBlogPosts() {
       title,
       slug,
       excerpt,
+      content,
       publishedAt,
       featuredImage,
       categories[]-> {
