@@ -12,7 +12,7 @@ export function ContentCtaBanner({
   heading = "Ready to automate your workflows",
   subtitle = "Get practical workflows built for your business. No coding required, just results that matter.",
   ctaText = "Get started",
-  ctaHref = "/contact",
+  ctaHref = "/#contact",
 }: ContentCtaBannerProps) {
   return (
     <section className="py-24 bg-gradient-to-b from-muted/10 to-background relative overflow-hidden">
