@@ -5,6 +5,7 @@ import { CTASection } from "@/components/cta-section";
 import { Footer } from "@/components/footer";
 import { getBlogPosts } from "@/lib/sanity/queries";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
+import { BLOG_REVALIDATE } from "@/lib/config/revalidate";
 
 export const metadata = {
 	title: "Blog - Granite Marketing | AI Automation Insights",
@@ -12,8 +13,8 @@ export const metadata = {
 		"Discover the latest insights, tutorials, and best practices in AI automation, workflow optimization, and business process improvement.",
 };
 
-// ISR with 1 hour revalidation for blog listing
-export const revalidate = 3600;
+// ISR with 1 hour revalidation for blog listing (disabled in development)
+export const revalidate = BLOG_REVALIDATE;
 
 type SanityBlogPost = {
 	_id: string;

@@ -17,24 +17,25 @@ import {
 	adaptLogoListItem,
 	type LogoItem,
 } from "@/lib/sanity/lib/adapters";
+import { HOME_REVALIDATE } from "@/lib/config/revalidate";
 
-// ISR with 30 minute revalidation for homepage content
-export const revalidate = 1800;
+// ISR with 30 minute revalidation for homepage content (disabled in development)
+export const revalidate = HOME_REVALIDATE;
 
 export default async function Home() {
-	const [homeContent, tools] = await Promise.all([
+	const [homeContent, tools] = (await Promise.all([
 		getHomeContent(),
 		getTools(),
-	]) as [any, any];
+	])) as [any, any];
 
 	const logos: LogoItem[] =
 		homeContent.featuredLogos?.map((logoDoc: any) =>
-			adaptLogoListItem(logoDoc)
+			adaptLogoListItem(logoDoc),
 		) ?? [];
 
 	const testimonials =
 		homeContent.testimonials?.map((client: any) =>
-			adaptClientTestimonial(client, client.location?.name)
+			adaptClientTestimonial(client, client.location?.name),
 		) ?? [];
 
 	const faqs = homeContent.faqs?.map((faq: any) => adaptFAQItem(faq)) ?? [];

@@ -14,9 +14,10 @@ import { getImageUrl } from "@/lib/sanity/lib/adapters";
 import type { PortableTextBlock } from "@portabletext/types";
 import type { Metadata } from "next";
 import { siteConfig, pageMetadata } from "@/lib/seo";
+import { BLOG_POST_REVALIDATE } from "@/lib/config/revalidate";
 
-// ISR with 1 hour revalidation for blog posts
-export const revalidate = 3600;
+// ISR with 1 hour revalidation for blog posts (disabled in development)
+export const revalidate = BLOG_POST_REVALIDATE;
 
 export async function generateStaticParams() {
 	const slugs = await getBlogPostSlugs();

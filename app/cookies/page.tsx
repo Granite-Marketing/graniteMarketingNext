@@ -1,5 +1,6 @@
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
+import { STATIC_REVALIDATE } from "@/lib/config/revalidate";
 
 export const metadata = {
 	title: "Cookie Policy - Granite Marketing",
@@ -8,7 +9,7 @@ export const metadata = {
 
 // Fully static page - never revalidate
 export const dynamic = "force-static";
-export const revalidate = false;
+export const revalidate = STATIC_REVALIDATE;
 
 export default function CookiesPage() {
 	return (
