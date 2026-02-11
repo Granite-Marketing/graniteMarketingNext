@@ -79,7 +79,14 @@ export function RelatedPosts({ posts, currentSlug }: RelatedPostsProps) {
 											>
 												<Calendar className="w-3 h-3" />
 												{post.publishedAt
-													? new Date(post.publishedAt).toLocaleDateString()
+													? new Date(post.publishedAt).toLocaleDateString(
+															undefined,
+															{
+																year: "numeric",
+																month: "short",
+																day: "numeric",
+															}
+													  )
 													: ""}
 											</Tag>
 											<span className="text-muted-foreground">•</span>
