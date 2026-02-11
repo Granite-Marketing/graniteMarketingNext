@@ -27,8 +27,7 @@ export async function getBlogPosts() {
       }
     }
   `,
-		{},
-		{ revalidateSeconds: 3600 }
+		{}
 	);
 }
 
@@ -66,8 +65,7 @@ export async function getBlogPost(slug?: string) {
       }
     }
   `,
-		{},
-		{ revalidateSeconds: 3600 }
+		{}
 	);
 }
 
@@ -76,8 +74,7 @@ export async function getBlogPostSlugs() {
 		`
     *[_type == "blogPost" && !(_id in path("drafts.**"))].slug.current
   `,
-		{},
-		{ revalidateSeconds: 3600 }
+		{}
 	);
 	return slugs.map((slug) => ({ slug }));
 }
@@ -97,8 +94,7 @@ export async function getFeaturedBlogPosts(limit = 3) {
       }
     }
   `,
-		{ limit },
-		{ revalidateSeconds: 3600 }
+		{ limit }
 	);
 }
 
@@ -122,8 +118,7 @@ export async function getBlogPostsByCategory(categorySlug: string) {
       }
     }
   `,
-		{ categorySlug },
-		{ revalidateSeconds: 3600 }
+		{ categorySlug }
 	);
 }
 
@@ -170,8 +165,7 @@ export async function getCaseStudies() {
       }
     }
   `,
-		{},
-		{ revalidateSeconds: 1800 }
+		{}
 	);
 }
 
@@ -247,8 +241,7 @@ export async function getCaseStudy(slug: string) {
       }
     }
   `,
-		{ slug },
-		{ revalidateSeconds: 1800 }
+		{ slug }
 	);
 }
 
@@ -257,8 +250,7 @@ export async function getCaseStudySlugs() {
 		`
     *[_type == "caseStudy" && !(_id in path("drafts.**"))] | order(sortOrder asc, _createdAt desc).slug.current
   `,
-		{},
-		{ revalidateSeconds: 1800 }
+		{}
 	);
 	return slugs.map((slug) => ({ slug }));
 }
@@ -277,8 +269,7 @@ export async function getCategories() {
       description
     }
   `,
-		{},
-		{ revalidateSeconds: 7200 }
+		{}
 	);
 }
 
@@ -292,8 +283,7 @@ export async function getCategory(slug: string) {
       description
     }
   `,
-		{ slug },
-		{ revalidateSeconds: 7200 }
+		{ slug }
 	);
 }
 
@@ -326,8 +316,7 @@ export async function getClients() {
       }
     }
   `,
-		{},
-		{ revalidateSeconds: 1800 }
+		{}
 	);
 }
 
@@ -357,8 +346,7 @@ export async function getClient(slug: string) {
       }
     }
   `,
-		{ slug },
-		{ revalidateSeconds: 1800 }
+		{ slug }
 	);
 }
 
@@ -380,7 +368,7 @@ export async function getFAQs(category?: string) {
     }
   `;
 
-	return fetchQuery(query, {}, { revalidateSeconds: 7200 });
+	return fetchQuery(query, {});
 }
 
 export async function getFAQ(slug: string) {
@@ -394,8 +382,7 @@ export async function getFAQ(slug: string) {
       category
     }
   `,
-		{ slug },
-		{ revalidateSeconds: 7200 }
+		{ slug }
 	);
 }
 
@@ -414,8 +401,7 @@ export async function getLocations() {
       region
     }
   `,
-		{},
-		{ revalidateSeconds: 7200 }
+		{}
 	);
 }
 
@@ -439,8 +425,7 @@ export async function getLogoList() {
       featured
     }
   `,
-		{},
-		{ revalidateSeconds: 7200 }
+		{}
 	);
 }
 
@@ -458,8 +443,7 @@ export async function getFeaturedLogos(limit = 10) {
       website
     }
   `,
-		{ limit },
-		{ revalidateSeconds: 1800 }
+		{ limit }
 	);
 }
 
@@ -483,8 +467,7 @@ export async function getTools() {
       website
     }
   `,
-		{},
-		{ revalidateSeconds: 7200 }
+		{}
 	);
 }
 
@@ -505,8 +488,7 @@ export async function getAuthors() {
       social
     }
   `,
-		{},
-		{ revalidateSeconds: 7200 }
+		{}
 	);
 }
 
@@ -523,8 +505,7 @@ export async function getAuthor(slug: string) {
       social
     }
   `,
-		{ slug },
-		{ revalidateSeconds: 7200 }
+		{ slug }
 	);
 }
 
@@ -571,8 +552,7 @@ export async function getHomepageCaseStudies(limit = 3) {
       }
     }
   `,
-		{ limit },
-		{ revalidateSeconds: 1800 }
+		{ limit }
 	);
 
 	return docs.map((doc) => adaptCaseStudyToCard(doc));
