@@ -2,7 +2,6 @@ import { Navigation } from "@/components/navigation";
 import { ContactHero } from "@/components/contact-hero";
 import { ContactForm } from "@/components/contact-form";
 import { Footer } from "@/components/footer";
-import { STATIC_REVALIDATE } from "@/lib/config/revalidate";
 
 export const metadata = {
 	title: "Contact Us - Granite Marketing | Get in Touch",
@@ -10,9 +9,8 @@ export const metadata = {
 		"Get in touch with Granite Marketing. Fill out our contact form to discuss your AI automation needs, workflow optimization, or general inquiries.",
 };
 
-// Fully static page - never revalidate
+// Fully static page
 export const dynamic = "force-static";
-export const revalidate = STATIC_REVALIDATE;
 
 export default function ContactPage() {
 	return (

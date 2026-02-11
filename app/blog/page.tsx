@@ -5,7 +5,6 @@ import { CTASection } from "@/components/cta-section";
 import { Footer } from "@/components/footer";
 import { getBlogPosts } from "@/lib/sanity/queries";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
-import { BLOG_REVALIDATE } from "@/lib/config/revalidate";
 import { calculateReadTime } from "@/lib/utils/read-time";
 import type { PortableTextBlock } from "@portabletext/types";
 
@@ -16,7 +15,7 @@ export const metadata = {
 };
 
 // ISR with 1 hour revalidation for blog listing (disabled in development)
-export const revalidate = BLOG_REVALIDATE;
+export const revalidate = 3600; // 1 hour
 
 type SanityBlogPost = {
 	_id: string;

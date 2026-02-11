@@ -1,15 +1,13 @@
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
-import { STATIC_REVALIDATE } from "@/lib/config/revalidate";
 
 export const metadata = {
 	title: "Privacy Policy - Granite Marketing",
 	description: "Privacy policy for Granite Marketing.",
 };
 
-// Fully static page - never revalidate
+// Fully static page
 export const dynamic = "force-static";
-export const revalidate = STATIC_REVALIDATE;
 
 export default function PrivacyPage() {
 	return (
