@@ -38,6 +38,13 @@ type SanityBlogPostDetail = {
 		metaTitle?: string;
 		metaDescription?: string;
 	};
+	relatedTemplates?: {
+		_id: string;
+		title: string;
+		slug: { current: string };
+		workflowJsonUrl?: string;
+		n8nUrl?: string;
+	}[];
 };
 
 export async function generateMetadata({
@@ -120,10 +127,17 @@ export default async function BlogPostPage({
 		image: getImageUrl(post.featuredImage as any) || "",
 	};
 
+	const relatedTemplates = post.relatedTemplates?.map((t) => ({
+		title: t.title,
+		slug: t.slug.current,
+		workflowJsonUrl: t.workflowJsonUrl,
+		n8nUrl: t.n8nUrl,
+	}));
+
 	return (
 		<div className="min-h-screen bg-background">
 			<Navigation />
-			<BlogPostHero post={heroPost} slug={slug} />
+			<BlogPostHero post={heroPost} slug={slug} relatedTemplates={relatedTemplates} />
 			<PostContent content={(post.content ?? []) as PortableTextBlock[]} />
 			<ContentCtaBanner />
 			<RelatedPosts posts={related as any[]} currentSlug={post.slug.current} />

@@ -53,7 +53,15 @@ export function urlFor(
 	}
 
 	try {
-		return builder.image(source).auto("format").url();
+		const url = builder.image(source).auto("format").url();
+		
+		// In development, add hourly cache-busting to get fresh images without breaking client cache
+		if (process.env.NODE_ENV === "development") {
+			const hourly = Math.floor(Date.now() / (1000 * 60 * 60));
+			return `${url}${url.includes("?") ? "&" : "?"}v=${hourly}`;
+		}
+		
+		return url;
 	} catch {
 		return "";
 	}

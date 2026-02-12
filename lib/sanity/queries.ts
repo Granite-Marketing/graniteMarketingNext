@@ -63,6 +63,13 @@ export async function getBlogPost(slug?: string) {
       seo {
         metaTitle,
         metaDescription
+      },
+      "relatedTemplates": *[_type == "workflowTemplate" && references(^._id)] {
+        _id,
+        title,
+        slug,
+        "workflowJsonUrl": workflowJson.asset->url,
+        n8nUrl
       }
     }
   `,
@@ -190,6 +197,16 @@ export async function getWorkflowTemplate(slug?: string) {
         name,
         image,
         bio
+      },
+      relatedBlogPosts[]-> {
+        _id,
+        title,
+        slug,
+        excerpt,
+        featuredImage,
+        publishedAt,
+        content,
+        categories[]-> { _id, name, slug }
       },
       seo {
         metaTitle,

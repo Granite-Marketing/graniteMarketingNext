@@ -2,11 +2,27 @@
 
 import { Tag } from "@/components/ui/tag";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, LinkIcon, Linkedin, Facebook, Check } from "lucide-react";
+import {
+	Calendar,
+	Clock,
+	LinkIcon,
+	Linkedin,
+	Facebook,
+	Check,
+	Download,
+	ExternalLink,
+} from "lucide-react";
 import { XIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+
+interface RelatedTemplate {
+	title: string;
+	slug: string;
+	workflowJsonUrl?: string;
+	n8nUrl?: string;
+}
 
 interface BlogPostHeroProps {
 	post: {
@@ -18,9 +34,14 @@ interface BlogPostHeroProps {
 		image: string;
 	};
 	slug: string;
+	relatedTemplates?: RelatedTemplate[];
 }
 
-export function BlogPostHero({ post, slug }: BlogPostHeroProps) {
+export function BlogPostHero({
+	post,
+	slug,
+	relatedTemplates,
+}: BlogPostHeroProps) {
 	const [copied, setCopied] = useState(false);
 
 	// Construct the full URL for sharing
@@ -154,6 +175,55 @@ export function BlogPostHero({ post, slug }: BlogPostHeroProps) {
 									</Button>
 								</div>
 							</div>
+
+							{/* Template download */}
+							{relatedTemplates && relatedTemplates.length > 0 && (
+								<div className="pt-2">
+									<p className="text-sm text-muted-foreground mb-3">
+										{relatedTemplates.length === 1
+											? "Get the template"
+											: "Get the templates"}
+									</p>
+									<div className="flex flex-col gap-3">
+										{relatedTemplates.map((template) => (
+											<div
+												key={template.slug}
+												className="flex items-center gap-3"
+											>
+												{relatedTemplates.length > 1 && (
+													<span className="text-sm text-foreground truncate max-w-[180px]">
+														{template.title}
+													</span>
+												)}
+												{template.workflowJsonUrl && (
+													<Button
+														size="icon"
+														variant="outline"
+														className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
+														aria-label={`Download ${template.title}`}
+														asChild
+													>
+														<a href={template.workflowJsonUrl} download>
+															<Download className="w-4 h-4" />
+														</a>
+													</Button>
+												)}
+												<Button
+													size="icon"
+													variant="outline"
+													className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
+													aria-label={`View ${template.title} template`}
+													asChild
+												>
+													<Link href={`/templates/${template.slug}`}>
+														<ExternalLink className="w-4 h-4" />
+													</Link>
+												</Button>
+											</div>
+										))}
+									</div>
+								</div>
+							)}
 						</div>
 
 						{/* Right column - Featured image */}
