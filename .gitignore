@@ -50,3 +50,6 @@ data/*.csv
 # Webflow source (reference only)
 # granite-automations.webflow/
 # granite-automations/
+
+.claude
+scripts
