@@ -918,6 +918,18 @@ const workflowTemplate = defineType({
 			type: "url",
 		}),
 		defineField({
+			name: "relatedBlogPosts",
+			title: "Related Blog Posts",
+			type: "array",
+			description: "Link to blog posts that cover this template's topic in more depth.",
+			of: [
+				defineArrayMember({
+					type: "reference",
+					to: [{ type: "blogPost" }],
+				}),
+			],
+		}),
+		defineField({
 			name: "content",
 			title: "Content",
 			type: "array",

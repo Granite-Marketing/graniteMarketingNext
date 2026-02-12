@@ -10,6 +10,7 @@ import {
 	Download,
 	Copy,
 	Check,
+	BookOpen,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,6 +27,7 @@ interface TemplatePostHeroProps {
 		n8nUrl?: string;
 		youtubeUrl?: string;
 		loomUrl?: string;
+		relatedBlogPosts?: { title: string; slug: string }[];
 	};
 }
 
@@ -46,7 +48,11 @@ export function TemplatePostHero({ post }: TemplatePostHeroProps) {
 	};
 
 	const hasLinks =
-		post.n8nUrl || post.youtubeUrl || post.loomUrl || post.workflowJsonUrl;
+		post.n8nUrl ||
+		post.youtubeUrl ||
+		post.loomUrl ||
+		post.workflowJsonUrl ||
+		(post.relatedBlogPosts && post.relatedBlogPosts.length > 0);
 
 	return (
 		<section className="relative pt-24 md:pb-24 bg-gradient-to-b from-background via-background to-muted/10 overflow-hidden">
@@ -181,6 +187,34 @@ export function TemplatePostHero({ post }: TemplatePostHeroProps) {
 												</a>
 											</Button>
 										)}
+										{post.relatedBlogPosts &&
+											post.relatedBlogPosts.length === 1 && (
+												<Button
+													variant="outline"
+													className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
+													asChild
+												>
+													<Link href={`/blog/${post.relatedBlogPosts[0].slug}`}>
+														<BookOpen className="w-4 h-4 mr-2" />
+														Read blog post
+													</Link>
+												</Button>
+											)}
+										{post.relatedBlogPosts &&
+											post.relatedBlogPosts.length > 1 &&
+											post.relatedBlogPosts.map((bp) => (
+												<Button
+													key={bp.slug}
+													variant="outline"
+													className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent max-w-[200px]"
+													asChild
+												>
+													<Link href={`/blog/${bp.slug}`}>
+														<BookOpen className="w-4 h-4 mr-2 shrink-0" />
+														<span className="truncate">{bp.title}</span>
+													</Link>
+												</Button>
+											))}
 									</div>
 								</div>
 							)}

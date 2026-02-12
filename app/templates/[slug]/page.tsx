@@ -2,6 +2,7 @@ import { Navigation } from "@/components/navigation";
 import { TemplatePostHero } from "@/components/template-post-hero";
 import { PostContent } from "@/components/post-content";
 import { ContentCtaBanner } from "@/components/content-cta-banner";
+import { RelatedBlogPosts } from "@/components/related-blog-posts";
 import { RelatedTemplates } from "@/components/related-templates";
 import { Footer } from "@/components/footer";
 import { notFound } from "next/navigation";
@@ -36,6 +37,16 @@ type SanityWorkflowTemplateDetail = {
 	n8nUrl?: string;
 	youtubeUrl?: string;
 	loomUrl?: string;
+	relatedBlogPosts?: {
+		_id: string;
+		title: string;
+		slug: { current: string };
+		excerpt?: string;
+		featuredImage?: unknown;
+		publishedAt?: string;
+		content?: PortableTextBlock[];
+		categories?: { name?: string }[];
+	}[];
 	seo?: {
 		metaTitle?: string;
 		metaDescription?: string;
@@ -121,6 +132,10 @@ export default async function TemplateDetailPage({
 		n8nUrl: template.n8nUrl,
 		youtubeUrl: template.youtubeUrl,
 		loomUrl: template.loomUrl,
+		relatedBlogPosts: template.relatedBlogPosts?.map((p) => ({
+			title: p.title,
+			slug: p.slug.current,
+		})),
 	};
 
 	return (
@@ -128,6 +143,9 @@ export default async function TemplateDetailPage({
 			<Navigation />
 			<TemplatePostHero post={heroPost} />
 			<PostContent content={(template.content ?? []) as PortableTextBlock[]} />
+			{template.relatedBlogPosts && template.relatedBlogPosts.length > 0 && (
+				<RelatedBlogPosts posts={template.relatedBlogPosts as any[]} />
+			)}
 			<ContentCtaBanner />
 			<RelatedTemplates templates={related as any[]} currentSlug={template.slug.current} />
 			<Footer />
