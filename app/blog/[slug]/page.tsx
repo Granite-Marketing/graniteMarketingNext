@@ -123,7 +123,7 @@ export default async function BlogPostPage({
 	return (
 		<div className="min-h-screen bg-background">
 			<Navigation />
-			<BlogPostHero post={heroPost} />
+			<BlogPostHero post={heroPost} slug={slug} />
 			<PostContent content={(post.content ?? []) as PortableTextBlock[]} />
 			<ContentCtaBanner />
 			<RelatedPosts posts={related as any[]} currentSlug={post.slug.current} />

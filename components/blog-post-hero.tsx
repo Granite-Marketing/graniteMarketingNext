@@ -1,9 +1,12 @@
+"use client";
+
 import { Tag } from "@/components/ui/tag";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, LinkIcon, Linkedin, Facebook } from "lucide-react";
+import { Calendar, Clock, LinkIcon, Linkedin, Facebook, Check } from "lucide-react";
 import { XIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 interface BlogPostHeroProps {
 	post: {
@@ -14,9 +17,43 @@ interface BlogPostHeroProps {
 		author: string;
 		image: string;
 	};
+	slug: string;
 }
 
-export function BlogPostHero({ post }: BlogPostHeroProps) {
+export function BlogPostHero({ post, slug }: BlogPostHeroProps) {
+	const [copied, setCopied] = useState(false);
+
+	// Construct the full URL for sharing
+	const postUrl =
+		typeof window !== "undefined"
+			? `${window.location.origin}/blog/${slug}`
+			: `https://granitemarketing.co.uk/blog/${slug}`;
+
+	const handleCopyLink = async () => {
+		try {
+			await navigator.clipboard.writeText(postUrl);
+			setCopied(true);
+			setTimeout(() => setCopied(false), 2000);
+		} catch {
+			// Silently fail if clipboard API is unavailable
+		}
+	};
+
+	const handleShareLinkedIn = () => {
+		const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`;
+		window.open(linkedInUrl, "_blank", "noopener,noreferrer");
+	};
+
+	const handleShareX = () => {
+		const xUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(post.title)}`;
+		window.open(xUrl, "_blank", "noopener,noreferrer");
+	};
+
+	const handleShareFacebook = () => {
+		const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
+		window.open(facebookUrl, "_blank", "noopener,noreferrer");
+	};
+
 	return (
 		<section className="relative pt-24 md:pb-24 bg-gradient-to-b from-background via-background to-muted/10 overflow-hidden">
 			{/* Decorative background elements */}
@@ -80,14 +117,20 @@ export function BlogPostHero({ post }: BlogPostHeroProps) {
 										variant="outline"
 										className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
 										aria-label="Copy link"
+										onClick={handleCopyLink}
 									>
-										<LinkIcon className="w-4 h-4" />
+										{copied ? (
+											<Check className="w-4 h-4 text-green-500" />
+										) : (
+											<LinkIcon className="w-4 h-4" />
+										)}
 									</Button>
 									<Button
 										size="icon"
 										variant="outline"
 										className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
 										aria-label="Share on LinkedIn"
+										onClick={handleShareLinkedIn}
 									>
 										<Linkedin className="w-4 h-4" />
 									</Button>
@@ -96,6 +139,7 @@ export function BlogPostHero({ post }: BlogPostHeroProps) {
 										variant="outline"
 										className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
 										aria-label="Share on X"
+										onClick={handleShareX}
 									>
 										<XIcon className="w-4 h-4" />
 									</Button>
@@ -104,6 +148,7 @@ export function BlogPostHero({ post }: BlogPostHeroProps) {
 										variant="outline"
 										className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
 										aria-label="Share on Facebook"
+										onClick={handleShareFacebook}
 									>
 										<Facebook className="w-4 h-4" />
 									</Button>
