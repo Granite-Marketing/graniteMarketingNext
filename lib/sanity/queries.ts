@@ -151,6 +151,10 @@ export async function getWorkflowTemplates() {
       n8nUrl,
       youtubeUrl,
       loomUrl,
+      railwayTemplates[]{
+        label,
+        deployUrl
+      },
       categories[]-> {
         _id,
         name,
@@ -188,6 +192,10 @@ export async function getWorkflowTemplate(slug?: string) {
       n8nUrl,
       youtubeUrl,
       loomUrl,
+      railwayTemplates[]{
+        label,
+        deployUrl
+      },
       categories[]-> {
         _id,
         name,

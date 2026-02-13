@@ -37,6 +37,10 @@ type SanityWorkflowTemplateDetail = {
 	n8nUrl?: string;
 	youtubeUrl?: string;
 	loomUrl?: string;
+	railwayTemplates?: {
+		label?: string;
+		deployUrl?: string;
+	}[];
 	relatedBlogPosts?: {
 		_id: string;
 		title: string;
@@ -132,6 +136,10 @@ export default async function TemplateDetailPage({
 		n8nUrl: template.n8nUrl,
 		youtubeUrl: template.youtubeUrl,
 		loomUrl: template.loomUrl,
+		railwayTemplates:
+			template.railwayTemplates?.filter(
+				(rt) => rt?.deployUrl && rt?.label
+			) as { label: string; deployUrl: string }[] | undefined,
 		relatedBlogPosts: template.relatedBlogPosts?.map((p) => ({
 			title: p.title,
 			slug: p.slug.current,

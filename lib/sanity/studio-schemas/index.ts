@@ -918,6 +918,36 @@ const workflowTemplate = defineType({
 			type: "url",
 		}),
 		defineField({
+			name: "railwayTemplates",
+			title: "Railway Templates",
+			type: "array",
+			description:
+				"Add one or more Railway deploy links for this workflow. Each entry will render a deploy button in the template hero.",
+			of: [
+				defineArrayMember({
+					type: "object",
+					fields: [
+						defineField({
+							name: "label",
+							title: "Template Label",
+							type: "string",
+							description:
+								"Human-readable name shown next to the Railway button (e.g. “S3 Pre-signed URL Generator”).",
+							validation: (Rule) => Rule.required(),
+						}),
+						defineField({
+							name: "deployUrl",
+							title: "Railway Deploy URL",
+							type: "url",
+							description:
+								"Full Railway deploy URL, including any referralCode and UTM parameters.",
+							validation: (Rule) => Rule.required(),
+						}),
+					],
+				}),
+			],
+		}),
+		defineField({
 			name: "relatedBlogPosts",
 			title: "Related Blog Posts",
 			type: "array",

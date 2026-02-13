@@ -27,6 +27,7 @@ interface TemplatePostHeroProps {
 		n8nUrl?: string;
 		youtubeUrl?: string;
 		loomUrl?: string;
+		railwayTemplates?: { label: string; deployUrl: string }[];
 		relatedBlogPosts?: { title: string; slug: string }[];
 	};
 }
@@ -52,6 +53,7 @@ export function TemplatePostHero({ post }: TemplatePostHeroProps) {
 		post.youtubeUrl ||
 		post.loomUrl ||
 		post.workflowJsonUrl ||
+		(post.railwayTemplates && post.railwayTemplates.length > 0) ||
 		(post.relatedBlogPosts && post.relatedBlogPosts.length > 0);
 
 	return (
@@ -187,6 +189,32 @@ export function TemplatePostHero({ post }: TemplatePostHeroProps) {
 												</a>
 											</Button>
 										)}
+										{post.railwayTemplates &&
+											post.railwayTemplates.length > 0 &&
+											post.railwayTemplates.map((rt) => (
+												<Button
+													key={rt.deployUrl ?? rt.label}
+													variant="outline"
+													className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
+													asChild
+												>
+													<a
+														href={rt.deployUrl}
+														target="_blank"
+														rel="noopener noreferrer"
+														aria-label={`Deploy ${rt.label} on Railway`}
+													>
+														<span className="flex items-center gap-2">
+															<img
+																src="https://railway.com/button.svg"
+																alt="Deploy on Railway"
+																className="h-6 w-auto"
+															/>
+															<span className="text-sm">{rt.label}</span>
+														</span>
+													</a>
+												</Button>
+											))}
 										{post.relatedBlogPosts &&
 											post.relatedBlogPosts.length === 1 && (
 												<Button
