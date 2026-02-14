@@ -2,10 +2,10 @@
 
 import { Tag } from "@/components/ui/tag";
 import { Button } from "@/components/ui/button";
+import { YoutubeLogo } from "@/components/ui/youtube-logo";
+import { N8nLogo } from "@/components/ui/n8n-logo";
 import {
 	Calendar,
-	ExternalLink,
-	Youtube,
 	Video,
 	Download,
 	Copy,
@@ -151,7 +151,7 @@ export function TemplatePostHero({ post }: TemplatePostHeroProps) {
 													target="_blank"
 													rel="noopener noreferrer"
 												>
-													<ExternalLink className="w-4 h-4" />
+													<N8nLogo />
 												</a>
 											</Button>
 										)}
@@ -168,7 +168,7 @@ export function TemplatePostHero({ post }: TemplatePostHeroProps) {
 													target="_blank"
 													rel="noopener noreferrer"
 												>
-													<Youtube className="w-4 h-4" />
+													<YoutubeLogo />
 												</a>
 											</Button>
 										)}
