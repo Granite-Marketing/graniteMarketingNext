@@ -2,6 +2,8 @@
 
 import { Tag } from "@/components/ui/tag";
 import { Button } from "@/components/ui/button";
+import { N8nLogo } from "@/components/ui/n8n-logo";
+import { YoutubeLogo } from "@/components/ui/youtube-logo";
 import {
 	Calendar,
 	Clock,
@@ -9,7 +11,6 @@ import {
 	Linkedin,
 	Facebook,
 	Check,
-	Download,
 	ExternalLink,
 } from "lucide-react";
 import { XIcon } from "lucide-react";
@@ -17,11 +18,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-interface RelatedTemplate {
-	title: string;
-	slug: string;
-	workflowJsonUrl?: string;
+interface TemplateLink {
+	slug?: string;
 	n8nUrl?: string;
+	youtubeUrl?: string;
 }
 
 interface BlogPostHeroProps {
@@ -34,7 +34,7 @@ interface BlogPostHeroProps {
 		image: string;
 	};
 	slug: string;
-	relatedTemplates?: RelatedTemplate[];
+	relatedTemplates?: TemplateLink[];
 }
 
 export function BlogPostHero({
@@ -176,49 +176,67 @@ export function BlogPostHero({
 								</div>
 							</div>
 
-							{/* Template download */}
+							{/* Explore template */}
 							{relatedTemplates && relatedTemplates.length > 0 && (
 								<div className="pt-2">
 									<p className="text-sm text-muted-foreground mb-3">
 										{relatedTemplates.length === 1
-											? "Get the template"
-											: "Get the templates"}
+											? "Explore the template"
+											: "Explore the templates"}
 									</p>
 									<div className="flex flex-col gap-3">
-										{relatedTemplates.map((template) => (
+										{relatedTemplates.map((template, index) => (
 											<div
-												key={template.slug}
+												key={template.slug ?? `template-${index}`}
 												className="flex items-center gap-3"
 											>
-												{relatedTemplates.length > 1 && (
-													<span className="text-sm text-foreground truncate max-w-[180px]">
-														{template.title}
-													</span>
-												)}
-												{template.workflowJsonUrl && (
+												{template.n8nUrl && (
 													<Button
 														size="icon"
 														variant="outline"
 														className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
-														aria-label={`Download ${template.title}`}
+														aria-label="Edit on n8n"
 														asChild
 													>
-														<a href={template.workflowJsonUrl} download>
-															<Download className="w-4 h-4" />
+														<a
+															href={template.n8nUrl}
+															target="_blank"
+															rel="noopener noreferrer"
+														>
+															<N8nLogo />
 														</a>
 													</Button>
 												)}
-												<Button
-													size="icon"
-													variant="outline"
-													className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
-													aria-label={`View ${template.title} template`}
-													asChild
-												>
-													<Link href={`/templates/${template.slug}`}>
-														<ExternalLink className="w-4 h-4" />
-													</Link>
-												</Button>
+												{template.slug && (
+													<Button
+														size="icon"
+														variant="outline"
+														className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
+														aria-label="View template"
+														asChild
+													>
+														<Link href={`/templates/${template.slug}`}>
+															<ExternalLink className="w-4 h-4" />
+														</Link>
+													</Button>
+												)}
+												{template.youtubeUrl && (
+													<Button
+														size="icon"
+														variant="outline"
+														className="hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-colors bg-transparent"
+														aria-label="Watch on YouTube"
+														asChild
+													>
+														<a
+															href={template.youtubeUrl}
+															target="_blank"
+															rel="noopener noreferrer"
+														>
+															<YoutubeLogo />
+														</a>
+													</Button>
+												)}
 											</div>
 										))}
 									</div>

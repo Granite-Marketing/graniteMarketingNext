@@ -581,6 +581,28 @@ const blogPost = defineType({
 				}),
 			],
 		}),
+		defineField({
+			name: "standaloneTemplateLink",
+			title: "Standalone template link",
+			type: "object",
+			description:
+				"Optional. Use when this blog links to an n8n workflow that doesn't have a template page on our site. Leave empty if the blog has related templates (via templates that reference this post).",
+			fields: [
+				defineField({
+					name: "n8nUrl",
+					title: "n8n workflow URL",
+					type: "url",
+					description: "Link to edit the workflow on n8n",
+				}),
+				defineField({
+					name: "youtubeUrl",
+					title: "YouTube video URL",
+					type: "url",
+					description:
+						"Optional. Link to a YouTube video about this workflow.",
+				}),
+			],
+		}),
 	],
 	preview: {
 		select: {

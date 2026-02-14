@@ -68,8 +68,12 @@ export async function getBlogPost(slug?: string) {
         _id,
         title,
         slug,
-        "workflowJsonUrl": workflowJson.asset->url,
-        n8nUrl
+        n8nUrl,
+        youtubeUrl
+      },
+      standaloneTemplateLink {
+        n8nUrl,
+        youtubeUrl
       }
     }
   `,

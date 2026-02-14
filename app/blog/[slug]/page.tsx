@@ -42,9 +42,13 @@ type SanityBlogPostDetail = {
 		_id: string;
 		title: string;
 		slug: { current: string };
-		workflowJsonUrl?: string;
 		n8nUrl?: string;
+		youtubeUrl?: string;
 	}[];
+	standaloneTemplateLink?: {
+		n8nUrl?: string;
+		youtubeUrl?: string;
+	};
 };
 
 export async function generateMetadata({
@@ -128,16 +132,31 @@ export default async function BlogPostPage({
 	};
 
 	const relatedTemplates = post.relatedTemplates?.map((t) => ({
-		title: t.title,
 		slug: t.slug.current,
-		workflowJsonUrl: t.workflowJsonUrl,
 		n8nUrl: t.n8nUrl,
+		youtubeUrl: t.youtubeUrl,
 	}));
+
+	const stl = post.standaloneTemplateLink;
+	const hasStandalone = stl && (stl.n8nUrl || stl.youtubeUrl);
+
+	const templateLinks =
+		relatedTemplates && relatedTemplates.length > 0
+			? relatedTemplates
+			: hasStandalone
+				? [
+						{
+							slug: undefined as string | undefined,
+							n8nUrl: stl!.n8nUrl,
+							youtubeUrl: stl!.youtubeUrl,
+						},
+					]
+				: undefined;
 
 	return (
 		<div className="min-h-screen bg-background">
 			<Navigation />
-			<BlogPostHero post={heroPost} slug={slug} relatedTemplates={relatedTemplates} />
+			<BlogPostHero post={heroPost} slug={slug} relatedTemplates={templateLinks} />
 			<PostContent content={(post.content ?? []) as PortableTextBlock[]} />
 			<ContentCtaBanner />
 			<RelatedPosts posts={related as any[]} currentSlug={post.slug.current} />
