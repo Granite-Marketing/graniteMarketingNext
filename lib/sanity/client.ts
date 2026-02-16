@@ -39,31 +39,30 @@ export function urlForImage(source: SanityImageAsset) {
 
 /**
  * Simple helper to get image URL directly
- * @param source - Sanity image reference or object with asset._ref
- * @returns Image URL string
+ * @param source - Sanity image reference with asset._ref
+ * @returns Image URL string, or `/placeholder.svg` as a safe fallback
+ *
+ * Migration note: legacy `_externalUrl` support has been removed.
+ * All images should now come from Sanity or fall back to a local placeholder.
  */
-export function urlFor(
-	source: SanityImageAsset | { _externalUrl?: string } | null | undefined
-): string {
-	if (!source) return "";
-
-	// Handle external URLs (from migration)
-	if ("_externalUrl" in source && source._externalUrl) {
-		return source._externalUrl;
-	}
+export function urlFor(source: SanityImageAsset | null | undefined): string {
+	// If there's no source at all, use a local placeholder so layouts stay stable
+	if (!source) return "/placeholder.svg";
 
 	try {
 		const url = builder.image(source).auto("format").url();
-		
-		// In development, add hourly cache-busting to get fresh images without breaking client cache
+
+		// In development, add hourly cache-busting to get fresh images
+		// without breaking client cache behaviour.
 		if (process.env.NODE_ENV === "development") {
 			const hourly = Math.floor(Date.now() / (1000 * 60 * 60));
 			return `${url}${url.includes("?") ? "&" : "?"}v=${hourly}`;
 		}
-		
+
 		return url;
 	} catch {
-		return "";
+		// If anything goes wrong building the URL, fall back to a safe placeholder
+		return "/placeholder.svg";
 	}
 }
 
