@@ -67,12 +67,6 @@ export function ContactForm() {
 									</div>
 								</div>
 								<div className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-colors duration-300">
-									<div className="text-muted-foreground">📞</div>
-									<div>
-										<div className="font-medium">+44 (0) 20 1234</div>
-									</div>
-								</div>
-								<div className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-colors duration-300">
 									<div className="text-muted-foreground">📍</div>
 									<div>
 										<div className="font-medium">
@@ -241,7 +235,14 @@ export function ContactForm() {
 								className="focus:ring-2 focus:ring-primary/50"
 							/>
 							<label htmlFor="terms" className="text-sm cursor-pointer">
-								I agree to the terms
+								I agree to the{" "}
+								<a href="/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+									Terms of Service
+								</a>{" "}
+								and{" "}
+								<a href="/refund-policy" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+									Refund Policy
+								</a>
 							</label>
 						</div>
 
