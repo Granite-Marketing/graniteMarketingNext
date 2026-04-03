@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 export const siteConfig = {
   name: "Granite Marketing",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://granitemarketing.com",
-  locale: "en_US",
+  locale: "en_GB",
   defaultImage: "/images/og-image.jpg", // Default OG image
   twitterHandle: "@granitemarketing",
 };
@@ -128,6 +128,21 @@ export const pageMetadata = {
     title: "Cookie Policy",
     description:
       "Learn about how Granite Marketing uses cookies and similar technologies.",
+  },
+  terms: {
+    title: "Terms of Service",
+    description:
+      "Terms of service for Granite Marketing's AI workflow automation services.",
+  },
+  refundPolicy: {
+    title: "Refund & Cancellation Policy",
+    description:
+      "Refund and cancellation policy for Granite Marketing's services.",
+  },
+  deliveryPolicy: {
+    title: "Delivery Policy",
+    description:
+      "Service delivery policy for Granite Marketing's AI workflow automation services.",
   },
 };
 

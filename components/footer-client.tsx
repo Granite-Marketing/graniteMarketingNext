@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
@@ -93,10 +94,26 @@ export function FooterClient({ logo }: FooterClientProps) {
 				<Separator className="mb-8" />
 
 				<div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-					<div>
-						© {new Date().getFullYear()} Granite Marketing. All rights reserved.
+					<div className="flex items-center gap-4">
+						<span>© {new Date().getFullYear()} Granite Marketing. All rights reserved.</span>
+						<div className="flex items-center gap-2">
+							<Image
+								src="/images/logos/visa.svg"
+								alt="Visa accepted"
+								width={40}
+								height={26}
+								className="h-6 w-auto"
+							/>
+							<Image
+								src="/images/logos/mastercard.svg"
+								alt="Mastercard accepted"
+								width={40}
+								height={26}
+								className="h-6 w-auto"
+							/>
+						</div>
 					</div>
-					<div className="flex gap-6">
+					<div className="flex flex-wrap gap-6">
 						<Link
 							href="/privacy"
 							className="hover:text-foreground transition-colors"
@@ -108,6 +125,24 @@ export function FooterClient({ logo }: FooterClientProps) {
 							className="hover:text-foreground transition-colors"
 						>
 							Cookies
+						</Link>
+						<Link
+							href="/terms"
+							className="hover:text-foreground transition-colors"
+						>
+							Terms
+						</Link>
+						<Link
+							href="/refund-policy"
+							className="hover:text-foreground transition-colors"
+						>
+							Refund Policy
+						</Link>
+						<Link
+							href="/delivery-policy"
+							className="hover:text-foreground transition-colors"
+						>
+							Delivery Policy
 						</Link>
 					</div>
 				</div>
