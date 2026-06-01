@@ -2,9 +2,43 @@ import { PortableText, PortableTextComponents } from "@portabletext/react";
 import type { PortableTextBlock } from "@portabletext/types";
 import Image from "next/image";
 import { urlForImage } from "../client";
+import { codeToHtml } from "shiki";
+import { CodeBlock } from "./CodeBlock";
 
 interface PortableTextRendererProps {
 	value: PortableTextBlock[];
+}
+
+const LANG_ALIASES: Record<string, string> = {
+	golang: "go",
+	batchfile: "bat",
+	mysql: "sql",
+	groq: "text",
+};
+
+async function HighlightedCode({
+	value,
+}: {
+	value: { code: string; language?: string; filename?: string };
+}) {
+	if (!value.code) return null;
+
+	const lang = LANG_ALIASES[value.language ?? ""] ?? value.language ?? "text";
+	let html: string;
+	try {
+		html = await codeToHtml(value.code, { lang, theme: "github-dark" });
+	} catch {
+		html = await codeToHtml(value.code, { lang: "text", theme: "github-dark" });
+	}
+
+	return (
+		<CodeBlock
+			html={html}
+			language={value.language}
+			filename={value.filename}
+			code={value.code}
+		/>
+	);
 }
 
 const components: PortableTextComponents = {
@@ -66,6 +100,9 @@ const components: PortableTextComponents = {
 					)}
 				</figure>
 			);
+		},
+		code: ({ value }: { value: { code: string; language?: string; filename?: string } }) => {
+			return <HighlightedCode value={value} />;
 		},
 	},
 };
