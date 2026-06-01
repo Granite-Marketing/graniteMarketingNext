@@ -452,12 +452,6 @@ const blogPost = defineType({
 			validation: (Rule) => Rule.required(),
 		}),
 		defineField({
-			name: "author",
-			title: "Author",
-			type: "reference",
-			to: [{ type: "author" }],
-		}),
-		defineField({
 			name: "featuredImage",
 			title: "Featured Image",
 			type: "image",
@@ -471,6 +465,30 @@ const blogPost = defineType({
 					title: "Alternative Text",
 				}),
 			],
+		}),
+		defineField({
+			name: "seo",
+			title: "SEO",
+			type: "object",
+			fields: [
+				defineField({
+					name: "metaTitle",
+					title: "Meta Title",
+					type: "string",
+				}),
+				defineField({
+					name: "metaDescription",
+					title: "Meta Description",
+					type: "text",
+					rows: 3,
+				}),
+			],
+		}),
+		defineField({
+			name: "author",
+			title: "Author",
+			type: "reference",
+			to: [{ type: "author" }],
 		}),
 		defineField({
 			name: "categories",
@@ -561,23 +579,8 @@ const blogPost = defineType({
 						}),
 					],
 				}),
-			],
-		}),
-		defineField({
-			name: "seo",
-			title: "SEO",
-			type: "object",
-			fields: [
-				defineField({
-					name: "metaTitle",
-					title: "Meta Title",
-					type: "string",
-				}),
-				defineField({
-					name: "metaDescription",
-					title: "Meta Description",
-					type: "text",
-					rows: 3,
+				defineArrayMember({
+					type: "code",
 				}),
 			],
 		}),
@@ -859,12 +862,6 @@ const workflowTemplate = defineType({
 			validation: (Rule) => Rule.required(),
 		}),
 		defineField({
-			name: "author",
-			title: "Author",
-			type: "reference",
-			to: [{ type: "author" }],
-		}),
-		defineField({
 			name: "featuredImage",
 			title: "Featured Image",
 			type: "image",
@@ -878,6 +875,30 @@ const workflowTemplate = defineType({
 					title: "Alternative Text",
 				}),
 			],
+		}),
+		defineField({
+			name: "seo",
+			title: "SEO",
+			type: "object",
+			fields: [
+				defineField({
+					name: "metaTitle",
+					title: "Meta Title",
+					type: "string",
+				}),
+				defineField({
+					name: "metaDescription",
+					title: "Meta Description",
+					type: "text",
+					rows: 3,
+				}),
+			],
+		}),
+		defineField({
+			name: "author",
+			title: "Author",
+			type: "reference",
+			to: [{ type: "author" }],
 		}),
 		defineField({
 			name: "categories",
@@ -954,7 +975,7 @@ const workflowTemplate = defineType({
 							title: "Template Label",
 							type: "string",
 							description:
-								"Human-readable name shown next to the Railway button (e.g. “S3 Pre-signed URL Generator”).",
+								'Human-readable name shown next to the Railway button (e.g. "S3 Pre-signed URL Generator").',
 							validation: (Rule) => Rule.required(),
 						}),
 						defineField({
@@ -1037,24 +1058,6 @@ const workflowTemplate = defineType({
 							title: "Caption",
 						}),
 					],
-				}),
-			],
-		}),
-		defineField({
-			name: "seo",
-			title: "SEO",
-			type: "object",
-			fields: [
-				defineField({
-					name: "metaTitle",
-					title: "Meta Title",
-					type: "string",
-				}),
-				defineField({
-					name: "metaDescription",
-					title: "Meta Description",
-					type: "text",
-					rows: 3,
 				}),
 			],
 		}),
