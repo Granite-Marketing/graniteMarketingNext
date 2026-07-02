@@ -44,13 +44,15 @@ export function RelayTestimonials({ testimonials }: RelayTestimonialsProps) {
 									className="mb-5 font-mono text-[13px] text-relay-cyan"
 								>
 									{"// "}
-									{(testimonial.company || testimonial.role || "client")
-										.toLowerCase()}
+									{(
+										testimonial.locationName ||
+										testimonial.company ||
+										testimonial.role ||
+										"connection"
+									).toLowerCase()}
 								</span>
 								<blockquote className="text-[15px] leading-relaxed text-relay-ink [&_.typo>p]:mb-3 [&_.typo>p]:text-relay-ink [&_.typo>p:last-child]:mb-0">
-									<PortableTextRenderer
-										value={testimonial.quote as never}
-									/>
+									<PortableTextRenderer value={testimonial.quote as never} />
 								</blockquote>
 								<figcaption className="mt-auto flex items-center gap-3.5 border-t border-relay-line pt-5">
 									{testimonial.headshotUrl ? (
