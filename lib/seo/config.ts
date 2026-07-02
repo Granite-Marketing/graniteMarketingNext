@@ -5,7 +5,7 @@ export const siteConfig = {
   name: "Granite Marketing",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://granitemarketing.com",
   locale: "en_GB",
-  defaultImage: "/images/og-image.jpg", // Default OG image
+  defaultImage: "/images/og-image.png", // Default OG image
   twitterHandle: "@granitemarketing",
 };
 
@@ -80,6 +80,7 @@ export const defaultMetadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
       { url: "/images/favicon.png" },
       { url: "/images/favicon-32x32.png", sizes: "32x32", type: "image/png" },
       { url: "/images/favicon-16x16.png", sizes: "16x16", type: "image/png" },

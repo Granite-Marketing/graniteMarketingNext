@@ -4,8 +4,8 @@
   "description": "Custom AI Automations for Business Productivity",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
+  "background_color": "#0c131b",
+  "theme_color": "#0c131b",
   "icons": [
     {
       "src": "/images/favicon.png",

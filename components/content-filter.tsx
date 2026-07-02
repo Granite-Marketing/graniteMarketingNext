@@ -44,24 +44,22 @@ export function ContentFilter({ categories, selectedCategories, onCategoryChange
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-muted-foreground" />
           <span className="text-sm text-muted-foreground">Filter by {label}</span>
-          {!isAllSelected && (
-            <Tag variant="category" size="sm">
-              {selectedCategories.length} selected
-            </Tag>
-          )}
+          <Tag variant="category" size="sm" className={isAllSelected ? "invisible" : undefined}>
+            {selectedCategories.length} selected
+          </Tag>
         </div>
 
-        {!isAllSelected && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={clearFilters}
-            className="text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors duration-200"
-          >
-            <X className="w-3 h-3 mr-1" />
-            Clear filters
-          </Button>
-        )}
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={clearFilters}
+          className={`text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors duration-200 ${
+            isAllSelected ? "invisible" : ""
+          }`}
+        >
+          <X className="w-3 h-3 mr-1" />
+          Clear filters
+        </Button>
       </div>
 
       {/* Desktop: Toggle buttons */}
@@ -144,25 +142,6 @@ export function ContentFilter({ categories, selectedCategories, onCategoryChange
         </DropdownMenu>
       </div>
 
-      {/* Selected filters display */}
-      {!isAllSelected && (
-        <div className="flex flex-wrap gap-2" role="region" aria-label="Selected filters">
-          {selectedCategories.map((category) => (
-            <Tag
-              key={category}
-              variant="category"
-              size="md"
-              className="pl-3 pr-1 py-1 cursor-pointer hover:bg-primary/20"
-              onClick={() => toggleCategory(category)}
-              role="button"
-              aria-label={`Remove ${category} filter`}
-            >
-              {category}
-              <X className="w-3 h-3 ml-1" />
-            </Tag>
-          ))}
-        </div>
-      )}
     </div>
   )
 }

@@ -31,7 +31,8 @@
 	--chart-3: oklch(0.398 0.07 227.392);
 	--chart-4: oklch(0.828 0.189 84.429);
 	--chart-5: oklch(0.769 0.188 70.08);
-	--radius: 0.75rem;
+	/* Relay uses tighter radii: lg resolves to 8px, matching the homepage panels */
+	--radius: 0.5rem;
 	--sidebar: oklch(0.985 0 0);
 	--sidebar-foreground: oklch(0.145 0 0);
 	--sidebar-primary: oklch(0.205 0 0);
@@ -43,28 +44,29 @@
 }
 
 .dark {
-	/* Enhanced dark mode with tertiary accent and richer gradients */
-	--background: oklch(0.09 0 0);
-	--foreground: oklch(0.99 0 0);
-	--card: oklch(0.12 0 0);
-	--card-foreground: oklch(0.99 0 0);
-	--popover: oklch(0.09 0 0);
-	--popover-foreground: oklch(0.99 0 0);
-	--primary: oklch(0.55 0.16 157);
-	--primary-foreground: oklch(0.09 0 0);
-	--secondary: oklch(0.2 0 0);
-	--secondary-foreground: oklch(0.99 0 0);
-	--muted: oklch(0.2 0 0);
-	--muted-foreground: oklch(0.65 0 0);
-	--accent: oklch(0.55 0.16 157);
-	--accent-foreground: oklch(0.09 0 0);
+	/* Relay palette rollout: semantic tokens map to the Relay design
+	   system so all pages and shadcn components share the new skin. */
+	--background: #0c131b;
+	--foreground: #d9e4ee;
+	--card: #121b25;
+	--card-foreground: #d9e4ee;
+	--popover: #121b25;
+	--popover-foreground: #d9e4ee;
+	--primary: #3fc6dc;
+	--primary-foreground: #0c131b;
+	--secondary: #16202c;
+	--secondary-foreground: #d9e4ee;
+	--muted: #16202c;
+	--muted-foreground: #7c8da0;
+	--accent: #3fc6dc;
+	--accent-foreground: #0c131b;
 	--tertiary: oklch(0.6 0.18 250);
 	--tertiary-foreground: oklch(0.09 0 0);
 	--destructive: oklch(0.55 0.2 27);
 	--destructive-foreground: oklch(0.99 0 0);
-	--border: oklch(0.25 0 0);
-	--input: oklch(0.25 0 0);
-	--ring: oklch(0.55 0.16 157);
+	--border: #1f2c3a;
+	--input: #1f2c3a;
+	--ring: #3fc6dc;
 	--chart-1: oklch(0.488 0.243 264.376);
 	--chart-2: oklch(0.696 0.17 162.48);
 	--chart-3: oklch(0.769 0.188 70.08);
@@ -292,5 +294,92 @@
 
 	.typo hr {
 		@apply my-8 border-border;
+	}
+}
+
+/* ── Relay homepage theme ─────────────────────────────────────
+   Scoped design tokens for the Relay redesign. Only components
+   under components/relay/ consume these; existing pages keep the
+   original palette until the rollout goes site-wide. */
+@theme {
+	--color-relay-bg: #0c131b;
+	--color-relay-panel: #121b25;
+	--color-relay-raised: #16202c;
+	--color-relay-ink: #d9e4ee;
+	--color-relay-body: #a9bacb;
+	--color-relay-faint: #7c8da0;
+	--color-relay-line: #1f2c3a;
+	--color-relay-cyan: #3fc6dc;
+	--color-relay-bright: #5cd8ec;
+
+	--animate-relay-dash: relay-dash 3s linear infinite;
+	--animate-relay-blink: relay-blink 2.2s ease-in-out infinite;
+	--animate-relay-breathe: relay-breathe 8s ease-in-out infinite alternate;
+	--animate-relay-marquee: relay-marquee 45s linear infinite;
+	--animate-relay-rail: relay-rail 4.5s linear infinite;
+	--animate-relay-rail-y: relay-rail-y 4.5s linear infinite;
+	--animate-relay-rise: relay-rise 0.7s ease both;
+
+	@keyframes relay-dash {
+		to {
+			stroke-dashoffset: -95;
+		}
+	}
+	@keyframes relay-blink {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.25;
+		}
+	}
+	@keyframes relay-breathe {
+		from {
+			opacity: 0.5;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+	@keyframes relay-marquee {
+		from {
+			transform: translateX(0);
+		}
+		to {
+			transform: translateX(-50%);
+		}
+	}
+	@keyframes relay-rail {
+		from {
+			left: -6rem;
+		}
+		to {
+			left: 100%;
+		}
+	}
+	@keyframes relay-rail-y {
+		from {
+			top: -6rem;
+		}
+		to {
+			top: 100%;
+		}
+	}
+	@keyframes relay-rise {
+		from {
+			opacity: 0;
+			transform: translateY(14px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[class*="animate-relay-"] {
+		animation: none !important;
 	}
 }

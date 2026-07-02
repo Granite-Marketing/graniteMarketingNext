@@ -10,7 +10,7 @@ const tagVariants = cva(
         category: "bg-primary/10 text-primary border-primary/20 hover:bg-primary/15 hover:border-primary/30",
         published: "bg-muted/50 text-muted-foreground border-border/30 hover:bg-muted hover:border-border/50",
         sectionLabel:
-          "bg-gradient-to-br from-primary/20 via-primary/10 to-transparent text-primary border-primary/30 backdrop-blur-sm shadow-lg shadow-primary/10 hover:shadow-primary/20 hover:border-primary/40 uppercase tracking-wider font-semibold",
+          "border-transparent bg-transparent px-0 py-0 font-mono text-[13px] font-normal lowercase tracking-normal text-primary shadow-none before:mr-1.5 before:content-['//']",
         interactive:
           "bg-card/50 text-foreground border-border/50 hover:border-primary/50 hover:bg-primary/10 hover:text-foreground cursor-pointer",
         selected: "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20 hover:bg-primary/90",

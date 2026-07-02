@@ -1,22 +1,10 @@
-import Link from "next/link";
-import Image from "next/image";
-import { NavigationClient } from "./navigation-client";
+import { RelayNav } from "@/components/relay/nav";
 
+/**
+ * Site-wide navigation now renders the Relay redesign.
+ * The previous implementation is preserved in navigation-client.tsx
+ * in case we need to roll back.
+ */
 export function Navigation() {
-	const logo = (
-		<Link
-			href="/"
-			className="flex items-center rounded-full border border-border/60 overflow-hidden"
-		>
-			<Image
-				src="/images/granite-marketing-new-logo.png"
-				alt="Logo brand logo for Granite Marketing. The logo is a simple, modern, and clean logo that is easy to recognize and remember."
-				width={48}
-				height={48}
-				className="w-12 h-12 object-contain"
-			/>
-		</Link>
-	);
-
-	return <NavigationClient logo={logo} />;
+	return <RelayNav />;
 }

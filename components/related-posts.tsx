@@ -1,7 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Tag } from "@/components/ui/tag";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Clock, Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
@@ -18,44 +14,32 @@ export function RelatedPosts({ posts, currentSlug }: RelatedPostsProps) {
 		.filter((post) => post.slug?.current !== currentSlug)
 		.slice(0, 3);
 
-	return (
-		<section className="py-24 bg-gradient-to-b from-background to-muted/10">
-			<div className="container mx-auto px-4">
-				<div className="max-w-7xl mx-auto">
-					{/* Section header */}
-					<div className="text-center mb-16">
-						<div className="flex items-center gap-2 justify-center mb-6">
-							<div className="h-px w-20 bg-gradient-to-r from-transparent to-border" />
-							<Tag
-								variant="sectionLabel"
-								size="sm"
-								className="uppercase tracking-wider"
-							>
-								Related Articles
-							</Tag>
-							<div className="h-px w-20 bg-gradient-to-l from-transparent to-border" />
-						</div>
-						<h2 className="text-4xl md:text-5xl font-bold mb-4">
-							Continue reading
-						</h2>
-						<p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-							Explore more insights and strategies to enhance your automation
-							journey
-						</p>
-					</div>
+	if (relatedPosts.length === 0) return null;
 
-					{/* Related posts grid */}
-					<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-						{relatedPosts.map((post) => (
-							<Card
-								key={post._id}
-								className="group overflow-hidden border-border/50 hover:border-primary/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/10 bg-card h-full flex flex-col"
-							>
+	return (
+		<section aria-labelledby="related-heading" className="border-t border-border">
+			<div className="container mx-auto px-6 py-24">
+				<header className="max-w-2xl">
+					<p className="mb-4 font-mono text-[13px] text-primary">
+						{"// keep reading"}
+					</p>
+					<h2
+						id="related-heading"
+						className="text-balance text-3xl font-semibold tracking-tight text-foreground sm:text-4xl"
+					>
+						Continue reading
+					</h2>
+				</header>
+
+				<ul className="mt-13 grid gap-3.5 md:grid-cols-2 lg:grid-cols-3">
+					{relatedPosts.map((post) => (
+						<li key={post._id}>
+							<article className="flex h-full flex-col overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-primary/50">
 								<Link
 									href={`/blog/${post.slug.current}`}
-									className="flex flex-col h-full"
+									className="flex h-full flex-col"
 								>
-									<div className="relative h-48 overflow-hidden bg-muted">
+									<div className="relative h-44 overflow-hidden border-b border-border bg-muted">
 										<Image
 											src={
 												getImageUrl(post.featuredImage as any) ||
@@ -63,82 +47,60 @@ export function RelatedPosts({ posts, currentSlug }: RelatedPostsProps) {
 											}
 											alt={post.title}
 											fill
-											className="object-cover transition-transform duration-700 group-hover:scale-110"
+											className="object-cover"
 										/>
-										<div className="absolute top-4 left-4">
-											<Tag variant="category">
-												{post.categories?.[0]?.name ?? "Article"}
-											</Tag>
-										</div>
 									</div>
 
-									<CardContent className="p-6 flex flex-col flex-1">
-										<div className="flex items-center gap-3 mb-3">
-											<Tag
-												variant="published"
-												size="sm"
-												className="flex items-center gap-1"
-											>
-												<Calendar className="w-3 h-3" />
-												{post.publishedAt
-													? new Date(post.publishedAt).toLocaleDateString(
-															undefined,
-															{
-																year: "numeric",
-																month: "short",
-																day: "numeric",
-															}
-													  )
-													: ""}
-											</Tag>
-											<span className="text-muted-foreground">•</span>
-											<Tag
-												variant="published"
-												size="sm"
-												className="flex items-center gap-1"
-											>
-												<Clock className="w-3 h-3" />
-												{calculateReadTime(
-													(post.content ?? []) as PortableTextBlock[]
-												)}
-											</Tag>
-										</div>
+									<div className="flex grow flex-col p-6">
+										<p className="mb-3 font-mono text-[11px] text-muted-foreground">
+											<span className="text-primary">
+												{"// "}
+												{(post.categories?.[0]?.name ?? "article").toLowerCase()}
+											</span>
+											{post.publishedAt && (
+												<>
+													{" · "}
+													{new Date(post.publishedAt).toLocaleDateString(
+														undefined,
+														{
+															year: "numeric",
+															month: "short",
+															day: "numeric",
+														}
+													)}
+												</>
+											)}
+											{" · "}
+											{calculateReadTime(
+												(post.content ?? []) as PortableTextBlock[]
+											)}
+										</p>
 
-										<h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors duration-300 text-balance">
+										<h3 className="text-balance text-xl font-semibold tracking-tight text-foreground">
 											{post.title}
 										</h3>
 
-										<p className="text-muted-foreground text-sm leading-relaxed mb-4 flex-1 text-pretty">
+										<p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
 											{post.excerpt}
 										</p>
 
-										<Button
-											variant="ghost"
-											size="sm"
-											className="w-fit group-hover:translate-x-2 transition-transform duration-300 text-primary px-0"
-										>
-											Read article
-											<ArrowRight className="ml-2 h-4 w-4" />
-										</Button>
-									</CardContent>
+										<p className="mt-auto pt-6 font-mono text-[13px] text-primary">
+											Read article <span aria-hidden="true">→</span>
+										</p>
+									</div>
 								</Link>
-							</Card>
-						))}
-					</div>
+							</article>
+						</li>
+					))}
+				</ul>
 
-					{/* View all link */}
-					<div className="text-center mt-12">
-						<Link href="/blog">
-							<Button
-								variant="outline"
-								size="lg"
-								className="border-border/50 hover:border-primary/50 hover:bg-primary/10 bg-transparent"
-							>
-								View all articles
-								<ArrowRight className="ml-2 h-4 w-4" />
-							</Button>
-						</Link>
-					</div>
+				<div className="mt-10">
+					<Link
+						href="/blog"
+						className="inline-flex items-center gap-2 rounded border border-border px-5 py-3 font-mono text-[13px] text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+					>
+						View all articles <span aria-hidden="true">→</span>
+					</Link>
 				</div>
 			</div>
 		</section>

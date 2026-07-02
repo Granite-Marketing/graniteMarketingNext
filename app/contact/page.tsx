@@ -1,6 +1,5 @@
 import { Navigation } from "@/components/navigation";
-import { ContactHero } from "@/components/contact-hero";
-import { ContactForm } from "@/components/contact-form";
+import { RelayContact } from "@/components/relay/contact";
 import { Footer } from "@/components/footer";
 
 export const metadata = {
@@ -17,11 +16,9 @@ export default function ContactPage() {
 		<>
 			<Navigation />
 			<main className="min-h-screen">
-				<ContactHero />
-				<ContactForm />
+				<RelayContact />
 			</main>
 			<Footer />
 		</>
 	);
 }
-

@@ -1,21 +1,17 @@
-import { Navigation } from "@/components/navigation";
-import { Hero } from "@/components/hero";
-import { Capabilities } from "@/components/capabilities";
-import { ToolsLogoList } from "@/components/tools-logo-list";
-import { SplitSection } from "@/components/split-section";
-import { StatsSection } from "@/components/stats-section";
-import { Approach } from "@/components/approach";
-import { Testimonials } from "@/components/testimonials";
-import { FAQ } from "@/components/faq";
-import { CTASection } from "@/components/cta-section";
-import { Footer } from "@/components/footer";
-import { CaseStudySection } from "@/components/case-study-section";
+import { RelayNav } from "@/components/relay/nav";
+import { RelayHero } from "@/components/relay/hero";
+import { RelayCapabilities } from "@/components/relay/capabilities";
+import { RelayToolsStrip } from "@/components/relay/tools-strip";
+import { RelayProcess } from "@/components/relay/process";
+import { RelayResults } from "@/components/relay/results";
+import { RelayTestimonials } from "@/components/relay/testimonials";
+import { RelayFAQ } from "@/components/relay/faq";
+import { RelayCTA } from "@/components/relay/cta";
+import { RelayFooter } from "@/components/relay/footer";
 import { getHomeContent, getTools } from "@/lib/sanity/queries";
 import {
 	adaptClientTestimonial,
 	adaptFAQItem,
-	adaptLogoListItem,
-	type LogoItem,
 } from "@/lib/sanity/lib/adapters";
 
 // ISR with 30 minute revalidation for homepage content
@@ -27,11 +23,6 @@ export default async function Home() {
 		getTools(),
 	])) as [any, any];
 
-	const logos: LogoItem[] =
-		homeContent.featuredLogos?.map((logoDoc: any) =>
-			adaptLogoListItem(logoDoc),
-		) ?? [];
-
 	const testimonials =
 		homeContent.testimonials?.map((client: any) =>
 			adaptClientTestimonial(client, client.location?.name),
@@ -40,25 +31,21 @@ export default async function Home() {
 	const faqs = homeContent.faqs?.map((faq: any) => adaptFAQItem(faq)) ?? [];
 
 	return (
-		<>
-			<Navigation />
+		<div className="bg-relay-bg text-relay-ink selection:bg-relay-cyan selection:text-relay-bg">
+			<RelayNav />
 			<main className="min-h-screen">
-				<Hero logos={logos} />
-				<Capabilities />
-				{tools && tools.length > 0 && <ToolsLogoList tools={tools} />}
-				<SplitSection />
-				{/* <StatsSection /> */}
-				{homeContent.caseStudies?.length > 0 && (
-					<CaseStudySection caseStudies={homeContent.caseStudies} />
+				<RelayHero clientLogos={homeContent.featuredLogos ?? []} />
+				<RelayCapabilities />
+				<RelayToolsStrip tools={tools ?? []} />
+				<RelayProcess />
+				<RelayResults caseStudies={homeContent.caseStudies ?? []} />
+				{testimonials.length > 0 && (
+					<RelayTestimonials testimonials={testimonials} />
 				)}
-				<Approach />
-				{testimonials.length > 1 && (
-					<Testimonials testimonials={testimonials} />
-				)}
-				<FAQ faqs={faqs} />
-				<CTASection />
+				{faqs.length > 0 && <RelayFAQ faqs={faqs} />}
+				<RelayCTA />
 			</main>
-			<Footer />
-		</>
+			<RelayFooter />
+		</div>
 	);
 }
