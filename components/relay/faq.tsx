@@ -27,7 +27,7 @@ export function RelayFAQ({ faqs }: RelayFAQProps) {
 						id="faq-heading"
 						className="text-3xl font-semibold tracking-tight text-relay-ink sm:text-4xl"
 					>
-						Fair questions.
+						FAQs.
 					</h2>
 					<p className="mt-4 max-w-sm text-pretty text-relay-faint">
 						The ones every founder asks on the intro call, answered before you
