@@ -31,7 +31,7 @@ export function RelayTestimonials({ testimonials }: RelayTestimonialsProps) {
 						id="testimonials-heading"
 						className="text-balance text-3xl font-semibold tracking-tight text-relay-ink sm:text-4xl"
 					>
-						The quiet kind of transformation.
+						In their words, not ours.
 					</h2>
 				</header>
 

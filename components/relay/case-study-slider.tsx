@@ -46,11 +46,11 @@ export function CaseStudySlider({ caseStudies }: CaseStudySliderProps) {
 	return (
 		<div className="mt-3.5">
 			<div className="overflow-hidden" ref={emblaRef}>
-				<ul className="flex gap-3.5">
+				<ul className="-ml-3.5 flex">
 					{caseStudies.map((study) => (
 						<li
 							key={study.id}
-							className="min-w-0 shrink-0 grow-0 basis-full md:basis-[calc(50%-0.4375rem)]"
+							className="min-w-0 shrink-0 grow-0 basis-full pl-3.5 md:basis-1/2"
 						>
 							<article className="flex h-full flex-col overflow-hidden rounded-lg border border-relay-line bg-relay-panel transition-colors hover:border-relay-cyan/50">
 								<header className="flex items-center justify-between gap-4 border-b border-relay-line px-6 py-3 font-mono text-xs">
@@ -78,8 +78,8 @@ export function CaseStudySlider({ caseStudies }: CaseStudySliderProps) {
 									</div>
 
 									{study.results.length > 0 && (
-										<ul className="mt-auto flex flex-wrap gap-x-9 gap-y-4 border-t border-relay-line pt-5">
-											{study.results.slice(0, 3).map((result) => (
+										<ul className="mt-auto grid grid-cols-2 gap-x-6 gap-y-4 border-t border-relay-line pt-5 sm:grid-cols-4">
+											{study.results.slice(0, 4).map((result) => (
 												<li key={`${study.id}-${result.label}`}>
 													<p className="text-xl font-semibold tabular-nums tracking-tight text-relay-ink">
 														{result.value}
@@ -90,6 +90,15 @@ export function CaseStudySlider({ caseStudies }: CaseStudySliderProps) {
 												</li>
 											))}
 										</ul>
+									)}
+
+									{study.techStack.length > 0 && (
+										<p className="mt-5 border-t border-relay-line pt-4 font-mono text-[11px] text-relay-faint">
+											<span className="text-relay-cyan">stack: </span>
+											{study.techStack
+												.map((tool) => tool.title.toLowerCase())
+												.join(" · ")}
+										</p>
 									)}
 								</div>
 							</article>

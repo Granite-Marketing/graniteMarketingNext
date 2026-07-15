@@ -30,9 +30,10 @@ export function RelayHero({ clientLogos = [] }: RelayHeroProps) {
 						We connect your tools into workflows that run themselves.
 					</h1>
 					<p className="mt-6 max-w-xl text-pretty text-[17px] leading-relaxed text-relay-body">
-						Custom AI automations built on n8n and wired into the stack you
-						already use. They qualify leads, move projects, draft content and
-						brief you while you sleep.
+						Custom AI automations wired into the stack you already run. They
+						keep your CRM clean, turn market noise into a morning digest,
+						draft on-brand content and bring the real judgement calls to a
+						person.
 					</p>
 
 					<div className="mt-9 flex flex-wrap items-center gap-5">

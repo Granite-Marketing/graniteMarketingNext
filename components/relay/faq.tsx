@@ -30,7 +30,7 @@ export function RelayFAQ({ faqs }: RelayFAQProps) {
 						FAQs.
 					</h2>
 					<p className="mt-4 max-w-sm text-pretty text-relay-faint">
-						The ones every founder asks on the intro call, answered before you
+						The ones every team asks on the intro call, answered before you
 						book it.
 					</p>
 				</header>

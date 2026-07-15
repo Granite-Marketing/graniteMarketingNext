@@ -631,7 +631,7 @@ export async function getAuthor(slug: string) {
 // COMPOSED HELPERS FOR MARKETING PAGES
 // =============================================================================
 
-export async function getHomepageCaseStudies(limit = 3) {
+export async function getHomepageCaseStudies(limit = 24) {
 	const docs: any[] = await fetchQuery(
 		`
     *[_type == "caseStudy" && showOnHome == true && !(_id in path("drafts.**"))]
@@ -681,7 +681,7 @@ export async function getHomeContent() {
 		getFeaturedLogos(10),
 		getClients(),
 		getFAQs("general"),
-		getHomepageCaseStudies(3),
+		getHomepageCaseStudies(),
 	]);
 
 	return {

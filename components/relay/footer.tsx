@@ -14,8 +14,8 @@ export function RelayFooter() {
 							<span className="sr-only">Granite Marketing home</span>
 						</Link>
 						<p className="mt-4 max-w-64 text-sm leading-relaxed text-relay-faint">
-							AI-powered workflow automation for teams who&apos;d rather grow
-							the business than run it by hand.
+							AI automations and custom systems for lean teams who&apos;d
+							rather grow the business than run it by hand.
 						</p>
 					</div>
 

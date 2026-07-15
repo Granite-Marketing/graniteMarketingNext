@@ -54,50 +54,50 @@ export type Capability = {
 
 export const capabilities: Capability[] = [
 	{
-		tag: "agents",
-		title: "AI Agents",
+		tag: "crm-ops",
+		title: "CRM & marketing automation",
 		description:
-			"Purpose-built agents for support, triage and operations. Trained on your business, working every hour of every day.",
+			"Bounce detection, lead routing, lifecycle emails and handoffs that keep your CRM trustworthy. Safe actions run themselves; judgement calls land in Slack.",
 		featured: true,
 		snippet: [
-			"triaged 14 tickets, routed 3 to humans",
-			"drafted 6 replies, queued for review",
+			"flagged 12 repeat bounces in hubspot",
+			"cleanup queued in slack for approval",
 		],
-	},
-	{
-		tag: "pipeline",
-		title: "Lead generation",
-		description:
-			"Pipelines that find, enrich and qualify prospects around the clock. Warm, scored leads in your CRM, not raw lists.",
-		featured: true,
-		snippet: [
-			"212 prospects sourced this week",
-			"47 qualified · 9 booked calls",
-		],
-	},
-	{
-		tag: "ops",
-		title: "Project management",
-		description:
-			"Status updates, task routing and handoffs that happen on their own. Projects move without being pushed.",
-	},
-	{
-		tag: "publishing",
-		title: "Content generation",
-		description:
-			"Briefs become drafts, drafts become posts. Tuned to your voice, running on your schedule.",
 	},
 	{
 		tag: "intel",
-		title: "Research assistant",
+		title: "Market intelligence",
 		description:
-			"Market scans and briefing docs compiled overnight, ready before standup.",
+			"Hundreds of sources monitored, duplicates removed, relevance judged by AI. A digest of what matters, delivered before standup.",
+		featured: true,
+		snippet: [
+			"scanned 665 sources overnight",
+			"digest: 8 stories · 0 duplicates",
+		],
 	},
 	{
-		tag: "enablement",
-		title: "Educational tools",
+		tag: "agents",
+		title: "AI Agents",
 		description:
-			"Onboarding flows and internal academies that train teams without meetings.",
+			"Purpose-built agents for support, triage and operations. Working around the clock, handing the hard cases to a human.",
+	},
+	{
+		tag: "content",
+		title: "Content systems",
+		description:
+			"From trusted sources to on-brand drafts to a named reviewer. A pipeline your team controls, not a tool to babysit.",
+	},
+	{
+		tag: "ops",
+		title: "Ops automation",
+		description:
+			"Status updates, task routing and handoffs that happen on their own. Projects move without being pushed along by hand.",
+	},
+	{
+		tag: "platforms",
+		title: "Custom platforms",
+		description:
+			"Dashboards, admin panels and full web platforms. Built when an automation needs a home, and run in production by us.",
 	},
 ];
 
@@ -113,14 +113,14 @@ export const processSteps = [
 		index: "02 / design",
 		title: "Design it",
 		description:
-			"The automation takes shape in n8n, built to fit your exact workflow without forcing change. You sign off a blueprint before we build a thing.",
+			"The system takes shape on whatever fits the job: an n8n workflow, custom code or a full app. What needs sign-off waits for you.",
 		duration: "week 2 · a blueprint you approve",
 	},
 	{
 		index: "03 / deploy",
 		title: "Deploy it",
 		description:
-			"The workflow goes live with monitoring and alerting wired in. Your systems talk. The work that took a morning takes minutes.",
+			"The workflow goes live with monitoring and alerting wired in. When something fails, you hear it from us, not from a customer.",
 		duration: "week 3 · live, monitored, documented",
 	},
 ];
