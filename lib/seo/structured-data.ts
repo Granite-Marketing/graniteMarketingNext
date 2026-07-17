@@ -7,7 +7,7 @@ export function getOrganizationSchema() {
     "@type": "Organization",
     name: siteConfig.name,
     url: siteConfig.url,
-    logo: `${siteConfig.url}/images/logo.avif`,
+    logo: `${siteConfig.url}/images/granite-logo.png`,
     description:
       "Granite Marketing helps businesses automate workflows with n8n and no-code tools to boost team efficiency and output.",
     sameAs: [
@@ -17,7 +17,7 @@ export function getOrganizationSchema() {
     ],
     contactPoint: {
       "@type": "ContactPoint",
-      email: "hello@granitemarketing.com",
+      email: "hello@granitemarketing.co.uk",
       contactType: "customer service",
     },
   };
@@ -66,7 +66,7 @@ export function getBlogPostSchema(post: {
       name: siteConfig.name,
       logo: {
         "@type": "ImageObject",
-        url: `${siteConfig.url}/images/logo.avif`,
+        url: `${siteConfig.url}/images/granite-logo.png`,
       },
     },
     image: post.image || `${siteConfig.url}${siteConfig.defaultImage}`,
@@ -101,7 +101,7 @@ export function getCaseStudySchema(study: {
       name: siteConfig.name,
       logo: {
         "@type": "ImageObject",
-        url: `${siteConfig.url}/images/logo.avif`,
+        url: `${siteConfig.url}/images/granite-logo.png`,
       },
     },
     image: study.image || `${siteConfig.url}${siteConfig.defaultImage}`,

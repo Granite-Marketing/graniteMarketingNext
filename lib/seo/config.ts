@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 // Site configuration
 export const siteConfig = {
   name: "Granite Marketing",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://granitemarketing.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.granitemarketing.co.uk",
   locale: "en_GB",
   defaultImage: "/images/og-image.png", // Default OG image
   twitterHandle: "@granitemarketing",
