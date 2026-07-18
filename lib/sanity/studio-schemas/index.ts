@@ -14,6 +14,15 @@ import { caseStudy } from "./documents/caseStudy";
 import { workflowTemplate } from "./documents/workflowTemplate";
 import { page } from "./documents/page";
 import { legalPage } from "./documents/legalPage";
+import { siteSettings } from "./documents/siteSettings";
+import { heroBlock } from "./blocks/heroBlock";
+import { capabilitiesBlock } from "./blocks/capabilitiesBlock";
+import { toolsStripBlock } from "./blocks/toolsStripBlock";
+import { processBlock } from "./blocks/processBlock";
+import { resultsBlock } from "./blocks/resultsBlock";
+import { testimonialsBlock } from "./blocks/testimonialsBlock";
+import { faqBlock } from "./blocks/faqBlock";
+import { ctaBlock } from "./blocks/ctaBlock";
 
 // granite-convention-exception: test-discipline
 // reason: barrel export re-assembling the same array previously inlined at
@@ -36,6 +45,17 @@ export const schemaTypes = [
 	location,
 	workflowCategory,
 
+	// Page builder blocks — must be registered here as well as listed in
+	// pageBuilder.of, or they silently fail to resolve at runtime.
+	heroBlock,
+	capabilitiesBlock,
+	toolsStripBlock,
+	processBlock,
+	resultsBlock,
+	testimonialsBlock,
+	faqBlock,
+	ctaBlock,
+
 	// Content types
 	client,
 	faq,
@@ -46,4 +66,5 @@ export const schemaTypes = [
 	workflowTemplate,
 	page,
 	legalPage,
+	siteSettings,
 ];
