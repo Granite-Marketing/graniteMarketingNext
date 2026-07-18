@@ -1,5 +1,6 @@
 import { seo } from "./objects/seo";
 import { link } from "./objects/link";
+import { pageBuilder } from "./objects/pageBuilder";
 import { author } from "./documents/author";
 import { category } from "./documents/category";
 import { location } from "./documents/location";
@@ -11,6 +12,8 @@ import { tool } from "./documents/tool";
 import { blogPost } from "./documents/blogPost";
 import { caseStudy } from "./documents/caseStudy";
 import { workflowTemplate } from "./documents/workflowTemplate";
+import { page } from "./documents/page";
+import { legalPage } from "./documents/legalPage";
 
 // granite-convention-exception: test-discipline
 // reason: barrel export re-assembling the same array previously inlined at
@@ -25,6 +28,7 @@ export const schemaTypes = [
 	// Named object types first — documents below reference these by name.
 	seo,
 	link,
+	pageBuilder,
 
 	// Referenced types
 	author,
@@ -40,4 +44,6 @@ export const schemaTypes = [
 	blogPost,
 	caseStudy,
 	workflowTemplate,
+	page,
+	legalPage,
 ];
