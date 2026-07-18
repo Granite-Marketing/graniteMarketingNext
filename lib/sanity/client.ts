@@ -3,12 +3,19 @@ import { createImageUrlBuilder } from "@sanity/image-url";
 import { apiVersion, dataset, projectId, useCdn } from "./env";
 
 // Create Sanity client (mirrors MLN/src/sanity/client.ts style)
+//
+// Note: `perspective` and `stega` are deliberately NOT pinned here. They are
+// decided per-request in `lib/sanity/lib/fetch.ts`, which is the single place
+// that knows whether Draft Mode is active. Hardcoding them here would make
+// draft previews impossible.
+//
+// `studioUrl` is what lets stega-encoded content link back to the embedded
+// Studio. It is only ever *activated* in Draft Mode.
 export const client = createClient({
 	apiVersion,
 	dataset,
 	projectId,
 	useCdn,
-	perspective: "published",
 	stega: {
 		enabled: false,
 		studioUrl: "/studio",

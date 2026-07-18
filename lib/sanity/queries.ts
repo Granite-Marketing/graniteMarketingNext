@@ -9,7 +9,7 @@ import { adaptCaseStudyToCard } from "./lib/adapters";
 export async function getBlogPosts() {
 	return fetchQuery(
 		`
-    *[_type == "blogPost" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
+    *[_type == "blogPost"] | order(publishedAt desc) {
       _id,
       title,
       slug,
@@ -37,11 +37,9 @@ export async function getBlogPost(slug?: string) {
 		return null;
 	}
 
-	const safeSlug = slug.replace(/"/g, '\\"');
-
 	return fetchQuery(
 		`
-    *[_type == "blogPost" && slug.current == "${safeSlug}"][0] {
+    *[_type == "blogPost" && slug.current == $slug][0] {
       _id,
       title,
       slug,
@@ -77,16 +75,18 @@ export async function getBlogPost(slug?: string) {
       }
     }
   `,
-		{}
+		{ slug }
 	);
 }
 
 export async function getBlogPostSlugs() {
 	const slugs = await fetchQuery<string[]>(
 		`
-    *[_type == "blogPost" && !(_id in path("drafts.**"))].slug.current
+    *[_type == "blogPost"].slug.current
   `,
-		{}
+		{},
+		// Static params must never include draft-only posts.
+		{ forcePublished: true }
 	);
 	return slugs.map((slug) => ({ slug }));
 }
@@ -94,7 +94,7 @@ export async function getBlogPostSlugs() {
 export async function getFeaturedBlogPosts(limit = 3) {
 	return fetchQuery(
 		`
-    *[_type == "blogPost" && featured == true && !(_id in path("drafts.**"))] | order(publishedAt desc) [0...$limit] {
+    *[_type == "blogPost" && featured == true] | order(publishedAt desc) [0...$limit] {
       _id,
       title,
       slug,
@@ -113,7 +113,7 @@ export async function getFeaturedBlogPosts(limit = 3) {
 export async function getBlogPostsByCategory(categorySlug: string) {
 	return fetchQuery(
 		`
-    *[_type == "blogPost" && $categorySlug in categories[]->slug.current && !(_id in path("drafts.**"))] | order(publishedAt desc) {
+    *[_type == "blogPost" && $categorySlug in categories[]->slug.current] | order(publishedAt desc) {
       _id,
       title,
       slug,
@@ -141,7 +141,7 @@ export async function getBlogPostsByCategory(categorySlug: string) {
 export async function getWorkflowTemplates() {
 	return fetchQuery(
 		`
-    *[_type == "workflowTemplate" && !(_id in path("drafts.**"))] | order(publishedAt desc) {
+    *[_type == "workflowTemplate"] | order(publishedAt desc) {
       _id,
       title,
       slug,
@@ -179,11 +179,9 @@ export async function getWorkflowTemplate(slug?: string) {
 		return null;
 	}
 
-	const safeSlug = slug.replace(/"/g, '\\"');
-
 	return fetchQuery(
 		`
-    *[_type == "workflowTemplate" && slug.current == "${safeSlug}"][0] {
+    *[_type == "workflowTemplate" && slug.current == $slug][0] {
       _id,
       title,
       slug,
@@ -226,16 +224,18 @@ export async function getWorkflowTemplate(slug?: string) {
       }
     }
   `,
-		{}
+		{ slug }
 	);
 }
 
 export async function getWorkflowTemplateSlugs() {
 	const slugs = await fetchQuery<string[]>(
 		`
-    *[_type == "workflowTemplate" && !(_id in path("drafts.**"))].slug.current
+    *[_type == "workflowTemplate"].slug.current
   `,
-		{}
+		{},
+		// Static params must never include draft-only templates.
+		{ forcePublished: true }
 	);
 	return slugs.map((slug) => ({ slug }));
 }
@@ -247,7 +247,7 @@ export async function getWorkflowTemplateSlugs() {
 export async function getCaseStudies() {
 	return fetchQuery(
 		`
-    *[_type == "caseStudy" && !(_id in path("drafts.**"))] | order(sortOrder asc, _createdAt desc) {
+    *[_type == "caseStudy"] | order(sortOrder asc, _createdAt desc) {
       _id,
       title,
       slug,
@@ -366,9 +366,11 @@ export async function getCaseStudy(slug: string) {
 export async function getCaseStudySlugs() {
 	const slugs = await fetchQuery<string[]>(
 		`
-    *[_type == "caseStudy" && !(_id in path("drafts.**"))] | order(sortOrder asc, _createdAt desc).slug.current
+    *[_type == "caseStudy"] | order(sortOrder asc, _createdAt desc).slug.current
   `,
-		{}
+		{},
+		// Static params must never include draft-only case studies.
+		{ forcePublished: true }
 	);
 	return slugs.map((slug) => ({ slug }));
 }
@@ -380,7 +382,7 @@ export async function getCaseStudySlugs() {
 export async function getCategories() {
 	return fetchQuery(
 		`
-    *[_type == "category" && !(_id in path("drafts.**"))] | order(name asc) {
+    *[_type == "category"] | order(name asc) {
       _id,
       name,
       slug,
@@ -412,7 +414,7 @@ export async function getCategory(slug: string) {
 export async function getClients() {
 	return fetchQuery(
 		`
-    *[_type == "client" && !(_id in path("drafts.**"))] | order(dateStarted desc) {
+    *[_type == "client"] | order(dateStarted desc) {
       _id,
       name,
       slug,
@@ -473,10 +475,10 @@ export async function getClient(slug: string) {
 // =============================================================================
 
 export async function getFAQs(category?: string) {
-	const categoryFilter = category ? ` && category == "${category}"` : "";
+	const categoryFilter = category ? " && category == $category" : "";
 
 	const query = `
-    *[_type == "faq" && !(_id in path("drafts.**"))${categoryFilter}] | order(order asc) {
+    *[_type == "faq"${categoryFilter}] | order(order asc) {
       _id,
       question,
       slug,
@@ -486,7 +488,7 @@ export async function getFAQs(category?: string) {
     }
   `;
 
-	return fetchQuery(query, {});
+	return fetchQuery(query, category ? { category } : {});
 }
 
 export async function getFAQ(slug: string) {
@@ -511,7 +513,7 @@ export async function getFAQ(slug: string) {
 export async function getLocations() {
 	return fetchQuery(
 		`
-    *[_type == "location" && !(_id in path("drafts.**"))] | order(name asc) {
+    *[_type == "location"] | order(name asc) {
       _id,
       name,
       slug,
@@ -530,7 +532,7 @@ export async function getLocations() {
 export async function getLogoList() {
 	return fetchQuery(
 		`
-    *[_type == "logoList" && !(_id in path("drafts.**"))] | order(sortOrder asc) {
+    *[_type == "logoList"] | order(sortOrder asc) {
       _id,
       clientName,
       slug,
@@ -550,7 +552,7 @@ export async function getLogoList() {
 export async function getFeaturedLogos(limit = 10) {
 	return fetchQuery(
 		`
-    *[_type == "logoList" && featured == true && !(_id in path("drafts.**"))] | order(sortOrder asc) [0...$limit] {
+    *[_type == "logoList" && featured == true] | order(sortOrder asc) [0...$limit] {
       _id,
       clientName,
       slug,
@@ -572,7 +574,7 @@ export async function getFeaturedLogos(limit = 10) {
 export async function getTools() {
 	return fetchQuery(
 		`
-    *[_type == "tool" && !(_id in path("drafts.**"))] | order(name asc) {
+    *[_type == "tool"] | order(name asc) {
       _id,
       name,
       slug,
@@ -596,7 +598,7 @@ export async function getTools() {
 export async function getAuthors() {
 	return fetchQuery(
 		`
-    *[_type == "author" && !(_id in path("drafts.**"))] | order(name asc) {
+    *[_type == "author"] | order(name asc) {
       _id,
       name,
       slug,
@@ -634,7 +636,7 @@ export async function getAuthor(slug: string) {
 export async function getHomepageCaseStudies(limit = 24) {
 	const docs: any[] = await fetchQuery(
 		`
-    *[_type == "caseStudy" && showOnHome == true && !(_id in path("drafts.**"))]
+    *[_type == "caseStudy" && showOnHome == true]
       | order(sortOrder asc, _createdAt desc) [0...$limit]{
       _id,
       title,

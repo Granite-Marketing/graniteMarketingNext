@@ -5,6 +5,7 @@ import { ContentCtaBanner } from "@/components/content-cta-banner";
 import { Footer } from "@/components/footer";
 import { getWorkflowTemplates } from "@/lib/sanity/queries";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
+import { stegaClean } from "next-sanity";
 export const metadata = {
 	title:
 		"Workflow Templates - Granite Marketing | Ready-to-Use n8n Automations",
@@ -38,7 +39,9 @@ export default async function TemplatesPage() {
 			slug: template.slug?.current ?? "",
 			title: template.title,
 			description: template.excerpt ?? "",
-			category: template.categories?.[0]?.name ?? "Template",
+			// Cleaned because this value is used as a filter identifier and
+			// compared with === downstream. Stega characters break equality.
+			category: stegaClean(template.categories?.[0]?.name) ?? "Template",
 			date: template.publishedAt
 				? new Date(template.publishedAt).toLocaleDateString(undefined, {
 						year: "numeric",

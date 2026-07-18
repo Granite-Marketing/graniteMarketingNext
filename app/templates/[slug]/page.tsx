@@ -15,6 +15,7 @@ import { getImageUrl } from "@/lib/sanity/lib/adapters";
 import type { PortableTextBlock } from "@portabletext/types";
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/seo";
+import { stegaClean } from "next-sanity";
 
 export const revalidate = 3600;
 
@@ -63,7 +64,12 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
 	const { slug } = await params;
-	const template = (await getWorkflowTemplate(slug)) as SanityWorkflowTemplateDetail | null;
+	// stegaClean strips the invisible characters that power click-to-edit.
+	// They are harmless in rendered copy but would corrupt <title>, meta tags
+	// and canonical URLs — where they reach search engines.
+	const template = stegaClean(
+		await getWorkflowTemplate(slug)
+	) as SanityWorkflowTemplateDetail | null;
 
 	if (!template) {
 		return {

@@ -7,6 +7,7 @@ import { getBlogPosts } from "@/lib/sanity/queries";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
 import { calculateReadTime } from "@/lib/utils/read-time";
 import type { PortableTextBlock } from "@portabletext/types";
+import { stegaClean } from "next-sanity";
 
 export const metadata = {
 	title: "Blog - Granite Marketing | AI Automation Insights",
@@ -38,7 +39,9 @@ export default async function BlogPage() {
 			slug: post.slug?.current ?? "",
 			title: post.title,
 			description: post.excerpt ?? "",
-			category: post.categories?.[0]?.name ?? "Article",
+			// Cleaned because this value is used as a filter identifier and
+			// compared with === downstream. Stega characters break equality.
+			category: stegaClean(post.categories?.[0]?.name) ?? "Article",
 			date: post.publishedAt
 				? new Date(post.publishedAt).toLocaleDateString(undefined, {
 						year: "numeric",

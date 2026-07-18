@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+// Imported from @sanity/client/stega rather than next-sanity: this is a client
+// component, and the narrower entry point avoids pulling server-only code in.
+import { stegaClean } from "@sanity/client/stega";
 
 interface CodeBlockProps {
 	html: string;
@@ -14,7 +17,10 @@ export function CodeBlock({ html, language, filename, code }: CodeBlockProps) {
 
 	const handleCopy = async () => {
 		try {
-			await navigator.clipboard.writeText(code);
+			// stegaClean before copying. In Draft Mode the code string carries
+			// invisible stega characters, which would be pasted into the editor's
+			// terminal or IDE and silently break whatever they land in.
+			await navigator.clipboard.writeText(stegaClean(code) ?? code);
 			setCopied(true);
 			setTimeout(() => setCopied(false), 2000);
 		} catch {

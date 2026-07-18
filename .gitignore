@@ -53,3 +53,7 @@ data/*.csv
 
 .claude
 scripts
+# Never commit env backups/copies
+.env*.bak
+*.bak
+.env.local.*

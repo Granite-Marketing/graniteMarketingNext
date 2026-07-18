@@ -14,6 +14,7 @@ import { getImageUrl } from "@/lib/sanity/lib/adapters";
 import type { PortableTextBlock } from "@portabletext/types";
 import type { Metadata } from "next";
 import { siteConfig, pageMetadata } from "@/lib/seo";
+import { stegaClean } from "next-sanity";
 import { calculateReadTime } from "@/lib/utils/read-time";
 
 // ISR with 1 hour revalidation for blog posts (disabled in development)
@@ -57,7 +58,12 @@ export async function generateMetadata({
 	params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
 	const { slug } = await params;
-	const post = (await getBlogPost(slug)) as SanityBlogPostDetail | null;
+	// stegaClean strips the invisible characters that power click-to-edit.
+	// They are harmless in rendered copy but would corrupt <title>, meta tags
+	// and canonical URLs — where they reach search engines.
+	const post = stegaClean(
+		await getBlogPost(slug)
+	) as SanityBlogPostDetail | null;
 
 	if (!post) {
 		// Fallback to generic blog metadata if post is missing

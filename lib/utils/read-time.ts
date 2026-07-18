@@ -1,4 +1,5 @@
 import type { PortableTextBlock } from "@portabletext/types";
+import { stegaClean } from "next-sanity";
 
 // Average reading speed: 200-250 words per minute
 const WORDS_PER_MINUTE = 225;
@@ -16,8 +17,15 @@ export function calculateReadTime(content: PortableTextBlock[]): string {
 	// Extract all text from portable text blocks
 	const text = extractTextFromPortableText(content);
 
+	// Strip stega before counting. In Draft Mode every string carries an
+	// encoded payload of invisible characters, and one of them (U+FEFF) IS
+	// matched by JS \s — so splitting on whitespace counts the payload as
+	// words and inflates the estimate roughly 9x. Cleaning here rather than at
+	// the call sites means every caller is protected.
+	const cleanText = stegaClean(text) ?? "";
+
 	// Count words
-	const wordCount = text.trim().split(/\s+/).length;
+	const wordCount = cleanText.trim().split(/\s+/).filter(Boolean).length;
 
 	// Calculate minutes (round up, minimum 1 minute)
 	const minutes = Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));

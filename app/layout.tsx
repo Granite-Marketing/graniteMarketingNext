@@ -1,10 +1,14 @@
 import type React from "react";
 import type { Metadata } from "next";
 import Script from "next/script";
+import { draftMode } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { VisualEditing } from "next-sanity/visual-editing";
 import "./globals.css";
 import { defaultMetadata } from "@/lib/seo/config";
+import { SanityLive } from "@/lib/sanity/live";
+import { DisableDraftMode } from "@/components/disable-draft-mode";
 
 const geist = Geist({
 	subsets: ["latin"],
@@ -19,11 +23,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = defaultMetadata;
 
-export default function RootLayout({
+export default async function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const { isEnabled: isDraftMode } = await draftMode();
+
 	return (
 		<html lang="en" className="dark">
 			<body
@@ -44,6 +50,25 @@ export default function RootLayout({
 				</Script>
 				{children}
 				<Analytics />
+				{/*
+					Draft-gated so anonymous traffic keeps its existing ISR behaviour
+					and never opens a live connection.
+
+					<VisualEditing /> is the comlink bridge to the Studio — it powers
+					the connection, refresh, and the "Documents on this page" list. It
+					must always be present in Draft Mode, or Presentation reports
+					"Unable to connect to visual editing".
+
+					The env flag controls only *stega*, i.e. whether content carries
+					click-to-edit targets. Bridge and overlays are separate concerns.
+				*/}
+				{isDraftMode && (
+					<>
+						<SanityLive />
+						<VisualEditing />
+						<DisableDraftMode />
+					</>
+				)}
 			</body>
 		</html>
 	);
