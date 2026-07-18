@@ -1,6 +1,7 @@
 ---
 title: Rich code blocks in Sanity blog posts with Shiki syntax highlighting
 date: 2026-06-01
+last_updated: 2026-07-18
 category: architecture-patterns
 module: blog-rich-content
 problem_type: architecture_pattern
@@ -86,17 +87,25 @@ async function HighlightedCode({ value }) {
 }
 ```
 
-Create a `"use client"` CodeBlock component for the copy button. Override Shiki's inline styles so your wrapper controls the background:
+Create a `"use client"` CodeBlock component for the copy button. Override Shiki's inline styles so your wrapper controls the background.
+
+Note the `stegaClean` on the clipboard payload: if the site also runs Sanity
+Visual Editing, the `code` string carries invisible stega characters in Draft
+Mode, and copying it raw pastes them into the editor's terminal or IDE. Import
+from `@sanity/client/stega` rather than `next-sanity` — this is a client
+component, and the narrower entry point avoids pulling in server-only code.
 
 ```tsx
 "use client";
+
+import { stegaClean } from "@sanity/client/stega";
 
 export function CodeBlock({ html, language, filename, code }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(code);
+      await navigator.clipboard.writeText(stegaClean(code) ?? code);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -139,6 +148,14 @@ types: {
 - **RSC fit**: Shiki's `codeToHtml` is async with no DOM dependency, making it a natural fit for an async Server Component. The RSC/client split (HighlightedCode server + CodeBlock client) is the correct pattern.
 - **`dangerouslySetInnerHTML` safety**: Shiki HTML-encodes all `<` to `&#x3C;`. Combined with content authored by trusted Studio users, there is no XSS vector.
 
+  This argument was written for a published-only pipeline and rests on an
+  assumption worth naming: *the string rendered is the string the author typed*.
+  With Visual Editing enabled that no longer holds — in Draft Mode every string
+  field arrives carrying invisible stega characters. It remains true that there
+  is no XSS vector (the added characters are zero-width and inert), but any code
+  that treats the code string as verbatim author input — copying it, measuring
+  it, hashing it, diffing it — must strip the encoding first.
+
 ## When to Apply
 
 - A Sanity blog or content schema needs multi-line code blocks (tutorials, changelogs, documentation posts).
@@ -164,3 +181,4 @@ Studio presents a code editor with language dropdown. Frontend renders a styled 
 
 - `docs/brainstorms/rich-code-blocks-requirements.md` — upstream requirements document for this feature
 - `docs/plans/2026-04-03-002-feat-standardised-rich-text-typography-plan.md` — `.typo` CSS class plan (shares `PortableTextRenderer.tsx`)
+- `docs/solutions/best-practices/sanity-visual-editing-draft-mode-gotchas.md` — why the clipboard payload needs `stegaClean`, and the wider rule that stega breaks any code measuring or copying a content string
