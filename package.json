@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "migrate": "npx tsx scripts/migrate-content.ts",
     "migrate:categories": "npx tsx scripts/migrate-categories.ts",
     "migrate:locations": "npx tsx scripts/migrate-locations.ts",
@@ -91,9 +93,12 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.1.2",
     "baseline-browser-mapping": "^2.9.19",
     "csv-parse": "^5.6.0",
     "eslint": "^9.0.0",
@@ -103,6 +108,8 @@
     "tailwindcss": "^4.1.9",
     "tsx": "^4.19.0",
     "tw-animate-css": "1.3.3",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vite": "^7.3.6",
+    "vitest": "^4.1.10"
   }
 }
