@@ -663,6 +663,12 @@ page-builder pages — blog and templates keep their bespoke routes (R2).
 **Files:** `scripts/seed-pages.ts`, `scripts/migrate-all.ts`, `package.json`,
 `app/page.tsx`
 
+**Tracking:** `scripts/` is gitignored (contents, not the directory), with `!/scripts/seed-*.ts`
+negated so seeding scripts are committed. The seed is the durable record of pre-migration
+homepage copy and the reproducibility path for a fresh dataset — a gitignored file serves
+neither. The existing ten `migrate-*.ts` files stay untracked; auditing them for credentials is
+separate work.
+
 **Approach:** Follow the established migration convention exactly (KTD6) — one `transaction()`,
 deterministic `_id`s (`page-home`, `siteSettings`), `createOrReplace`, single commit, log the
 transaction id, `migrate:pages` npm alias, registered in `migrate-all.ts` in dependency order
