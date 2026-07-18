@@ -228,6 +228,14 @@ empty; U12 fills it.
 **Execution note:** Mechanical extraction. Do not "improve" schemas while moving them — that
 makes the U5 typegen diff unreadable.
 
+The `test-discipline` convention blocks new files under `lib/` without paired tests. This unit
+carries an inline exception on each extracted file, because a before/after
+`sanity schema extract` diff is stronger evidence of correctness than any unit test would be.
+
+**That exception does not extend to U12.** Block schemas carry real behaviour — `Rule.min/max`
+on process steps, `Rule.custom` asserting exactly one featured capability — and have real test
+scenarios listed. Do not copy the U4 marker forward into `blocks/`.
+
 **Test expectation:** none — structural. Guarded by U5's extracted `schema.json` being
 identical before and after.
 
