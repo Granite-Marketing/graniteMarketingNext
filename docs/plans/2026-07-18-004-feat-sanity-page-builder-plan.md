@@ -787,6 +787,19 @@ routes. Anonymous browsing shows no stega. Presentation reorder updates the prev
 
 **In scope:** everything in the 18 units above.
 
+**Open from execution**
+
+- `ctaBlock.secondaryCta` has no `siteSettings` fallback. `cta.tsx` renders two CTAs — a primary
+  button and an "or send us a message" text link — but the global CTA defaults model only the
+  primary. The block field exists and works; it just always has to be filled per-page. Either
+  add a matching default to `siteSettings` or accept it. Surfaced by the block agent rather
+  than silently dropping the second link's copy.
+- Hero's workflow-diagram mock terminal and CTA's terminal chrome stay hardcoded. Decorative and
+  tightly coupled to bespoke animated components. Reasonable, but it means those two sections
+  are not *fully* editable, which is worth knowing against R3.
+- `page.ts` and `legalPage.ts` duplicate the flat-slug format regex verbatim. A shared
+  `validateFlatSlugFormat` is the obvious extraction now both files are stable.
+
 **Deferred to follow-up work**
 - `granite-sanity-page-builder` skill and the checkable conventions — deliberately after build
   and test, so they carry real lessons rather than guesses
@@ -796,6 +809,23 @@ routes. Anonymous browsing shows no stega. Presentation reorder updates the prev
   will be conflated
 - `workflowTemplate.content` missing its `code` member (origin Q1) — visible during U10, but a
   separate fix
+- **Upgrading `sanity` 4 → 5+.** Deliberately out of scope here (C2), but the case is building
+  and this project is generating the evidence. Scope it as its own piece of work rather than
+  mid-build:
+
+  | Friction hit | Consequence on 4.21.1 |
+  |---|---|
+  | `Rule.skip()` absent | Hidden-variant validation goes through `Rule.custom` instead |
+  | `Get<>` / `FilterByType<>` absent | Block union narrows via `Extract<>` by hand |
+  | Typegen `enabled: true` and `--watch` need 5.8+ | Manual `extract && generate` after every query edit |
+  | TypeGen GA is 5.10.0 | Currently on the pre-GA workflow |
+  | Embedded Studio marked "Not Recommended" | No auto-updates, no typegen watch, 10–30x slower builds |
+
+  None of these blocked the build, but three of five are "the documented answer does not exist
+  in this version" — which is the shape of a pin that has drifted from its docs. The upgrade
+  path is `sanity` 4→6 plus `@sanity/vision`, `@sanity/code-input` and a React patch bump, so
+  it carries real risk and deserves its own plan.
+
 - Migrating the Studio out of the Next.js app. Sanity's `nextjs` rule now explicitly marks
   embedded Studios "Not Recommended" (no auto-updates, no typegen watch, 10–30x slower builds),
   and `autoUpdates: true` in `sanity.cli.ts` does nothing for an embedded Studio. Direction of
@@ -835,8 +865,8 @@ derive from the dependency graph — a unit may start once every unit it depends
 | B | U4, U6 | U4 needs U1; U6 needs U1 + U2 |
 | C | U7 | **U5 moved out.** U7 promotes `seo` to a named type, changing the `schema.json` that typegen consumes |
 | D | U8, U10 | Both need U7, disjoint files |
-| E | U5, U9 | **U5 moved here.** `link` references `page` and `legalPage`, and Sanity 4.21.1 does **not** tolerate forward references — `sanity schema extract` hard-errors with `Unknown type: page` until U8 and U10 land. Typegen consumes that extract, so it cannot run earlier. Verified during execution by stripping the refs (extract went green) and restoring them |
-| E2 | U12 | Largest unit — the natural fan-out point, one agent per block |
+| E | U9, U12 | Both are schema work. U12 is the fan-out point — split by pattern (chrome blocks vs data blocks), not one agent per block, so each agent owns a coherent convention |
+| E2 | U5 | **Moved last among schema work.** Typegen is manual on 4.21.1 (KTD3), so it must be re-run after every schema change. Running it before U9 and U12 would generate a `sections` type of `null` — an empty `of: []` extracts as `{"type": "null"}` — and stale types twice over. One run against a settled schema instead |
 | F | U11, U13, U15 | U13 is the critical path |
 | G | U14, U17 | Both need U13 |
 | H | U16 | Serial — the cutover, and it touches `app/page.tsx` |
