@@ -1,5 +1,5 @@
-import { Navigation } from "@/components/navigation";
-import { Footer } from "@/components/footer";
+import { RelayNav } from "@/components/nav";
+import { RelayFooter } from "@/components/footer";
 
 export const metadata = {
 	title: "Refund & Cancellation Policy - Granite Marketing",
@@ -12,7 +12,7 @@ export const dynamic = "force-static";
 export default function RefundPolicyPage() {
 	return (
 		<>
-			<Navigation />
+			<RelayNav />
 			<main className="min-h-screen pt-32 pb-16">
 				<div className="container mx-auto px-4">
 					<div className="max-w-4xl mx-auto">
@@ -60,7 +60,7 @@ export default function RefundPolicyPage() {
 					</div>
 				</div>
 			</main>
-			<Footer />
+			<RelayFooter />
 		</>
 	);
 }

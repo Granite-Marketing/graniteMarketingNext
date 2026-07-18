@@ -1,13 +1,13 @@
-import { RelayNav } from "@/components/relay/nav";
-import { RelayHero } from "@/components/relay/hero";
-import { RelayCapabilities } from "@/components/relay/capabilities";
-import { RelayToolsStrip } from "@/components/relay/tools-strip";
-import { RelayProcess } from "@/components/relay/process";
-import { RelayResults } from "@/components/relay/results";
-import { RelayTestimonials } from "@/components/relay/testimonials";
-import { RelayFAQ } from "@/components/relay/faq";
-import { RelayCTA } from "@/components/relay/cta";
-import { RelayFooter } from "@/components/relay/footer";
+import { RelayNav } from "@/components/nav";
+import { RelayHero } from "@/components/hero";
+import { RelayCapabilities } from "@/components/capabilities";
+import { RelayToolsStrip } from "@/components/tools-strip";
+import { RelayProcess } from "@/components/process";
+import { RelayResults } from "@/components/results";
+import { RelayTestimonials } from "@/components/testimonials";
+import { RelayFAQ } from "@/components/faq";
+import { RelayCTA } from "@/components/cta";
+import { RelayFooter } from "@/components/footer";
 import { getHomeContent, getTools } from "@/lib/sanity/queries";
 import {
 	adaptClientTestimonial,

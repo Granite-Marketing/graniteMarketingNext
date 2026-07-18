@@ -1,4 +1,4 @@
-import { RelayCTA } from "@/components/relay/cta";
+import { RelayCTA } from "@/components/cta";
 
 interface ContentCtaBannerProps {
 	heading?: string;

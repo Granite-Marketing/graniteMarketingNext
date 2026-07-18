@@ -1,9 +1,9 @@
-import { Navigation } from "@/components/navigation";
+import { RelayNav } from "@/components/nav";
 import { BlogPostHero } from "@/components/blog-post-hero";
 import { PostContent } from "@/components/post-content";
 import { ContentCtaBanner } from "@/components/content-cta-banner";
 import { RelatedPosts } from "@/components/related-posts";
-import { Footer } from "@/components/footer";
+import { RelayFooter } from "@/components/footer";
 import { notFound } from "next/navigation";
 import {
 	getBlogPost,
@@ -161,12 +161,12 @@ export default async function BlogPostPage({
 
 	return (
 		<div className="min-h-screen bg-background">
-			<Navigation />
+			<RelayNav />
 			<BlogPostHero post={heroPost} slug={slug} relatedTemplates={templateLinks} />
 			<PostContent content={(post.content ?? []) as PortableTextBlock[]} />
 			<ContentCtaBanner />
 			<RelatedPosts posts={related as any[]} currentSlug={post.slug.current} />
-			<Footer />
+			<RelayFooter />
 		</div>
 	);
 }

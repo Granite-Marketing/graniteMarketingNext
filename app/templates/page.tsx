@@ -1,8 +1,8 @@
-import { Navigation } from "@/components/navigation";
+import { RelayNav } from "@/components/nav";
 import { ContentHero } from "@/components/content-hero";
 import { TemplateGrid } from "@/components/template-grid";
 import { ContentCtaBanner } from "@/components/content-cta-banner";
-import { Footer } from "@/components/footer";
+import { RelayFooter } from "@/components/footer";
 import { getWorkflowTemplates } from "@/lib/sanity/queries";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
 import { stegaClean } from "next-sanity";
@@ -58,7 +58,7 @@ export default async function TemplatesPage() {
 
 	return (
 		<>
-			<Navigation />
+			<RelayNav />
 			<main className="min-h-screen">
 				<ContentHero
 					tag="Workflow Templates"
@@ -69,7 +69,7 @@ export default async function TemplatesPage() {
 				<TemplateGrid posts={posts} />
 				<ContentCtaBanner />
 			</main>
-			<Footer />
+			<RelayFooter />
 		</>
 	);
 }

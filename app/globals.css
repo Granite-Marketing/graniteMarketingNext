@@ -298,8 +298,8 @@
 }
 
 /* ── Relay homepage theme ─────────────────────────────────────
-   Scoped design tokens for the Relay redesign. Only components
-   under components/relay/ consume these; existing pages keep the
+   Scoped design tokens for the Relay redesign. Only the Relay-
+   prefixed components consume these; existing pages keep the
    original palette until the rollout goes site-wide. */
 @theme {
 	--color-relay-bg: #0c131b;

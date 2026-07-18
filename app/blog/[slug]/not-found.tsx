@@ -1,5 +1,5 @@
-import { Navigation } from "@/components/navigation"
-import { Footer } from "@/components/footer"
+import { RelayNav } from "@/components/nav"
+import { RelayFooter } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { FileQuestion, ArrowLeft, Home } from "lucide-react"
 import Link from "next/link"
@@ -7,7 +7,7 @@ import Link from "next/link"
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navigation />
+      <RelayNav />
 
       <main className="flex-1 flex items-center justify-center px-4 py-24">
         <div className="max-w-2xl mx-auto text-center">
@@ -55,7 +55,7 @@ export default function NotFound() {
         </div>
       </main>
 
-      <Footer />
+      <RelayFooter />
     </div>
   )
 }

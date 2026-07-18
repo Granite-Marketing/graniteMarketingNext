@@ -1,6 +1,6 @@
-import { Navigation } from "@/components/navigation";
-import { RelayContact } from "@/components/relay/contact";
-import { Footer } from "@/components/footer";
+import { RelayNav } from "@/components/nav";
+import { RelayContact } from "@/components/contact";
+import { RelayFooter } from "@/components/footer";
 
 export const metadata = {
 	title: "Contact Us - Granite Marketing | Get in Touch",
@@ -14,11 +14,11 @@ export const dynamic = "force-static";
 export default function ContactPage() {
 	return (
 		<>
-			<Navigation />
+			<RelayNav />
 			<main className="min-h-screen">
 				<RelayContact />
 			</main>
-			<Footer />
+			<RelayFooter />
 		</>
 	);
 }

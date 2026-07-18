@@ -1,8 +1,8 @@
-import { Navigation } from "@/components/navigation";
+import { RelayNav } from "@/components/nav";
 import { ContentHero } from "@/components/content-hero";
 import { BlogGrid } from "@/components/blog-grid";
-import { CTASection } from "@/components/cta-section";
-import { Footer } from "@/components/footer";
+import { RelayCTA } from "@/components/cta";
+import { RelayFooter } from "@/components/footer";
 import { getBlogPosts } from "@/lib/sanity/queries";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
 import { calculateReadTime } from "@/lib/utils/read-time";
@@ -56,7 +56,7 @@ export default async function BlogPage() {
 
 	return (
 		<>
-			<Navigation />
+			<RelayNav />
 			<main className="min-h-screen">
 				<ContentHero
 					tag="Blog & Insights"
@@ -65,9 +65,9 @@ export default async function BlogPage() {
 					patternId="blog-grid"
 				/>
 				<BlogGrid posts={posts} />
-				<CTASection />
+				<RelayCTA />
 			</main>
-			<Footer />
+			<RelayFooter />
 		</>
 	);
 }
