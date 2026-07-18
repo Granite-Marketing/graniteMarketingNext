@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test": "vitest run",
     "test:watch": "vitest",
+    "baseline:capture": "next build && tsx test/regression/capture-baseline.ts",
     "migrate": "npx tsx scripts/migrate-content.ts",
     "migrate:categories": "npx tsx scripts/migrate-categories.ts",
     "migrate:locations": "npx tsx scripts/migrate-locations.ts",
