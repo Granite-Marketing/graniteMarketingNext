@@ -52,7 +52,9 @@ data/*.csv
 # granite-automations/
 
 .claude
-scripts
+# Anchored to the repo root: an unanchored "scripts" also matches test/scripts/,
+# which silently untracked the migration-client tests.
+/scripts
 # Never commit env backups/copies
 .env*.bak
 *.bak
