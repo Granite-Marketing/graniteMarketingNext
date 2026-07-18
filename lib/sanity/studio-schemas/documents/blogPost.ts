@@ -44,20 +44,7 @@ export const blogPost = defineType({
 		defineField({
 			name: "seo",
 			title: "SEO",
-			type: "object",
-			fields: [
-				defineField({
-					name: "metaTitle",
-					title: "Meta Title",
-					type: "string",
-				}),
-				defineField({
-					name: "metaDescription",
-					title: "Meta Description",
-					type: "text",
-					rows: 3,
-				}),
-			],
+			type: "seo",
 		}),
 		defineField({
 			name: "author",

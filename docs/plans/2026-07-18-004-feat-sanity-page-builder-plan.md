@@ -332,9 +332,12 @@ Two things that are easy to get wrong and both silent:
 
 - Hide variants with `hidden: ({parent}) => …` — inside an object, `parent` is the object
   value, not the document.
-- A hidden variant's `required()` still blocks publish unless the validator uses
-  `(rule, context) => context?.hidden ? rule.skip() : rule.required()`. The second argument is
-  routinely missed.
+- A hidden variant's `required()` still blocks publish unless the validator accounts for it.
+  **`Rule.skip()` does not exist in `sanity@4.21.1`** — verified by grepping `@sanity/types`,
+  not assumed. It is a v5-era addition, and the published docs showing it do not apply to this
+  pin. The working equivalent is `Rule.custom((value, context) => …)` returning `true` when the
+  variant is inactive. Verify behaviourally: assert each hidden variant's empty required field
+  actually permits publish, rather than reading the code and concluding it does.
 
 `resolve-link.ts` is the single resolver, and it `stegaClean`s `linkType` before switching
 (KTD4). In client components import `stegaClean` from `@sanity/client/stega`, not `next-sanity`
@@ -830,9 +833,10 @@ derive from the dependency graph — a unit may start once every unit it depends
 |---|---|---|
 | A | U1, U2, U3 | Fully independent. U1 touches `components/`, U2 root config, U3 `scripts/` — no file overlap |
 | B | U4, U6 | U4 needs U1; U6 needs U1 + U2 |
-| C | U5, U7 | Both need U4. U5 owns `queries.ts`, U7 owns `objects/` |
+| C | U7 | **U5 moved out.** U7 promotes `seo` to a named type, changing the `schema.json` that typegen consumes |
 | D | U8, U10 | Both need U7, disjoint files |
-| E | U9, U12 | U12 is the largest unit — consider splitting per block across agents |
+| E | U5, U9 | **U5 moved here.** `link` references `page` and `legalPage`, and Sanity 4.21.1 does **not** tolerate forward references — `sanity schema extract` hard-errors with `Unknown type: page` until U8 and U10 land. Typegen consumes that extract, so it cannot run earlier. Verified during execution by stripping the refs (extract went green) and restoring them |
+| E2 | U12 | Largest unit — the natural fan-out point, one agent per block |
 | F | U11, U13, U15 | U13 is the critical path |
 | G | U14, U17 | Both need U13 |
 | H | U16 | Serial — the cutover, and it touches `app/page.tsx` |

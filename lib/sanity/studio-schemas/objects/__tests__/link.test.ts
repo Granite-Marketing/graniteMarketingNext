@@ -1,0 +1,151 @@
+import { describe, expect, it, vi } from "vitest";
+import type { FieldDefinition, ValidationContext } from "sanity";
+import { link } from "../link";
+
+// A minimal stand-in for Sanity's `Rule` builder. `defineField`/`defineType`
+// are identity functions at runtime (verified in
+// node_modules/@sanity/types/lib/index.js), so `link.fields` below holds the
+// exact `hidden` and `validation` functions written in link.ts — this test
+// exercises the real schema file, not a re-implementation of its logic.
+function createStubRule() {
+	let capturedCustomValidator:
+		| ((value: unknown, context: ValidationContext) => unknown)
+		| undefined;
+
+	const rule = {
+		required: vi.fn(() => rule),
+		custom: vi.fn(
+			(fn: (value: unknown, context: ValidationContext) => unknown) => {
+				capturedCustomValidator = fn;
+				return rule;
+			}
+		),
+		getCustomValidator: () => capturedCustomValidator,
+	};
+
+	return rule;
+}
+
+function findField(name: string): FieldDefinition {
+	const field = link.fields.find((f) => f.name === name);
+	if (!field) throw new Error(`link has no field named "${name}"`);
+	return field as FieldDefinition;
+}
+
+function runValidation(fieldName: string, value: unknown, parent: unknown) {
+	const field = findField(fieldName);
+	const stubRule = createStubRule();
+	(field.validation as unknown as (rule: typeof stubRule) => unknown)(
+		stubRule
+	);
+	const customValidator = stubRule.getCustomValidator();
+	if (!customValidator) {
+		throw new Error(`${fieldName} did not call Rule.custom()`);
+	}
+	return customValidator(value, { parent } as ValidationContext);
+}
+
+function runHidden(fieldName: string, parent: unknown) {
+	const field = findField(fieldName);
+	if (typeof field.hidden !== "function") {
+		throw new Error(`${fieldName}.hidden is not a callback`);
+	}
+	return field.hidden({
+		parent,
+		document: undefined,
+		value: undefined,
+		currentUser: null,
+	});
+}
+
+describe("studio-schemas/objects/link", () => {
+	it("is a discriminated union on linkType with a string enum + radio layout", () => {
+		const linkType = findField("linkType");
+		expect(linkType.type).toBe("string");
+		expect((linkType.options as { layout?: string })?.layout).toBe("radio");
+		expect(
+			(linkType.options as { list?: Array<{ value: string }> })?.list?.map(
+				(o) => o.value
+			)
+		).toEqual(["internal", "anchor", "external"]);
+	});
+
+	describe("hidden — keyed off the OBJECT value (parent), never the document", () => {
+		it("internalRef is visible only when linkType is internal", () => {
+			expect(runHidden("internalRef", { linkType: "internal" })).toBe(false);
+			expect(runHidden("internalRef", { linkType: "anchor" })).toBe(true);
+			expect(runHidden("internalRef", { linkType: "external" })).toBe(true);
+		});
+
+		it("anchorPage and anchorId are visible only when linkType is anchor", () => {
+			expect(runHidden("anchorPage", { linkType: "anchor" })).toBe(false);
+			expect(runHidden("anchorPage", { linkType: "internal" })).toBe(true);
+			expect(runHidden("anchorId", { linkType: "anchor" })).toBe(false);
+			expect(runHidden("anchorId", { linkType: "external" })).toBe(true);
+		});
+
+		it("href and openInNewTab are visible only when linkType is external", () => {
+			expect(runHidden("href", { linkType: "external" })).toBe(false);
+			expect(runHidden("href", { linkType: "internal" })).toBe(true);
+			expect(runHidden("openInNewTab", { linkType: "external" })).toBe(false);
+			expect(runHidden("openInNewTab", { linkType: "anchor" })).toBe(true);
+		});
+
+		it("reads parent, not document — a document-shaped object with no linkType still hides every variant field", () => {
+			// Simulates the common bug: a field several levels deep whose
+			// `hidden` callback was accidentally written against `document`
+			// instead of `parent`. Passing a document-like shape here (no
+			// `linkType` on it, since linkType lives on the nested object) must
+			// still resolve every variant to hidden.
+			const documentShapedParent = { _type: "siteSettings", title: "Home" };
+			expect(runHidden("internalRef", documentShapedParent)).toBe(true);
+			expect(runHidden("anchorPage", documentShapedParent)).toBe(true);
+			expect(runHidden("href", documentShapedParent)).toBe(true);
+		});
+	});
+
+	describe("validation — hidden variants must not block publish", () => {
+		it("internalRef: required when internal, skipped (permits publish) otherwise", () => {
+			expect(runValidation("internalRef", undefined, { linkType: "internal" })).not.toBe(
+				true
+			);
+			expect(
+				runValidation("internalRef", { _ref: "abc" }, { linkType: "internal" })
+			).toBe(true);
+			// The hidden variants: an editor who picked "external" must be able
+			// to publish with internalRef left empty.
+			expect(runValidation("internalRef", undefined, { linkType: "external" })).toBe(
+				true
+			);
+			expect(runValidation("internalRef", undefined, { linkType: "anchor" })).toBe(
+				true
+			);
+		});
+
+		it("anchorId: required when anchor, skipped otherwise", () => {
+			expect(runValidation("anchorId", undefined, { linkType: "anchor" })).not.toBe(
+				true
+			);
+			expect(runValidation("anchorId", "services", { linkType: "anchor" })).toBe(
+				true
+			);
+			expect(runValidation("anchorId", undefined, { linkType: "internal" })).toBe(
+				true
+			);
+			expect(runValidation("anchorId", undefined, { linkType: "external" })).toBe(
+				true
+			);
+		});
+
+		it("href: required when external, skipped otherwise", () => {
+			expect(runValidation("href", undefined, { linkType: "external" })).not.toBe(
+				true
+			);
+			expect(
+				runValidation("href", "https://example.com", { linkType: "external" })
+			).toBe(true);
+			expect(runValidation("href", undefined, { linkType: "internal" })).toBe(true);
+			expect(runValidation("href", undefined, { linkType: "anchor" })).toBe(true);
+		});
+	});
+});
