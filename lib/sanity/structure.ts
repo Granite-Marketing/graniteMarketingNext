@@ -17,11 +17,38 @@ import { SITE_SETTINGS_ID, SITE_SETTINGS_TYPE } from "./studio-schemas/documents
 // `__experimental_actions` was removed in sanity 4.x; neither is reached for
 // here.
 
+// Desk ordering is explicit rather than auto-generated. The generated list
+// sorts by registration order, which buried `page` among the taxonomy types
+// even though it is the thing an editor reaches for most. Emoji prefixes in
+// schema titles had been doing this job by hand; grouping does it properly.
+//
+// Order runs from "what you edit most" to "what you edit rarely": the
+// singleton, then composed pages, then editorial content, then the records
+// that feed content blocks, then taxonomy.
+const PAGE_TYPES = ["page", "legalPage"];
+const EDITORIAL_TYPES = ["blogPost", "workflowTemplate", "caseStudy"];
+const RECORD_TYPES = ["client", "faq", "logoList", "tool"];
+const TAXONOMY_TYPES = ["author", "category", "location", "workflowCategory"];
+
 // Mechanism (1) — pin the desk list item's child to the fixed document id,
 // so opening "Site Settings" always edits the same document regardless of
 // what (if anything) exists in the dataset yet.
-export const structure: StructureResolver = (S) =>
-	S.list()
+export const structure: StructureResolver = (S) => {
+	// Mechanism (2) — siteSettings is excluded here as well as pinned above.
+	// Without this it would ALSO appear as an ordinary (uncapped) document
+	// list, defeating the pin.
+	const grouped = new Set([
+		SITE_SETTINGS_TYPE,
+		...PAGE_TYPES,
+		...EDITORIAL_TYPES,
+		...RECORD_TYPES,
+		...TAXONOMY_TYPES,
+	]);
+
+	const listFor = (types: string[]) =>
+		types.map((type) => S.documentTypeListItem(type));
+
+	return S.list()
 		.title("Content")
 		.items([
 			S.listItem()
@@ -33,13 +60,21 @@ export const structure: StructureResolver = (S) =>
 						.documentId(SITE_SETTINGS_ID)
 				),
 			S.divider(),
-			// Mechanism (2) — filter siteSettings out of the auto-generated
-			// type list. Without this it would ALSO appear here as an
-			// ordinary (uncapped) document list, defeating the pin above.
+			...listFor(PAGE_TYPES),
+			S.divider(),
+			...listFor(EDITORIAL_TYPES),
+			S.divider(),
+			...listFor(RECORD_TYPES),
+			S.divider(),
+			...listFor(TAXONOMY_TYPES),
+
+			// Anything registered but not placed above still shows up, so a
+			// new document type is never silently missing from the desk.
 			...S.documentTypeListItems().filter(
-				(listItem) => listItem.getId() !== SITE_SETTINGS_TYPE
+				(listItem) => !grouped.has(listItem.getId() ?? "")
 			),
 		]);
+};
 
 const HIDDEN_SITE_SETTINGS_ACTIONS = new Set(["duplicate", "delete"]);
 

@@ -82,6 +82,9 @@ function createStubS(documentTypeListItems: ReturnType<typeof createListItemStub
 		document: () => createDocumentBuilderStub(),
 		divider: () => ({ __type: "divider" as const }),
 		documentTypeListItems: () => documentTypeListItems,
+		// Real API, confirmed at sanity/lib/structure.d.ts:7622 —
+		// `documentTypeListItem: (typeName: string) => ListItemBuilder`.
+		documentTypeListItem: (typeName: string) => createListItemStub(typeName),
 	};
 
 	return { S, getList: () => list };
@@ -108,31 +111,76 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 		expect(child.getDocumentId()).toBe("siteSettings");
 	});
 
-	it("mechanism (2): filters siteSettings out of the auto-generated document type list, keeping the rest in order", () => {
-		const { S, getList } = createStubS([
-			createListItemStub("page"),
-			createListItemStub("siteSettings"),
-			createListItemStub("blogPost"),
-			createListItemStub("legalPage"),
-		]);
+	it("mechanism (2): never lists siteSettings alongside the pinned item", () => {
+		const { S, getList } = createStubS([createListItemStub("siteSettings")]);
 
 		structure(S as never, {} as never);
 
 		const items = getList().items as ReturnType<typeof createListItemStub>[];
-		// [0] is the pinned Site Settings item, [1] is the divider — the
-		// filtered auto-generated list starts at index 2.
-		const autoListIds = items.slice(2).map((item) => item.getId());
-		expect(autoListIds).toEqual(["page", "blogPost", "legalPage"]);
-		expect(autoListIds).not.toContain("siteSettings");
+		const ids = items.slice(1).map((item) => item.getId?.());
+
+		expect(ids.filter((id) => id === "siteSettings")).toEqual([]);
 	});
 
-	it("places a divider between the pinned item and the auto-generated list", () => {
-		const { S, getList } = createStubS([createListItemStub("page")]);
+	it("places a divider between the pinned item and the grouped lists", () => {
+		const { S, getList } = createStubS([]);
 
 		structure(S as never, {} as never);
 
 		const items = getList().items as unknown[];
 		expect(items[1]).toEqual({ __type: "divider" });
+	});
+
+	// Ordering is the point of the explicit structure: the auto-generated list
+	// sorted by registration order, which buried `page` among the taxonomy
+	// types even though it is the most-reached-for type.
+	it("orders groups from most-edited to least, with page types directly after Site Settings", () => {
+		const { S, getList } = createStubS([]);
+
+		structure(S as never, {} as never);
+
+		const ids = (getList().items as ReturnType<typeof createListItemStub>[])
+			.map((item) => item.getId?.())
+			.filter((id): id is string => typeof id === "string" && id !== "");
+
+		expect(ids).toEqual([
+			"siteSettings",
+			"page",
+			"legalPage",
+			"blogPost",
+			"workflowTemplate",
+			"caseStudy",
+			"client",
+			"faq",
+			"logoList",
+			"tool",
+			"author",
+			"category",
+			"location",
+			"workflowCategory",
+		]);
+
+		expect(ids.indexOf("page")).toBeLessThan(ids.indexOf("author"));
+	});
+
+	// A new document type must never be silently missing from the desk just
+	// because nobody remembered to add it to a group.
+	it("still lists any registered type that was not placed in a group", () => {
+		const { S, getList } = createStubS([
+			createListItemStub("page"),
+			createListItemStub("somethingNew"),
+		]);
+
+		structure(S as never, {} as never);
+
+		const ids = (getList().items as ReturnType<typeof createListItemStub>[])
+			.map((item) => item.getId?.())
+			.filter(Boolean);
+
+		expect(ids).toContain("somethingNew");
+		// ...and not twice, despite `page` appearing in both the group list
+		// and the auto-generated passthrough.
+		expect(ids.filter((id) => id === "page")).toHaveLength(1);
 	});
 });
 
