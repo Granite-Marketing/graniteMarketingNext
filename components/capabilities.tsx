@@ -1,7 +1,11 @@
 import { sectionIdProps } from "@/lib/utils/section-id";
 import { capabilities as defaultCapabilities, type Capability } from "./data";
+import { CalButton } from "./cal-button";
 
-type CapabilityFooterLink = { label: string; href: string } | null;
+type CapabilityFooterLink =
+	| { label: string; kind: "navigate"; href: string }
+	| { label: string; kind: "calBooking"; calLink: string }
+	| null;
 
 type CapabilitiesProps = {
 	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
@@ -25,7 +29,11 @@ export function Capabilities({
 	heading = "Built for the work you're tired of doing.",
 	body = "Six systems, each scoped to a job your team currently does by hand. Start with one. They're designed to be wired together.",
 	items = defaultCapabilities,
-	link = { label: "Map your first automation →", href: "#contact" },
+	link = {
+		label: "Map your first automation →",
+		kind: "navigate",
+		href: "#contact",
+	},
 	id,
 	dataSanity,
 }: CapabilitiesProps) {
@@ -92,7 +100,12 @@ export function Capabilities({
 					))}
 				</ul>
 
-				{link && (
+				{link && link.kind === "calBooking" && (
+					<p className="mt-11">
+						<CalButton calLink={link.calLink}>{link.label}</CalButton>
+					</p>
+				)}
+				{link && link.kind === "navigate" && (
 					<p className="mt-11">
 						<a
 							href={link.href}

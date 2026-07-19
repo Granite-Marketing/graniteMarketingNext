@@ -26,10 +26,29 @@ describe("resolveNavLinks", () => {
 			"templates",
 			"granite",
 		]);
-		expect(resolved.map((l) => l.href)).toEqual([
+		// `l.href` only exists on the "navigate" branch of the ResolvedLink
+		// union — narrowing here (rather than reading `.href` unconditionally)
+		// is itself proof the discrimination is enforced at the type level for
+		// every consumer, not just resolveLink's own return type.
+		expect(resolved.map((l) => (l.kind === "navigate" ? l.href : null))).toEqual([
 			"#services",
 			"/templates/n8n-crm-cleanup",
 			"https://example.com",
+		]);
+	});
+
+	it("resolves a navLink set to calBooking to the Cal variant, not a plain href", () => {
+		const navLinks = [
+			{
+				label: "book a call",
+				link: { linkType: "calBooking" as const, calLink: "sanindo/intro-call" },
+			},
+		];
+
+		const resolved = resolveNavLinks(navLinks);
+
+		expect(resolved).toEqual([
+			{ kind: "calBooking", label: "book a call", calLink: "sanindo/intro-call" },
 		]);
 	});
 
@@ -70,20 +89,20 @@ describe("resolveNavLinks", () => {
 
 describe("resolveLogoLink", () => {
 	it("an unset logoLink defaults to / rather than a dead anchor", () => {
-		expect(resolveLogoLink(undefined)).toEqual({ href: "/" });
-		expect(resolveLogoLink(null)).toEqual({ href: "/" });
+		expect(resolveLogoLink(undefined)).toEqual({ kind: "navigate", href: "/" });
+		expect(resolveLogoLink(null)).toEqual({ kind: "navigate", href: "/" });
 	});
 
 	it("a logoLink with an unresolvable target also falls back to /", () => {
 		expect(
 			resolveLogoLink({ linkType: "internal", internalRef: null })
-		).toEqual({ href: "/" });
+		).toEqual({ kind: "navigate", href: "/" });
 	});
 
 	it("a resolvable logoLink resolves to its own target, not the / fallback", () => {
 		expect(
 			resolveLogoLink({ linkType: "external", href: "https://example.com" })
-		).toEqual({ href: "https://example.com" });
+		).toEqual({ kind: "navigate", href: "https://example.com" });
 	});
 });
 
@@ -115,8 +134,14 @@ describe("resolveFooterColumns", () => {
 		];
 
 		expect(resolveFooterColumns(columns)).toEqual([
-			{ heading: "Product", links: [{ label: "Templates", href: "/templates" }] },
-			{ heading: "Company", links: [{ label: "Blog", href: "/blog/hello" }] },
+			{
+				heading: "Product",
+				links: [{ kind: "navigate", label: "Templates", href: "/templates" }],
+			},
+			{
+				heading: "Company",
+				links: [{ kind: "navigate", label: "Blog", href: "/blog/hello" }],
+			},
 		]);
 	});
 

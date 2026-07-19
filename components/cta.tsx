@@ -2,7 +2,10 @@ import { sectionIdProps } from "@/lib/utils/section-id";
 import Link from "next/link";
 import { CalButton } from "./cal-button";
 
-type SecondaryCta = { label: string; href: string } | null;
+type SecondaryCta =
+	| { label: string; kind: "navigate"; href: string }
+	| { label: string; kind: "calBooking"; calLink: string }
+	| null;
 
 type CTAProps = {
 	heading?: string;
@@ -25,7 +28,11 @@ export function CTA({
 	heading = "Stop doing work a workflow could do.",
 	subtitle = "Thirty minutes, no slides. We map one of your real workflows live on the call. You keep the map either way.",
 	primaryCtaLabel = "Book an intro call",
-	secondaryCta = { label: "or send us a message", href: "/contact" },
+	secondaryCta = {
+		label: "or send us a message",
+		kind: "navigate",
+		href: "/contact",
+	},
 	footnote = "avg. response time: same day · first build live in ~3 weeks",
 	id,
 	dataSanity,
@@ -67,7 +74,12 @@ export function CTA({
 						</p>
 						<div className="mt-9 flex flex-wrap items-center justify-center gap-5">
 							<CalButton size="lg">{primaryCtaLabel}</CalButton>
-							{secondaryCta && (
+							{secondaryCta && secondaryCta.kind === "calBooking" && (
+								<CalButton calLink={secondaryCta.calLink}>
+									{secondaryCta.label}
+								</CalButton>
+							)}
+							{secondaryCta && secondaryCta.kind === "navigate" && (
 								<Link
 									href={secondaryCta.href}
 									className="rounded border border-relay-line px-5 py-3 font-mono text-[13px] text-relay-faint transition-colors hover:border-relay-cyan hover:text-relay-ink"

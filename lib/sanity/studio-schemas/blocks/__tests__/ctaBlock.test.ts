@@ -105,6 +105,7 @@ describe("studio-schemas/blocks/ctaBlock", () => {
 		const resolved = resolveCta(overrides, {});
 		expect(resolved.heading).toBe("Ready when you are.");
 		expect(resolved.button).toEqual({
+			kind: "navigate",
 			label: "Book an intro call",
 			href: "https://cal.com/granite/30min",
 		});

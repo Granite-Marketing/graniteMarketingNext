@@ -1,7 +1,9 @@
 import { stegaClean } from "@sanity/client/stega";
+import { CAL_LINK } from "@/components/data";
 
 // The single resolver turning a `link` object (lib/sanity/studio-schemas/objects/link.ts)
-// into an href, everywhere the site needs one (nav, footer, CTAs, in-body links).
+// into either a navigation target or a Cal.com booking instruction, everywhere
+// the site needs one (nav, footer, CTAs, in-body links).
 //
 // KTD4 — `linkType` is author-entered content, so in Draft Mode it carries
 // invisible stega characters and `linkType === "external"` silently returns
@@ -11,6 +13,18 @@ import { stegaClean } from "@sanity/client/stega";
 // `next-sanity`) is the narrower entry point, consistent with the only other
 // stegaClean import in this codebase that runs in a client component
 // (lib/sanity/components/CodeBlock.tsx).
+//
+// `ResolvedLink` is a discriminated union on `kind`, not a single `{ href }`
+// shape with a Cal variant bolted on. A `calBooking` link is NOT navigation —
+// it opens the Cal.com modal (components/cal-button.tsx) and must never be
+// handed to an `<a href>`/`<Link href>` as a plain string. Smuggling the Cal
+// handle through the `href` field (e.g. `href: "cal:sanindo/30min"`) would
+// let a careless call site render it as a dead/wrong anchor with nothing to
+// catch the mistake at compile time. Branching on `kind` instead means a
+// caller that only destructures `.href` gets a TypeScript error on the
+// `calBooking` branch (no `href` property exists there) rather than a silent
+// runtime bug — see resolve-link.test.ts's "cannot be rendered as a plain
+// href by mistake" case for the regression guard.
 
 type InternalDocType = "page" | "blogPost" | "workflowTemplate" | "legalPage";
 
@@ -35,15 +49,28 @@ export type LinkValue =
 			anchorId?: string | null;
 			href?: string | null;
 			openInNewTab?: boolean | null;
+			calLink?: string | null;
 	  }
 	| null
 	| undefined;
 
-export type ResolvedLink = {
-	href: string;
-	target?: "_blank";
-	rel?: "noopener noreferrer";
-};
+/**
+ * `kind: "navigate"` is a real destination — hand its `href` to `<a>`/
+ * `<Link>`. `kind: "calBooking"` is not: it's an instruction to open the
+ * Cal.com modal with `calLink` as the booking handle
+ * (`data-cal-link` in components/cal-button.tsx), and has no `href` at all.
+ */
+export type ResolvedLink =
+	| {
+			kind: "navigate";
+			href: string;
+			target?: "_blank";
+			rel?: "noopener noreferrer";
+	  }
+	| {
+			kind: "calBooking";
+			calLink: string;
+	  };
 
 export type ResolveLinkContext = {
 	/**
@@ -97,7 +124,7 @@ export function resolveLink(
 	switch (clean.linkType) {
 		case "internal": {
 			const href = pathForInternalDoc(clean.internalRef ?? null);
-			return href ? { href } : null;
+			return href ? { kind: "navigate", href } : null;
 		}
 
 		case "anchor": {
@@ -108,16 +135,29 @@ export function resolveLink(
 				!targetSlug || targetSlug === context.currentSlug;
 
 			return isCurrentPage
-				? { href: `#${clean.anchorId}` }
-				: { href: `/${targetSlug}#${clean.anchorId}` };
+				? { kind: "navigate", href: `#${clean.anchorId}` }
+				: { kind: "navigate", href: `/${targetSlug}#${clean.anchorId}` };
 		}
 
 		case "external": {
 			if (!clean.href) return null;
 
 			return clean.openInNewTab
-				? { href: clean.href, target: "_blank", rel: "noopener noreferrer" }
-				: { href: clean.href };
+				? {
+						kind: "navigate",
+						href: clean.href,
+						target: "_blank",
+						rel: "noopener noreferrer",
+					}
+				: { kind: "navigate", href: clean.href };
+		}
+
+		case "calBooking": {
+			// The field is genuinely optional (see link.ts) — most editors leave
+			// it unset and inherit the site's standard booking handle. `|| `, not
+			// `??`, so an author-cleared empty string also falls back rather than
+			// resolving to a Cal.com modal with an empty handle.
+			return { kind: "calBooking", calLink: clean.calLink || CAL_LINK };
 		}
 
 		default:

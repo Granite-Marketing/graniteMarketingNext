@@ -1,5 +1,6 @@
 import { defineType, defineField } from "sanity";
 import type { ValidationContext } from "sanity";
+import { CAL_LINK } from "@/components/data";
 
 // The reusable link union every nav item, CTA button and in-body link target
 // resolves through (U7 of the Sanity page builder plan). A discriminated
@@ -14,7 +15,11 @@ import type { ValidationContext } from "sanity";
 // registered in the schema.
 //
 // The destination is resolved by `lib/sanity/lib/resolve-link.ts` — nothing
-// in this schema file computes an href.
+// in this schema file computes an href. `calBooking` is the one exception to
+// "resolves to an href": it resolves to an instruction to open the Cal.com
+// modal (components/cal-button.tsx) instead, which is exactly why the
+// resolver returns a discriminated `{ kind }` result rather than a bare
+// string — see resolve-link.ts for the rationale.
 
 type LinkParent = { linkType?: string } | undefined;
 
@@ -30,6 +35,9 @@ function isAnchor(parent: LinkParent) {
 }
 function isExternal(parent: LinkParent) {
 	return parent?.linkType === "external";
+}
+function isCalBooking(parent: LinkParent) {
+	return parent?.linkType === "calBooking";
 }
 
 function parentOf(context: ValidationContext): LinkParent {
@@ -50,6 +58,7 @@ export const link = defineType({
 					{ title: "Internal page", value: "internal" },
 					{ title: "Anchor on a page", value: "anchor" },
 					{ title: "External URL", value: "external" },
+					{ title: "Cal.com booking", value: "calBooking" },
 				],
 				layout: "radio",
 			},
@@ -121,6 +130,19 @@ export const link = defineType({
 			type: "boolean",
 			initialValue: false,
 			hidden: ({ parent }) => !isExternal(parent as LinkParent),
+		}),
+		defineField({
+			name: "calLink",
+			title: "Cal.com booking handle",
+			description: `Optional. Defaults to the site's standard booking handle (${CAL_LINK}) when left blank — most editors should leave this alone.`,
+			type: "string",
+			initialValue: CAL_LINK,
+			hidden: ({ parent }) => !isCalBooking(parent as LinkParent),
+			// No Rule.custom here, unlike internalRef/anchorId/href: calLink is
+			// OPTIONAL even when this is the active variant (the resolver falls
+			// back to CAL_LINK when it's empty — see resolve-link.ts), the same
+			// "hidden, no required check" posture openInNewTab already has for
+			// the external variant above.
 		}),
 	],
 });

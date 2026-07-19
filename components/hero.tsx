@@ -12,7 +12,10 @@ export type ClientLogo = {
 	website?: string;
 };
 
-type SecondaryCta = { label: string; href: string } | null;
+type SecondaryCta =
+	| { label: string; kind: "navigate"; href: string }
+	| { label: string; kind: "calBooking"; calLink: string }
+	| null;
 
 type HeroProps = {
 	clientLogos?: ClientLogo[];
@@ -39,7 +42,11 @@ export function Hero({
 	heading = "We connect your tools into workflows that run themselves.",
 	body = "Custom AI automations wired into the stack you already run. They keep your CRM clean, turn market noise into a morning digest, draft on-brand content and bring the real judgement calls to a person.",
 	primaryCtaLabel = "Book an intro call",
-	secondaryCta = { label: "See what we build ↓", href: "/#services" },
+	secondaryCta = {
+		label: "See what we build ↓",
+		kind: "navigate",
+		href: "/#services",
+	},
 	showTrustedBy = true,
 	id,
 	dataSanity,
@@ -68,7 +75,12 @@ export function Hero({
 
 					<div className="mt-9 flex flex-wrap items-center gap-5">
 						<CalButton size="lg">{primaryCtaLabel}</CalButton>
-						{secondaryCta && (
+						{secondaryCta && secondaryCta.kind === "calBooking" && (
+							<CalButton calLink={secondaryCta.calLink}>
+								{secondaryCta.label}
+							</CalButton>
+						)}
+						{secondaryCta && secondaryCta.kind === "navigate" && (
 							<Link
 								href={secondaryCta.href}
 								className="rounded border border-relay-line px-5 py-3 font-mono text-[13px] text-relay-faint transition-colors hover:border-relay-cyan hover:text-relay-ink"

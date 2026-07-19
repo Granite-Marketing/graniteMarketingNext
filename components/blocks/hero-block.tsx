@@ -21,7 +21,8 @@ const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
       anchorPage->{ _type, _id, slug },
       anchorId,
       href,
-      openInNewTab
+      openInNewTab,
+      calLink
     }
   },
   showTrustedBy,
@@ -62,7 +63,7 @@ export function HeroBlockAdapter({
 			primaryCtaLabel={value.primaryCtaLabel ?? undefined}
 			secondaryCta={
 				secondary && value.secondaryCta?.label
-					? { label: value.secondaryCta.label, href: secondary.href }
+					? { label: value.secondaryCta.label, ...secondary }
 					: null
 			}
 			showTrustedBy={value.showTrustedBy ?? undefined}

@@ -53,6 +53,15 @@ import {
 export const HOME_PAGE_DOC_ID = "page-home";
 export const HOME_PAGE_SLUG = "home";
 
+// Mirrors lib/seo/config.ts's defaultMetadata. Duplicated as literals rather
+// than imported: this script writes a snapshot of what the homepage said at
+// migration time, and it must not silently change if the site defaults are
+// edited later.
+export const HOME_META_TITLE =
+	"Granite Marketing | Custom AI Automations for Business Productivity";
+export const HOME_META_DESCRIPTION =
+	"Automate workflows with n8n and no-code tools to boost team efficiency and output. Discover what you can build\u2014get started today.";
+
 // ---------------------------------------------------------------------------
 // Minimal write-side types. These describe what we're ABOUT TO WRITE to the
 // Content Lake — deliberately hand-rolled rather than imported from
@@ -204,6 +213,7 @@ export interface HomePageDocument {
 	_type: "page";
 	title: string;
 	slug: { _type: "slug"; current: string };
+	seo: { _type: "seo"; metaTitle: string; metaDescription: string };
 	sections: HomePageSection[];
 }
 
@@ -431,6 +441,20 @@ export function buildHomePageDocument(): HomePageDocument {
 		_type: "page",
 		title: "Home",
 		slug: { _type: "slug", current: HOME_PAGE_SLUG },
+		// Seeded from the site defaults in lib/seo/config.ts, so the SEO tab
+		// opens already showing the homepage's real title and description
+		// rather than two empty boxes an editor has to guess at.
+		//
+		// The first seed omitted this, and the HTML baseline caught the
+		// consequence: with no metaTitle the homepage <title> fell through to
+		// the document's Studio name and shipped as "Home". Copying the values
+		// in makes them visible and editable, which is the point of the
+		// migration.
+		seo: {
+			_type: "seo",
+			metaTitle: HOME_META_TITLE,
+			metaDescription: HOME_META_DESCRIPTION,
+		},
 		sections: buildHomePageSections(),
 	};
 }

@@ -1,6 +1,7 @@
 import { vercelStegaCombine } from "@vercel/stega";
 import { describe, expect, it } from "vitest";
-import { resolveLink, type LinkValue } from "../resolve-link";
+import { resolveLink, type LinkValue, type ResolvedLink } from "../resolve-link";
+import { CAL_LINK } from "@/components/data";
 
 describe("resolveLink", () => {
 	it("internal resolves to /{slug} from the referenced doc", () => {
@@ -13,7 +14,7 @@ describe("resolveLink", () => {
 			},
 		};
 
-		expect(resolveLink(link)).toEqual({ href: "/about-us" });
+		expect(resolveLink(link)).toEqual({ kind: "navigate", href: "/about-us" });
 	});
 
 	it("internal -> legalPage resolves to the policy path, not /{slug}-as-a-generic-page", () => {
@@ -32,7 +33,7 @@ describe("resolveLink", () => {
 			},
 		};
 
-		expect(resolveLink(link)).toEqual({ href: "/privacy" });
+		expect(resolveLink(link)).toEqual({ kind: "navigate", href: "/privacy" });
 	});
 
 	it("internal -> blogPost and workflowTemplate get their own route prefixes, proving the switch is type-aware", () => {
@@ -44,7 +45,7 @@ describe("resolveLink", () => {
 					slug: { current: "how-we-ship" },
 				},
 			})
-		).toEqual({ href: "/blog/how-we-ship" });
+		).toEqual({ kind: "navigate", href: "/blog/how-we-ship" });
 
 		expect(
 			resolveLink({
@@ -54,7 +55,7 @@ describe("resolveLink", () => {
 					slug: { current: "s3-presigned-url" },
 				},
 			})
-		).toEqual({ href: "/templates/s3-presigned-url" });
+		).toEqual({ kind: "navigate", href: "/templates/s3-presigned-url" });
 	});
 
 	it("anchor resolves to /{pageSlug}#{anchorId} when the target page differs from the current page", () => {
@@ -65,6 +66,7 @@ describe("resolveLink", () => {
 		};
 
 		expect(resolveLink(link, { currentSlug: "about-us" })).toEqual({
+			kind: "navigate",
 			href: "/home#services",
 		});
 	});
@@ -76,6 +78,7 @@ describe("resolveLink", () => {
 			anchorId: "services",
 		};
 		expect(resolveLink(linkToCurrentPage, { currentSlug: "home" })).toEqual({
+			kind: "navigate",
 			href: "#services",
 		});
 
@@ -85,7 +88,10 @@ describe("resolveLink", () => {
 			linkType: "anchor",
 			anchorId: "results",
 		};
-		expect(resolveLink(linkWithNoPageRef)).toEqual({ href: "#results" });
+		expect(resolveLink(linkWithNoPageRef)).toEqual({
+			kind: "navigate",
+			href: "#results",
+		});
 	});
 
 	it("external returns href verbatim, and sets target=_blank with rel=noopener noreferrer when openInNewTab", () => {
@@ -94,7 +100,10 @@ describe("resolveLink", () => {
 			href: "https://n8n.io",
 			openInNewTab: false,
 		};
-		expect(resolveLink(withoutNewTab)).toEqual({ href: "https://n8n.io" });
+		expect(resolveLink(withoutNewTab)).toEqual({
+			kind: "navigate",
+			href: "https://n8n.io",
+		});
 
 		const withNewTab: LinkValue = {
 			linkType: "external",
@@ -102,6 +111,7 @@ describe("resolveLink", () => {
 			openInNewTab: true,
 		};
 		expect(resolveLink(withNewTab)).toEqual({
+			kind: "navigate",
 			href: "https://n8n.io",
 			target: "_blank",
 			rel: "noopener noreferrer",
@@ -135,7 +145,10 @@ describe("resolveLink", () => {
 		// switch falls through to `default: return null` — silently breaking
 		// every link in Draft Mode. This must resolve exactly as the
 		// plain-string case above.
-		expect(resolveLink(link)).toEqual({ href: "https://n8n.io" });
+		expect(resolveLink(link)).toEqual({
+			kind: "navigate",
+			href: "https://n8n.io",
+		});
 	});
 
 	it("a dangling reference returns null rather than throwing", () => {
@@ -162,5 +175,92 @@ describe("resolveLink", () => {
 		expect(resolveLink({ linkType: undefined })).toBeNull();
 		expect(resolveLink(null)).toBeNull();
 		expect(resolveLink(undefined)).toBeNull();
+	});
+
+	describe("calBooking", () => {
+		it("resolves to the Cal variant, not an href", () => {
+			const link: LinkValue = {
+				linkType: "calBooking",
+				calLink: "sanindo/intro-call",
+			};
+
+			const resolved = resolveLink(link);
+
+			expect(resolved).toEqual({
+				kind: "calBooking",
+				calLink: "sanindo/intro-call",
+			});
+			// Explicitly prove the shape has no `href` at all — a calBooking
+			// result is not "an href that happens to also carry a kind", it has
+			// no navigation target whatsoever.
+			expect(resolved).not.toHaveProperty("href");
+		});
+
+		it("with no explicit handle falls back to the default CAL_LINK", () => {
+			expect(resolveLink({ linkType: "calBooking" })).toEqual({
+				kind: "calBooking",
+				calLink: CAL_LINK,
+			});
+
+			// An author-cleared empty string is "no explicit handle" too, not a
+			// deliberate empty booking handle.
+			expect(resolveLink({ linkType: "calBooking", calLink: "" })).toEqual({
+				kind: "calBooking",
+				calLink: CAL_LINK,
+			});
+		});
+
+		it("a stega-encoded 'calBooking' linkType still resolves correctly (draft-mode regression guard)", () => {
+			const encodedLinkType = vercelStegaCombine("calBooking", {
+				origin: "sanity.io",
+				href: "https://example.com/studio/desk/link",
+				title: "linkType",
+			});
+
+			expect(encodedLinkType).not.toBe("calBooking");
+			expect(encodedLinkType.startsWith("calBooking")).toBe(true);
+
+			const link: LinkValue = {
+				linkType: encodedLinkType,
+				calLink: "sanindo/intro-call",
+			};
+
+			// Without stegaClean, `clean.linkType === "calBooking"` is false and
+			// the switch falls through to `default: return null` — silently
+			// breaking every Cal booking CTA in Draft Mode.
+			expect(resolveLink(link)).toEqual({
+				kind: "calBooking",
+				calLink: "sanindo/intro-call",
+			});
+		});
+	});
+
+	it("a resolved calBooking cannot be rendered as a plain href by mistake — the type discrimination holds", () => {
+		// Compile-time proof, not just a runtime assertion. `link` here is
+		// typed as the genuine `ResolvedLink` union (not a literal TypeScript
+		// could narrow away at the declaration), so reading `.href` without
+		// first narrowing on `kind` is a type error — this function would fail
+		// `tsc --noEmit` if the union ever regressed back to a single
+		// `{ href: string }` shape with an optional Cal field bolted on.
+		function hrefIfNavigable(link: ResolvedLink): string | null {
+			// @ts-expect-error — `href` does not exist on the union until it is
+			// narrowed to the "navigate" branch; this line must not compile.
+			return link.href;
+		}
+		void hrefIfNavigable;
+
+		// The runtime half: an actual resolved calBooking value has no `href`
+		// property at all, so any call site that blindly forwards `.href` to
+		// `<a href>`/`<Link href>` renders `href={undefined}`, not a silent
+		// wrong URL — and the type error above is what stops that call site
+		// from being written in the first place.
+		const calBookingResult = resolveLink({
+			linkType: "calBooking",
+			calLink: "sanindo/intro-call",
+		});
+
+		expect(calBookingResult).not.toBeNull();
+		expect(calBookingResult?.kind).toBe("calBooking");
+		expect(calBookingResult).not.toHaveProperty("href");
 	});
 });

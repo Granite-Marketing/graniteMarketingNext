@@ -32,7 +32,8 @@ const LINK_PROJECTION = `{
 	anchorPage->{ _type, _id, slug },
 	anchorId,
 	href,
-	openInNewTab
+	openInNewTab,
+	calLink
 }`;
 
 const LABELED_LINK_PROJECTION = `{

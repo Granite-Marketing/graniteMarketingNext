@@ -9,6 +9,13 @@ type CalButtonProps = {
 	children: React.ReactNode;
 	size?: "default" | "lg";
 	className?: string;
+	/**
+	 * Overrides the booking handle passed to Cal.com's `data-cal-link`.
+	 * Defaults to the site-wide CAL_LINK — most callers (and every hardcoded
+	 * usage on the homepage today) never pass this, only a resolved `link`
+	 * object's `calBooking` variant with its own explicit handle does.
+	 */
+	calLink?: string;
 };
 
 /**
@@ -20,6 +27,7 @@ export function CalButton({
 	children,
 	size = "default",
 	className,
+	calLink = CAL_LINK,
 }: CalButtonProps) {
 	useEffect(() => {
 		(async () => {
@@ -40,7 +48,7 @@ export function CalButton({
 		<button
 			type="button"
 			data-cal-namespace={CAL_NAMESPACE}
-			data-cal-link={CAL_LINK}
+			data-cal-link={calLink}
 			data-cal-config='{"layout":"month_view","theme":"dark"}'
 			className={cn(
 				"cursor-pointer rounded bg-relay-cyan font-mono font-semibold text-relay-bg transition-all hover:bg-relay-bright hover:shadow-[0_0_28px_rgba(63,198,220,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-relay-cyan",

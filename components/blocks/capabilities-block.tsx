@@ -21,7 +21,8 @@ const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
       anchorPage->{ _type, _id, slug },
       anchorId,
       href,
-      openInNewTab
+      openInNewTab,
+      calLink
     }
   },
   anchorId
@@ -68,7 +69,7 @@ export function CapabilitiesBlockAdapter({
 			}
 			link={
 				footerLink && value.link?.label
-					? { label: value.link.label, href: footerLink.href }
+					? { label: value.link.label, ...footerLink }
 					: null
 			}
 			id={resolveAnchorId(value.anchorId, value.heading) ?? null}

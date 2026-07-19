@@ -31,6 +31,7 @@ describe("resolveCta", () => {
 			heading: siteDefaults.ctaHeading,
 			subtitle: siteDefaults.ctaSubtitle,
 			button: {
+				kind: "navigate",
 				label: "Book an intro call",
 				href: "https://cal.com/granite/30min",
 			},
@@ -55,6 +56,7 @@ describe("resolveCta", () => {
 		expect(resolved.subtitle).toBe(siteDefaults.ctaSubtitle);
 		expect(resolved.footnote).toBe(siteDefaults.ctaFootnote);
 		expect(resolved.button).toEqual({
+			kind: "navigate",
 			label: "Book an intro call",
 			href: "https://cal.com/granite/30min",
 		});
@@ -67,7 +69,11 @@ describe("resolveCta", () => {
 
 		const resolved = resolveCta(block, siteDefaults);
 
-		expect(resolved.button).toEqual({ label: "Talk to sales", href: "/contact" });
+		expect(resolved.button).toEqual({
+			kind: "navigate",
+			label: "Talk to sales",
+			href: "/contact",
+		});
 		expect(resolved.heading).toBe(siteDefaults.ctaHeading);
 		expect(resolved.subtitle).toBe(siteDefaults.ctaSubtitle);
 		expect(resolved.footnote).toBe(siteDefaults.ctaFootnote);
@@ -84,7 +90,7 @@ describe("resolveCta", () => {
 		expect(resolveCta(block, siteDefaults)).toEqual({
 			heading: "Custom heading",
 			subtitle: "Custom subtitle",
-			button: { label: "Custom CTA", href: "/custom" },
+			button: { kind: "navigate", label: "Custom CTA", href: "/custom" },
 			footnote: "Custom footnote",
 		});
 	});
@@ -122,5 +128,20 @@ describe("resolveCta", () => {
 		};
 
 		expect(resolveCta(block, {}).button).toBeNull();
+	});
+
+	it("a ctaButton set to calBooking resolves to the Cal variant, label preserved alongside it", () => {
+		const block: CtaBlockOverrides = {
+			ctaButton: {
+				label: "Book an intro call",
+				link: { linkType: "calBooking", calLink: "sanindo/intro-call" },
+			},
+		};
+
+		expect(resolveCta(block, {}).button).toEqual({
+			kind: "calBooking",
+			label: "Book an intro call",
+			calLink: "sanindo/intro-call",
+		});
 	});
 });

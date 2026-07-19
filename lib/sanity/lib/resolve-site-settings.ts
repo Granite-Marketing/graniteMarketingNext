@@ -43,7 +43,7 @@ export function resolveNavLinks(
 
 export type SiteSettingsLogoLink = LinkValue;
 
-const HOME_LINK: ResolvedLink = { href: "/" };
+const HOME_LINK: ResolvedLink = { kind: "navigate", href: "/" };
 
 /**
  * `logoLink` unset (or unresolvable) falls back to the homepage rather than

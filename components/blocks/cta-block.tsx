@@ -23,7 +23,8 @@ const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
       anchorPage->{ _type, _id, slug },
       anchorId,
       href,
-      openInNewTab
+      openInNewTab,
+      calLink
     }
   },
   ctaFootnote,
@@ -35,7 +36,8 @@ const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
       anchorPage->{ _type, _id, slug },
       anchorId,
       href,
-      openInNewTab
+      openInNewTab,
+      calLink
     }
   },
   anchorId
@@ -85,7 +87,7 @@ export function CtaBlockAdapter({
 			primaryCtaLabel={resolved.button?.label ?? undefined}
 			secondaryCta={
 				secondary && value.secondaryCta?.label
-					? { label: value.secondaryCta.label, href: secondary.href }
+					? { label: value.secondaryCta.label, ...secondary }
 					: null
 			}
 			footnote={resolved.footnote ?? undefined}

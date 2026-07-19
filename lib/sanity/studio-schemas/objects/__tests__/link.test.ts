@@ -67,7 +67,7 @@ describe("studio-schemas/objects/link", () => {
 			(linkType.options as { list?: Array<{ value: string }> })?.list?.map(
 				(o) => o.value
 			)
-		).toEqual(["internal", "anchor", "external"]);
+		).toEqual(["internal", "anchor", "external", "calBooking"]);
 	});
 
 	describe("hidden — keyed off the OBJECT value (parent), never the document", () => {
@@ -91,6 +91,13 @@ describe("studio-schemas/objects/link", () => {
 			expect(runHidden("openInNewTab", { linkType: "anchor" })).toBe(true);
 		});
 
+		it("calLink is visible only when linkType is calBooking", () => {
+			expect(runHidden("calLink", { linkType: "calBooking" })).toBe(false);
+			expect(runHidden("calLink", { linkType: "internal" })).toBe(true);
+			expect(runHidden("calLink", { linkType: "anchor" })).toBe(true);
+			expect(runHidden("calLink", { linkType: "external" })).toBe(true);
+		});
+
 		it("reads parent, not document — a document-shaped object with no linkType still hides every variant field", () => {
 			// Simulates the common bug: a field several levels deep whose
 			// `hidden` callback was accidentally written against `document`
@@ -101,6 +108,7 @@ describe("studio-schemas/objects/link", () => {
 			expect(runHidden("internalRef", documentShapedParent)).toBe(true);
 			expect(runHidden("anchorPage", documentShapedParent)).toBe(true);
 			expect(runHidden("href", documentShapedParent)).toBe(true);
+			expect(runHidden("calLink", documentShapedParent)).toBe(true);
 		});
 	});
 
@@ -146,6 +154,37 @@ describe("studio-schemas/objects/link", () => {
 			).toBe(true);
 			expect(runValidation("href", undefined, { linkType: "internal" })).toBe(true);
 			expect(runValidation("href", undefined, { linkType: "anchor" })).toBe(true);
+		});
+
+		it("switching linkType to calBooking does not block publish, even though internalRef/anchorId/href are now hidden and empty", () => {
+			// An editor who had "internal" (or "anchor"/"external") selected and
+			// switches to "Cal.com booking" leaves the old variant's now-hidden
+			// field empty in the document — that must not fail Rule.required()
+			// underneath the hood. Each of the three older variants' custom
+			// validators only enforces "required" when it is itself the active
+			// variant (see the pattern comment on internalRef above), so a
+			// calBooking parent must resolve every one of them to `true`.
+			const parent = { linkType: "calBooking" };
+			expect(runValidation("internalRef", undefined, parent)).toBe(true);
+			expect(runValidation("anchorId", undefined, parent)).toBe(true);
+			expect(runValidation("href", undefined, parent)).toBe(true);
+		});
+	});
+
+	describe("calLink field", () => {
+		it("has no Rule.custom validator — it is optional even when calBooking is the active variant", () => {
+			const calLinkField = findField("calLink");
+			const stubRule = createStubRule();
+			(calLinkField.validation as unknown as (rule: typeof stubRule) => unknown)?.(
+				stubRule
+			);
+			expect(stubRule.getCustomValidator()).toBeUndefined();
+		});
+
+		it("initialValue matches the site's default booking handle", () => {
+			const calLinkField = findField("calLink");
+			expect(calLinkField.initialValue).toBeTruthy();
+			expect(typeof calLinkField.initialValue).toBe("string");
 		});
 	});
 });
