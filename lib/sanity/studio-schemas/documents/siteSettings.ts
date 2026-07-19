@@ -163,7 +163,7 @@ export const siteSettings = defineType({
 					type: "string",
 					description:
 						"A real field, not derived from the filename. This is also " +
-						"the click-to-edit target for the logo — the image asset " +
+						"the click-to-edit target for the logo, since the image asset " +
 						"itself encodes nothing for stega to hook into.",
 				}),
 			],
@@ -184,7 +184,7 @@ export const siteSettings = defineType({
 			to: [{ type: "page" }],
 			group: "brand",
 			description:
-				"Controls what renders at / — the referenced page becomes the " +
+				"Controls what renders at /: the referenced page becomes the " +
 				"site's homepage. A reference rather than a boolean on the page " +
 				"itself (U16 of the Sanity page builder plan): a boolean lets two " +
 				"documents both claim the role with nothing to break the tie, and " +
@@ -322,7 +322,7 @@ export const siteSettings = defineType({
 			description:
 				"The site-wide default page title. Falls back to the " +
 				"hardcoded title in lib/seo/config.ts when left empty. This " +
-				"is a default, not an override — a page with its own SEO " +
+				"is a default, not an override. A page with its own SEO " +
 				"title (see the `seo` object) still wins on that page.",
 		}),
 		defineField({
@@ -346,8 +346,8 @@ export const siteSettings = defineType({
 				"Used when a page being shared has no image of its own. " +
 				"Falls back to the hardcoded /images/og-image.png when left " +
 				"empty. Follows the standard Open Graph convention of " +
-				"1200x630 — upload at that ratio so nothing gets cropped " +
-				"unexpectedly.",
+				"1200x630, so upload at that ratio to avoid unexpected " +
+				"cropping.",
 			fields: [
 				defineField({
 					name: "altText",

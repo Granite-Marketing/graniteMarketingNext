@@ -57,7 +57,7 @@ export const processBlock = defineType({
 		defineField({
 			name: "steps",
 			title: "Steps",
-			description: `Between ${MIN_STEPS} and ${MAX_STEPS} steps — the rail component hardcodes a 3-column grid and per-item animation delays, so the count can't grow or shrink freely.`,
+			description: `Between ${MIN_STEPS} and ${MAX_STEPS} steps: the rail component hardcodes a 3-column grid and per-item animation delays, so the count can't grow or shrink freely.`,
 			type: "array",
 			of: [
 				defineArrayMember({

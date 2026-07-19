@@ -42,8 +42,8 @@ export function slotFields(): FieldDefinition[] {
 			type: "pageBuilder",
 			description:
 				"Composable blocks rendered before the fixed content this page " +
-				"exists to show. There is no field for the fixed content itself " +
-				"— it always renders, and cannot be removed here.",
+				"exists to show. There is no field for the fixed content itself: " +
+				"it always renders, and cannot be removed here.",
 		}),
 		defineField({
 			name: "sectionsBelow",

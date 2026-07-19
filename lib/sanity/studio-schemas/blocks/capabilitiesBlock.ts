@@ -134,7 +134,7 @@ export const capabilitiesBlock = defineType({
 			name: "items",
 			title: "Capabilities",
 			description:
-				"Cards tile a 12-column grid: featured cards are double width. Combinations that fill whole rows work — 2 featured + 4 normal (the current homepage), or 4 normal on their own.",
+				"Cards tile a 12-column grid: featured cards are double width. Combinations that fill whole rows work, e.g. 2 featured + 4 normal (the current homepage), or 4 normal on their own.",
 			type: "array",
 			of: [
 				defineArrayMember({

@@ -125,7 +125,7 @@ export const link = defineType({
 			name: "anchorId",
 			title: "Anchor",
 			description:
-				"Pick a section from the dropdown once a page is selected above. You can still type an id directly — useful for a draft page, a section that doesn't exist yet, or a page's own current-page anchors.",
+				"Pick a section from the dropdown once a page is selected above. You can still type an id directly, which is useful for a draft page, a section that doesn't exist yet, or a page's own current-page anchors.",
 			type: "string",
 			hidden: ({ parent }) => !isAnchor(parent as LinkParent),
 			// The stored value stays a plain string — U11 (Sanity page builder
@@ -190,7 +190,7 @@ export const link = defineType({
 		defineField({
 			name: "calLink",
 			title: "Cal.com booking handle",
-			description: `Optional. Defaults to the site's standard booking handle (${CAL_LINK}) when left blank — most editors should leave this alone.`,
+			description: `Optional. Defaults to the site's standard booking handle (${CAL_LINK}) when left blank. Most editors should leave this alone.`,
 			type: "string",
 			initialValue: CAL_LINK,
 			hidden: ({ parent }) => !isCalBooking(parent as LinkParent),

@@ -58,8 +58,8 @@ export const toolsStripBlock = defineType({
 			type: "string",
 			options: {
 				list: [
-					{ title: "Automatic — every tool in the library", value: "auto" },
-					{ title: "Manual — pick specific tools", value: "manual" },
+					{ title: "Automatic: every tool in the library", value: "auto" },
+					{ title: "Manual: pick specific tools", value: "manual" },
 				],
 				layout: "radio",
 			},

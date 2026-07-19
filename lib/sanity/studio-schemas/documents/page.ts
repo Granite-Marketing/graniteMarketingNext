@@ -74,7 +74,7 @@ export function validatePageSlug(value: SlugValue | undefined): true | string {
 	}
 
 	if (!SLUG_FORMAT.test(current)) {
-		return "Slug must be lowercase letters, numbers and single hyphens only — no spaces, no uppercase, no leading or trailing hyphen";
+		return "Slug must be lowercase letters, numbers and single hyphens only: no spaces, no uppercase, no leading or trailing hyphen";
 	}
 
 	return true;

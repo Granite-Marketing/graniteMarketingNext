@@ -1,4 +1,4 @@
-// granite-convention-exception: paired-test-file
+// granite-convention-exception: test-discipline
 // reason: this is a thin Sanity-hooks wiring layer (useClient/useFormValue/
 // onChange) with no logic of its own to unit test — U11's own spec (per the
 // Sanity page builder plan) is to test the pure option-deriving logic
@@ -156,7 +156,7 @@ export function AnchorIdInput(props: StringInputProps) {
 				/>
 				<p style={hintStyle}>
 					No page selected above, so this anchor is looked up on the
-					current page at render time — type its id directly.
+					current page at render time, so type its id directly.
 				</p>
 			</div>
 		);
@@ -182,7 +182,7 @@ export function AnchorIdInput(props: StringInputProps) {
 						? "Loading this page's anchors…"
 						: options.length === 0
 							? "This page has no anchored sections yet"
-							: "— choose an anchor —"}
+							: "Choose an anchor"}
 				</option>
 				{options.map((option) => (
 					<option key={option.value} value={option.value}>
@@ -200,7 +200,7 @@ export function AnchorIdInput(props: StringInputProps) {
 			/>
 			{status === "error" && (
 				<p style={hintStyle}>
-					Could not load this page's sections — type the anchor id
+					Could not load this page's sections. Type the anchor id
 					directly instead.
 				</p>
 			)}

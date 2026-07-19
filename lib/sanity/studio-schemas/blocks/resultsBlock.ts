@@ -40,7 +40,7 @@ function isManual(parent: ResultsBlockParent) {
 const STATS_SOURCE_DESCRIPTION =
 	'Sourced from the live n8n dashboards, dated 2026-07-02 (see the ' +
 	"`resultStats` comment in components/data.ts for the exact calculation " +
-	"per stat). Real numbers only — confirm a fresh dashboard reading " +
+	"per stat). Real numbers only: confirm a fresh dashboard reading " +
 	"before changing a value; never estimate or round for effect.";
 
 export const resultsBlock = defineType({
@@ -107,10 +107,10 @@ export const resultsBlock = defineType({
 			options: {
 				list: [
 					{
-						title: "Automatic — case studies marked \"Show on Homepage\"",
+						title: "Automatic: case studies marked \"Show on Homepage\"",
 						value: "auto",
 					},
-					{ title: "Manual — pick specific case studies", value: "manual" },
+					{ title: "Manual: pick specific case studies", value: "manual" },
 				],
 				layout: "radio",
 			},

@@ -46,7 +46,7 @@ export function validateLegalPageSlug(
 	if (!current) return "Slug is required";
 
 	if (!SLUG_FORMAT.test(current)) {
-		return "Slug must be lowercase letters, numbers and single hyphens only — no spaces, no uppercase, no leading or trailing hyphen, and no nested paths";
+		return "Slug must be lowercase letters, numbers and single hyphens only: no spaces, no uppercase, no leading or trailing hyphen, and no nested paths";
 	}
 
 	return true;

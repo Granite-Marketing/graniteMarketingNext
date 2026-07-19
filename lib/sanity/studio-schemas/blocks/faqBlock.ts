@@ -59,8 +59,8 @@ export const faqBlock = defineType({
 			type: "string",
 			options: {
 				list: [
-					{ title: "Automatic — FAQs from a category", value: "auto" },
-					{ title: "Manual — pick specific FAQs", value: "manual" },
+					{ title: "Automatic: FAQs from a category", value: "auto" },
+					{ title: "Manual: pick specific FAQs", value: "manual" },
 				],
 				layout: "radio",
 			},

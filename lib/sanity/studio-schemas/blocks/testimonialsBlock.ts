@@ -55,8 +55,8 @@ export const testimonialsBlock = defineType({
 			type: "string",
 			options: {
 				list: [
-					{ title: "Automatic — every client testimonial", value: "auto" },
-					{ title: "Manual — pick specific testimonials", value: "manual" },
+					{ title: "Automatic: every client testimonial", value: "auto" },
+					{ title: "Manual: pick specific testimonials", value: "manual" },
 				],
 				layout: "radio",
 			},

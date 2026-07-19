@@ -97,7 +97,7 @@ export const ctaBlock = defineType({
 			name: "secondaryCta",
 			title: "Secondary link",
 			description:
-				'Optional, e.g. "or send us a message". No Site Settings fallback exists for this one — leaving it blank simply renders no secondary link.',
+				'Optional, e.g. "or send us a message". No Site Settings fallback exists for this one: leaving it blank simply renders no secondary link.',
 			type: "object",
 			fields: labeledLinkFields(),
 		}),

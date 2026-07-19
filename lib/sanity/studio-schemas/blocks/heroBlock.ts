@@ -73,7 +73,7 @@ export const heroBlock = defineType({
 			name: "primaryCtaLabel",
 			title: "Primary button label",
 			description:
-				"The primary button always opens the Cal.com booking modal — that behaviour is fixed in code, only its label is editable here.",
+				"The primary button always opens the Cal.com booking modal: that behaviour is fixed in code, only its label is editable here.",
 			type: "string",
 			initialValue: "Book an intro call",
 		}),
@@ -89,7 +89,7 @@ export const heroBlock = defineType({
 			name: "showTrustedBy",
 			title: "Show “Trusted by” logos",
 			description:
-				"Toggles the client-logo strip beneath the intro copy. The logos themselves are sourced from existing client records, not from this field — this only switches the strip on or off.",
+				"Toggles the client-logo strip beneath the intro copy. The logos themselves are sourced from existing client records, not from this field: this only switches the strip on or off.",
 			type: "boolean",
 			initialValue: true,
 		}),

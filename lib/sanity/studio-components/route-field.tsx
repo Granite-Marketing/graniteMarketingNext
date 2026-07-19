@@ -59,7 +59,7 @@ export function routeField(type: FixedRouteType): FieldDefinition {
 		title: "Route",
 		type: "string",
 		readOnly: true,
-		description: `This page is served at ${route}. Set by the Next.js file router (the app/ directory), not by this field — it cannot be changed here.`,
+		description: `This page is served at ${route}. Set by the Next.js file router (the app/ directory), not by this field, so it cannot be changed here.`,
 		components: {
 			input: createRouteDisplay(route),
 		},
