@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { ImageIcon } from "@sanity/icons";
 
 // granite-convention-exception: test-discipline
 // reason: pure extraction from the former studio-schemas/index.ts (U4 of the
@@ -9,6 +10,7 @@ export const logoList = defineType({
 	name: "logoList",
 	title: "🌅 Logo List",
 	type: "document",
+	icon: ImageIcon,
 	fields: [
 		defineField({
 			name: "clientName",
@@ -70,6 +72,15 @@ export const logoList = defineType({
 		select: {
 			title: "clientName",
 			media: "logo",
+		},
+		// The panel needs to say WHAT KIND of document a row is at a glance.
+		// See documents/__tests__/previews.test.ts.
+		prepare({ title, media }) {
+			return {
+				title,
+				media,
+				subtitle: "Logo",
+			};
 		},
 	},
 });

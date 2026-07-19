@@ -1,4 +1,5 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
+import { HelpCircleIcon } from "@sanity/icons";
 
 // granite-convention-exception: test-discipline
 // reason: pure extraction from the former studio-schemas/index.ts (U4 of the
@@ -9,6 +10,7 @@ export const faq = defineType({
 	name: "faq",
 	title: "❔FAQ",
 	type: "document",
+	icon: HelpCircleIcon,
 	fields: [
 		defineField({
 			name: "question",
@@ -62,7 +64,15 @@ export const faq = defineType({
 	preview: {
 		select: {
 			title: "question",
-			subtitle: "category",
+		},
+		// Was `category` — the Presentation panel needs to say WHAT KIND of
+		// document a row is, not which FAQ category it's filed under. See
+		// documents/__tests__/previews.test.ts.
+		prepare({ title }) {
+			return {
+				title,
+				subtitle: "FAQ",
+			};
 		},
 	},
 });

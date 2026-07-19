@@ -1,4 +1,5 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
+import { ComposeIcon } from "@sanity/icons";
 
 // granite-convention-exception: test-discipline
 // reason: pure extraction from the former studio-schemas/index.ts (U4 of the
@@ -9,6 +10,7 @@ export const blogPost = defineType({
 	name: "blogPost",
 	title: "📝 Blog Post",
 	type: "document",
+	icon: ComposeIcon,
 	fields: [
 		defineField({
 			name: "title",
@@ -176,10 +178,14 @@ export const blogPost = defineType({
 			media: "featuredImage",
 		},
 		prepare(selection) {
-			const { author } = selection;
+			// Was `by ${author}` — the Presentation panel needs to say WHAT
+			// KIND of document a row is, not who wrote it. A per-type detail
+			// like this in the subtitle position defeats a glance-able panel
+			// where every row's subtitle means something different. See
+			// documents/__tests__/previews.test.ts.
 			return {
 				...selection,
-				subtitle: author && `by ${author}`,
+				subtitle: "Blog post",
 			};
 		},
 	},

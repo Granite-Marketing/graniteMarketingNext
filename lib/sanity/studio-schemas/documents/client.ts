@@ -1,4 +1,5 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
+import { UsersIcon } from "@sanity/icons";
 
 // granite-convention-exception: test-discipline
 // reason: pure extraction from the former studio-schemas/index.ts (U4 of the
@@ -9,6 +10,7 @@ export const client = defineType({
 	name: "client",
 	title: "👤 Client",
 	type: "document",
+	icon: UsersIcon,
 	fields: [
 		defineField({
 			name: "name",
@@ -79,8 +81,17 @@ export const client = defineType({
 	preview: {
 		select: {
 			title: "name",
-			subtitle: "company",
 			media: "headshot",
+		},
+		// Was `company` — the Presentation panel needs to say WHAT KIND of
+		// document a row is, not which company it belongs to. See
+		// documents/__tests__/previews.test.ts.
+		prepare({ title, media }) {
+			return {
+				title,
+				media,
+				subtitle: "Client",
+			};
 		},
 	},
 });

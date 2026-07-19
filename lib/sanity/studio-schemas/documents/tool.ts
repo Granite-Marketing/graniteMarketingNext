@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { PlugIcon } from "@sanity/icons";
 
 // granite-convention-exception: test-discipline
 // reason: pure extraction from the former studio-schemas/index.ts (U4 of the
@@ -9,6 +10,7 @@ export const tool = defineType({
 	name: "tool",
 	title: "🧩 Tool / Integration",
 	type: "document",
+	icon: PlugIcon,
 	fields: [
 		defineField({
 			name: "name",
@@ -71,8 +73,17 @@ export const tool = defineType({
 	preview: {
 		select: {
 			title: "name",
-			subtitle: "integrationType",
 			media: "logo",
+		},
+		// Was `integrationType` — the Presentation panel needs to say WHAT
+		// KIND of document a row is, not what kind of integration it is. See
+		// documents/__tests__/previews.test.ts.
+		prepare({ title, media }) {
+			return {
+				title,
+				media,
+				subtitle: "Tool",
+			};
 		},
 	},
 });

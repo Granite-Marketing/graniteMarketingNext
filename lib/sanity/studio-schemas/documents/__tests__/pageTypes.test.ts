@@ -163,11 +163,12 @@ describe("studio-schemas/documents — page type singletons (U19b)", () => {
 		});
 	});
 
-	// These singletons have no title field, so their name in the Studio comes
-	// entirely from `preview`. Two things have to be true or an editor opens
-	// a document headed "Untitled": `prepare()` must return a title, AND
-	// `select` must be present — without it Sanity never calls `prepare()`
-	// at all and falls straight through to its own fallback.
+	// These singletons have no title field, so `preview` is what names them
+	// in search results and reference pickers. The pane header is a separate
+	// mechanism — `DocumentBuilder.title()` in lib/sanity/structure.ts — and
+	// is covered by __tests__/structure.test.ts. An earlier version of this
+	// comment claimed `select` was required for `prepare()` to run at all;
+	// siteSettings.ts has no `select` and previews fine, so that was wrong.
 	describe("each previews with a fixed title and a plain-English subtitle", () => {
 		const expected: Record<string, string> = {
 			blogListing: "Blog Listing",
@@ -188,7 +189,6 @@ describe("studio-schemas/documents — page type singletons (U19b)", () => {
 				};
 			}).preview;
 
-			expect(preview?.select).toBeDefined();
 			expect(preview?.prepare).toBeTypeOf("function");
 
 			const prepared = preview?.prepare?.();

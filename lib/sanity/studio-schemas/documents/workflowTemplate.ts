@@ -1,4 +1,5 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
+import { PackageIcon } from "@sanity/icons";
 
 // granite-convention-exception: test-discipline
 // reason: pure extraction from the former studio-schemas/index.ts (U4 of the
@@ -9,6 +10,7 @@ export const workflowTemplate = defineType({
 	name: "workflowTemplate",
 	title: "⚙️ Workflow Template",
 	type: "document",
+	icon: PackageIcon,
 	fields: [
 		defineField({
 			name: "title",
@@ -221,10 +223,12 @@ export const workflowTemplate = defineType({
 			media: "featuredImage",
 		},
 		prepare(selection) {
-			const { author } = selection;
+			// Was `by ${author}` — the Presentation panel needs to say WHAT
+			// KIND of document a row is, not who wrote it. See
+			// documents/__tests__/previews.test.ts.
 			return {
 				...selection,
-				subtitle: author && `by ${author}`,
+				subtitle: "Template",
 			};
 		},
 	},

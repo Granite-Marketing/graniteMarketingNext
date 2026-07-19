@@ -1,5 +1,6 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
 import type { FieldDefinition } from "sanity";
+import { CogIcon } from "@sanity/icons";
 import { SINGLETON_TYPES, singletonDocumentId } from "../../singletons";
 
 // The site-wide chrome singleton (U9 of the Sanity page builder plan) — logo,
@@ -108,6 +109,7 @@ export const siteSettings = defineType({
 	name: SITE_SETTINGS_TYPE,
 	title: "Site Settings",
 	type: "document",
+	icon: CogIcon,
 	groups: [
 		{ name: "brand", title: "Brand" },
 		{ name: "navigation", title: "Navigation" },

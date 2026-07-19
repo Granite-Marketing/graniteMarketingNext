@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { EarthGlobeIcon } from "@sanity/icons";
 
 // granite-convention-exception: test-discipline
 // reason: pure extraction from the former studio-schemas/index.ts (U4 of the
@@ -9,6 +10,7 @@ export const location = defineType({
 	name: "location",
 	title: "🌍 Location",
 	type: "document",
+	icon: EarthGlobeIcon,
 	fields: [
 		defineField({
 			name: "name",
@@ -40,7 +42,15 @@ export const location = defineType({
 	preview: {
 		select: {
 			title: "name",
-			subtitle: "country",
+		},
+		// Was `country` — the Presentation panel needs to say WHAT KIND of
+		// document a row is, not which country it names. See
+		// documents/__tests__/previews.test.ts.
+		prepare({ title }) {
+			return {
+				title,
+				subtitle: "Location",
+			};
 		},
 	},
 });

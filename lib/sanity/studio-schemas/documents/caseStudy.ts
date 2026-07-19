@@ -1,4 +1,5 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
+import { CaseIcon } from "@sanity/icons";
 
 // granite-convention-exception: test-discipline
 // reason: pure extraction from the former studio-schemas/index.ts (U4 of the
@@ -9,6 +10,7 @@ export const caseStudy = defineType({
 	name: "caseStudy",
 	title: "📊 Case Study",
 	type: "document",
+	icon: CaseIcon,
 	fields: [
 		defineField({
 			name: "title",
@@ -157,9 +159,12 @@ export const caseStudy = defineType({
 			media: "featuredImage",
 		},
 		prepare(selection) {
+			// Was the referenced client — the Presentation panel needs to say
+			// WHAT KIND of document a row is, not which client it's about.
+			// See documents/__tests__/previews.test.ts.
 			return {
 				...selection,
-				subtitle: selection.client,
+				subtitle: "Case study",
 			};
 		},
 	},

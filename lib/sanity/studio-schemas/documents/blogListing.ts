@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { CogIcon } from "@sanity/icons";
 import { SINGLETON_TYPES } from "../../singletons";
 import { slotFields, heroFields } from "../objects/pageTypeSlots";
 
@@ -46,6 +47,7 @@ export const blogListing = defineType({
 	name: BLOG_LISTING_TYPE,
 	title: "⚙️ Blog Listing",
 	type: "document",
+	icon: CogIcon,
 	fields: [
 		defineField({
 			name: "seo",
@@ -56,10 +58,13 @@ export const blogListing = defineType({
 		...slotFields(),
 	],
 	preview: {
-		// `select` is required even though nothing is selected from the
-		// document: without it Sanity skips `prepare()` entirely and falls
-		// back to "Untitled", because these singletons have no title field
-		// for it to read.
+		// An empty `select` because there is no field worth reading: these
+		// singletons carry no title. It is NOT what stops the pane reading
+		// "Untitled" — an earlier version of this comment claimed that, and
+		// siteSettings.ts disproves it by having no `select` at all and
+		// previewing correctly. The pane title comes from
+		// `DocumentBuilder.title()` in lib/sanity/structure.ts. This preview
+		// is what search results and reference pickers use.
 		select: {},
 		prepare() {
 			return {

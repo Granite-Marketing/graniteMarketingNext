@@ -1,5 +1,6 @@
 import { defineType, defineField } from "sanity";
 import type { SlugValue } from "sanity";
+import { DocumentIcon } from "@sanity/icons";
 
 // The container the whole page builder hangs off (U8 of the Sanity page
 // builder plan). `sections` is the named `pageBuilder` array (empty `of: []`
@@ -83,6 +84,7 @@ export const page = defineType({
 	name: "page",
 	title: "Page",
 	type: "document",
+	icon: DocumentIcon,
 	fields: [
 		defineField({
 			name: "title",
@@ -125,10 +127,14 @@ export const page = defineType({
 			title: "title",
 			slug: "slug.current",
 		},
-		prepare({ title, slug }) {
+		prepare({ title }) {
+			// Was `/${slug}` — the Presentation panel needs to say WHAT KIND
+			// of document a row is, not repeat its route (already visible in
+			// the preview iframe itself). See
+			// documents/__tests__/previews.test.ts.
 			return {
 				title,
-				subtitle: slug ? `/${slug}` : "No slug",
+				subtitle: "Page",
 			};
 		},
 	},

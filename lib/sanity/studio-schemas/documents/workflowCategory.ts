@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { TagsIcon } from "@sanity/icons";
 
 // granite-convention-exception: test-discipline
 // reason: pure extraction from the former studio-schemas/index.ts (U4 of the
@@ -9,6 +10,7 @@ export const workflowCategory = defineType({
 	name: "workflowCategory",
 	title: "🗂️ Workflow Category",
 	type: "document",
+	icon: TagsIcon,
 	fields: [
 		defineField({
 			name: "name",
@@ -36,6 +38,15 @@ export const workflowCategory = defineType({
 	preview: {
 		select: {
 			title: "name",
+		},
+		// The panel needs to say WHAT KIND of document a row is at a glance —
+		// distinct from the plain `category` type it otherwise mirrors. See
+		// documents/__tests__/previews.test.ts.
+		prepare({ title }) {
+			return {
+				title,
+				subtitle: "Template category",
+			};
 		},
 	},
 });

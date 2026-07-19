@@ -1,4 +1,5 @@
 import { defineType, defineField } from "sanity";
+import { TagIcon } from "@sanity/icons";
 
 // granite-convention-exception: test-discipline
 // reason: pure extraction from the former studio-schemas/index.ts (U4 of the
@@ -9,6 +10,7 @@ export const category = defineType({
 	name: "category",
 	title: "🗂️ Category",
 	type: "document",
+	icon: TagIcon,
 	fields: [
 		defineField({
 			name: "name",
@@ -36,6 +38,14 @@ export const category = defineType({
 	preview: {
 		select: {
 			title: "name",
+		},
+		// The panel needs to say WHAT KIND of document a row is at a glance.
+		// See documents/__tests__/previews.test.ts.
+		prepare({ title }) {
+			return {
+				title,
+				subtitle: "Category",
+			};
 		},
 	},
 });

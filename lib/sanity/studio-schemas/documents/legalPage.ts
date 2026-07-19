@@ -1,5 +1,6 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
 import type { SlugValue } from "sanity";
+import { LockIcon } from "@sanity/icons";
 
 // Policy pages become content, so new ones need no code (U10 of the Sanity
 // page builder plan). `body` deliberately mirrors blogPost.content's block +
@@ -55,6 +56,7 @@ export const legalPage = defineType({
 	name: "legalPage",
 	title: "📜 Legal Page",
 	type: "document",
+	icon: LockIcon,
 	fields: [
 		defineField({
 			name: "title",
@@ -153,10 +155,13 @@ export const legalPage = defineType({
 			title: "title",
 			slug: "slug.current",
 		},
-		prepare({ title, slug }) {
+		prepare({ title }) {
+			// Was `/${slug}` — the Presentation panel needs to say WHAT KIND
+			// of document a row is, not repeat its route. See
+			// documents/__tests__/previews.test.ts.
 			return {
 				title,
-				subtitle: slug ? `/${slug}` : "No slug",
+				subtitle: "Legal page",
 			};
 		},
 	},
