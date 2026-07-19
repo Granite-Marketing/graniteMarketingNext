@@ -43,12 +43,8 @@ const TAXONOMY_TYPES = ["author", "category", "location", "workflowCategory"];
 // `singletonDocumentId` guarantees the id matches the type per
 // singletons.ts's header comment.
 //
-// Only siteSettings gets a desk entry today. The other five registered
-// singleton types (blogListing, blogPostTemplate, templateListing,
-// templateDetail, contactPage) don't have schemas yet — pinning a schema
-// type that isn't registered throws at runtime — so this helper exists to
-// be reused once those schemas land, not because it's called five times
-// here.
+// Pinning a schema type that isn't registered throws at runtime, so a
+// singleton earns its desk entry only once its schema is in the barrel.
 function pinnedSingletonListItem(
 	S: Parameters<StructureResolver>[0],
 	type: SingletonType,
@@ -81,6 +77,18 @@ export const structure: StructureResolver = (S) => {
 		.title("Content")
 		.items([
 			pinnedSingletonListItem(S, "siteSettings", "Site Settings"),
+			S.divider(),
+
+			// The fixed-route page types, grouped above the creatable page
+			// lists. These are the pages that always exist and can only be
+			// edited, never created or deleted; `page`/`legalPage` below are
+			// the ad-hoc ones an editor adds. Listing/detail pairs sit
+			// together so the relationship reads off the desk.
+			pinnedSingletonListItem(S, "blogListing", "Blog Listing"),
+			pinnedSingletonListItem(S, "blogPostTemplate", "Blog Post Template"),
+			pinnedSingletonListItem(S, "templateListing", "Template Listing"),
+			pinnedSingletonListItem(S, "templateDetail", "Template Detail"),
+			pinnedSingletonListItem(S, "contactPage", "Contact"),
 			S.divider(),
 			...listFor(PAGE_TYPES),
 			S.divider(),

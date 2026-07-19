@@ -1,10 +1,12 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
 import type { FieldDefinition } from "sanity";
+import { SINGLETON_TYPES, singletonDocumentId } from "../../singletons";
 
 // The site-wide chrome singleton (U9 of the Sanity page builder plan) — logo,
 // nav, footer, and the Global CTA defaults every `ctaBlock` (U12) falls back
 // to. Pinned to exactly one document via THREE separate mechanisms, none of
-// which is a schema option:
+// which is a schema option — all three now driven by the registry in
+// lib/sanity/singletons.ts, which is where they are documented in full:
 //
 //   1. lib/sanity/structure.ts pins the desk list item's child to
 //      `documentId(SITE_SETTINGS_ID)`.
@@ -19,8 +21,12 @@ import type { FieldDefinition } from "sanity";
 // was removed in sanity 4.x — verified by grepping `@sanity/types` and
 // `sanity`'s own type declarations for this pin (4.21.1), not assumed.
 
-export const SITE_SETTINGS_TYPE = "siteSettings" as const;
-export const SITE_SETTINGS_ID = "siteSettings" as const;
+// Derived from the registry rather than declared here, matching the five
+// page-type singletons (U19). These were literals until the registry
+// existed; a hand-kept second copy of a value whose whole job is to be
+// identical everywhere is exactly what drifts.
+export const SITE_SETTINGS_TYPE = SINGLETON_TYPES.siteSettings;
+export const SITE_SETTINGS_ID = singletonDocumentId(SITE_SETTINGS_TYPE);
 
 // A `link` object dereferenced the way lib/sanity/lib/resolve-link.ts's
 // `LinkValue` expects — `internalRef`/`anchorPage` projected with `_type`

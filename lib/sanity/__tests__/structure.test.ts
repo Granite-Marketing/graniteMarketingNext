@@ -130,11 +130,13 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 		expect(ids.filter((id) => id === "siteSettings")).toEqual([]);
 	});
 
-	// The other five registered singleton types don't have desk entries yet
-	// (their schemas don't exist), but the exclusion list is registry-driven
-	// — SINGLETON_TYPE_LIST, not a hand-picked set — so if one of them ever
-	// showed up in the auto-generated passthrough it would still be caught.
-	it("mechanism (2): excludes every registered singleton type from the generic list, not only siteSettings", () => {
+	// Every singleton now has a pinned desk entry, so the invariant is not
+	// "absent from the desk" but "present exactly once". A second row is the
+	// actual failure mode: the pinned entry opens the fixed document id while
+	// the passthrough row opens an uncapped list of every document of that
+	// type, and the two look identical in the sidebar. An editor who picks
+	// the wrong one creates a second Blog Listing that nothing ever reads.
+	it("mechanism (2): lists every registered singleton exactly once, never alongside a generic list", () => {
 		const { S, getList } = createStubS(
 			SINGLETON_TYPE_LIST.map((type) => createListItemStub(type))
 		);
@@ -142,10 +144,10 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 		structure(S as never, {} as never);
 
 		const items = getList().items as ReturnType<typeof createListItemStub>[];
-		const ids = items.slice(1).map((item) => item.getId?.());
+		const ids = items.map((item) => item.getId?.());
 
 		for (const type of SINGLETON_TYPE_LIST) {
-			expect(ids).not.toContain(type);
+			expect(ids.filter((id) => id === type)).toEqual([type]);
 		}
 	});
 
@@ -172,6 +174,14 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 
 		expect(ids).toEqual([
 			"siteSettings",
+			// Fixed-route page types: always exist, edit-only. Listing and
+			// detail pairs sit together so the relationship reads off the desk.
+			"blogListing",
+			"blogPostTemplate",
+			"templateListing",
+			"templateDetail",
+			"contactPage",
+			// Creatable page lists, below the fixed ones.
 			"page",
 			"legalPage",
 			"blogPost",
