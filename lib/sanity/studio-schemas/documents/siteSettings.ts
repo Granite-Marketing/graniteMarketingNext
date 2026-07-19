@@ -69,7 +69,11 @@ export const SITE_SETTINGS_QUERY = `*[_id == "${SITE_SETTINGS_ID}"][0]{
 	ctaHeading,
 	ctaSubtitle,
 	ctaButton ${LABELED_LINK_PROJECTION},
-	ctaFootnote
+	ctaFootnote,
+	siteTitle,
+	siteDescription,
+	ogImage{ asset, altText, hotspot, crop },
+	favicon{ asset, hotspot, crop }
 }`;
 
 // R7 — the Wise compliance strip (copyright line, card logos, five policy
@@ -115,6 +119,7 @@ export const siteSettings = defineType({
 		{ name: "navigation", title: "Navigation" },
 		{ name: "footer", title: "Footer" },
 		{ name: "cta", title: "Global CTA defaults" },
+		{ name: "seo", title: "SEO & Social" },
 	],
 	fields: [
 		// ---------------------------------------------------------------
@@ -270,6 +275,86 @@ export const siteSettings = defineType({
 			type: "string",
 			group: "cta",
 			description: CTA_FALLBACK_DESCRIPTION,
+		}),
+
+		// ---------------------------------------------------------------
+		// SEO & Social — site-wide defaults for the values lib/seo/config.ts
+		// currently hardcodes (`defaultMetadata.title.default`, `.description`,
+		// the OG image, the favicon set). Every field below is OPTIONAL, on
+		// purpose: this unit only adds fields and seeds nothing, a later unit
+		// wires them into metadata, and until that wiring exists (and even
+		// after, for an editor who hasn't filled these in yet) an empty
+		// siteSettings document must keep producing today's hardcoded title
+		// and share image rather than blanking them. A `required()` here
+		// would block publishing this singleton the moment it's created,
+		// before anyone has had the chance to fill these in.
+		// ---------------------------------------------------------------
+		defineField({
+			name: "siteTitle",
+			title: "Site Title",
+			type: "string",
+			group: "seo",
+			description:
+				"The site-wide default page title. Falls back to the " +
+				"hardcoded title in lib/seo/config.ts when left empty. This " +
+				"is a default, not an override — a page with its own SEO " +
+				"title (see the `seo` object) still wins on that page.",
+		}),
+		defineField({
+			name: "siteDescription",
+			title: "Site Description",
+			type: "text",
+			rows: 3,
+			group: "seo",
+			description:
+				"The site-wide default meta description. Falls back to the " +
+				"hardcoded description in lib/seo/config.ts when left empty, " +
+				"same rule as Site Title.",
+		}),
+		defineField({
+			name: "ogImage",
+			title: "Default Social Share Image",
+			type: "image",
+			group: "seo",
+			options: { hotspot: true },
+			description:
+				"Used when a page being shared has no image of its own. " +
+				"Falls back to the hardcoded /images/og-image.png when left " +
+				"empty. Follows the standard Open Graph convention of " +
+				"1200x630 — upload at that ratio so nothing gets cropped " +
+				"unexpectedly.",
+			fields: [
+				defineField({
+					name: "altText",
+					title: "Alt Text",
+					type: "string",
+					description:
+						"A real field, not derived from the filename, matching " +
+						"the logo field above.",
+				}),
+			],
+		}),
+		// lib/seo/config.ts's `icons` block currently declares FOUR separate
+		// entries: an SVG, a 32px PNG, a 16px PNG, and a 180px Apple webclip.
+		// Exposing four upload fields here would mean three of them silently
+		// going stale every time someone updates the fourth — there's no way
+		// for an editor to know the set has to move together, and no way for
+		// us to notice from the schema that it's happened. A single square
+		// source image, with the various pixel sizes derived from it, is the
+		// deliberate tradeoff being made instead: one thing to keep current
+		// rather than four. The SVG entry stays hardcoded in
+		// lib/seo/config.ts regardless of this field — Sanity's image
+		// pipeline transforms raster formats, it cannot emit an SVG from a
+		// PNG/JPEG upload.
+		defineField({
+			name: "favicon",
+			title: "Favicon",
+			type: "image",
+			group: "seo",
+			description:
+				"A single square image, at least 180px, that the browser " +
+				"tab icon, bookmark icon and mobile home-screen icon are " +
+				"all derived from.",
 		}),
 	],
 	preview: {

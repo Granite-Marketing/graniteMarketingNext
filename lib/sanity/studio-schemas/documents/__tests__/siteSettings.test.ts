@@ -42,7 +42,7 @@ describe("studio-schemas/documents/siteSettings", () => {
 		expect(prepare?.()).toEqual({ title: "Site Settings" });
 	});
 
-	it("has every field from the plan's Fields table, grouped Brand / Navigation / Footer / Global CTA defaults", () => {
+	it("has every field from the plan's Fields table, grouped Brand / Navigation / Footer / Global CTA defaults / SEO & Social", () => {
 		const fieldNames = siteSettings.fields.map((field) => field.name);
 		expect(fieldNames).toEqual([
 			"logo",
@@ -55,6 +55,10 @@ describe("studio-schemas/documents/siteSettings", () => {
 			"ctaSubtitle",
 			"ctaButton",
 			"ctaFootnote",
+			"siteTitle",
+			"siteDescription",
+			"ogImage",
+			"favicon",
 		]);
 	});
 
@@ -196,6 +200,67 @@ describe("studio-schemas/documents/siteSettings", () => {
 		});
 	});
 
+	describe("SEO & Social — site-wide SEO defaults", () => {
+		it("siteTitle is an unvalidated string", () => {
+			const siteTitle = findField("siteTitle");
+			expect(siteTitle.type).toBe("string");
+			expect(siteTitle.group).toBe("seo");
+			expect(siteTitle.validation).toBeUndefined();
+		});
+
+		it("siteDescription is an unvalidated 3-row text field", () => {
+			const siteDescription = findField("siteDescription");
+			expect(siteDescription.type).toBe("text");
+			expect((siteDescription as { rows?: number }).rows).toBe(3);
+			expect(siteDescription.group).toBe("seo");
+			expect(siteDescription.validation).toBeUndefined();
+		});
+
+		it("ogImage is an unvalidated image carrying its own altText field", () => {
+			const ogImage = findField("ogImage") as unknown as {
+				type: string;
+				group?: string;
+				validation?: unknown;
+				fields?: FieldDefinition[];
+			};
+			expect(ogImage.type).toBe("image");
+			expect(ogImage.group).toBe("seo");
+			expect(ogImage.validation).toBeUndefined();
+			const altText = ogImage.fields?.find((f) => f.name === "altText");
+			expect(altText).toBeDefined();
+			expect(altText?.type).toBe("string");
+			expect(altText?.validation).toBeUndefined();
+		});
+
+		it("ogImage's description notes the 1200x630 convention and the no-image-of-its-own fallback", () => {
+			const description = findField("ogImage").description;
+			expect(description).toMatch(/1200/);
+			expect(description).toMatch(/630/);
+			expect(description).toMatch(/no image|does not have|own/i);
+		});
+
+		it("favicon is an unvalidated square image", () => {
+			const favicon = findField("favicon");
+			expect(favicon.type).toBe("image");
+			expect(favicon.group).toBe("seo");
+			expect(favicon.validation).toBeUndefined();
+		});
+
+		it("favicon's description expects a square PNG of at least 180px and explains the derived icon set", () => {
+			const description = findField("favicon").description;
+			expect(description).toMatch(/square/i);
+			expect(description).toMatch(/180/);
+			expect(description).toMatch(/tab|bookmark|home.?screen/i);
+		});
+
+		it.each(["siteTitle", "siteDescription", "ogImage", "favicon"])(
+			"%s carries no required() validation — this singleton must stay publishable empty",
+			(name) => {
+				expect(findField(name).validation).toBeUndefined();
+			}
+		);
+	});
+
 	describe("SITE_SETTINGS_QUERY — the singleton query", () => {
 		it("filters by _id, matching the pinned constant — not by _type", () => {
 			expect(SITE_SETTINGS_QUERY).toContain(`_id == "${SITE_SETTINGS_ID}"`);
@@ -217,6 +282,10 @@ describe("studio-schemas/documents/siteSettings", () => {
 				"ctaSubtitle",
 				"ctaButton",
 				"ctaFootnote",
+				"siteTitle",
+				"siteDescription",
+				"ogImage",
+				"favicon",
 			]) {
 				expect(SITE_SETTINGS_QUERY).toContain(field);
 			}
@@ -232,11 +301,29 @@ describe("studio-schemas/documents/siteSettings", () => {
 			expect(derefCount).toBeGreaterThanOrEqual(5);
 			expect(anchorDerefCount).toBeGreaterThanOrEqual(5);
 		});
+
+		it("projects ogImage with asset/altText/hotspot/crop, matching logo's shape", () => {
+			expect(SITE_SETTINGS_QUERY).toMatch(
+				/ogImage\{\s*asset,\s*altText,\s*hotspot,\s*crop\s*\}/
+			);
+		});
+
+		it("projects favicon with asset/hotspot/crop — it has no altText subfield to project", () => {
+			expect(SITE_SETTINGS_QUERY).toMatch(
+				/favicon\{\s*asset,\s*hotspot,\s*crop\s*\}/
+			);
+		});
 	});
 
-	it("every field is assigned to one of the four documented groups", () => {
+	it("every field is assigned to one of the five documented groups", () => {
 		const groupNames = (siteSettings.groups ?? []).map((g) => g.name);
-		expect(groupNames).toEqual(["brand", "navigation", "footer", "cta"]);
+		expect(groupNames).toEqual([
+			"brand",
+			"navigation",
+			"footer",
+			"cta",
+			"seo",
+		]);
 
 		for (const field of siteSettings.fields) {
 			expect(

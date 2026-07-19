@@ -58,6 +58,79 @@ describe("resolveLink", () => {
 		).toEqual({ kind: "navigate", href: "/templates/s3-presigned-url" });
 	});
 
+	// U21/U22 prep (2026-07-19) — the three fixed-route singletons an editor
+	// can now target from `internalRef` (link.ts's `to` array). None of them
+	// has a `slug` field: their route is fixed in code (routes.ts's
+	// `LINKABLE_ROUTE_BY_TYPE`), not derived from content, so the projected
+	// value's `slug` is null exactly like a dangling reference's would be —
+	// proving that case does NOT fall through to `pathForInternalDoc`'s
+	// generic `!slug` guard the way a `page`/`blogPost`/etc. reference would.
+	it("internal -> blogListing/templateListing/contactPage resolve to their fixed route even though the projected value has no slug", () => {
+		expect(
+			resolveLink({
+				linkType: "internal",
+				internalRef: { _type: "blogListing", _id: "blogListing", slug: null },
+			})
+		).toEqual({ kind: "navigate", href: "/blog" });
+
+		expect(
+			resolveLink({
+				linkType: "internal",
+				internalRef: {
+					_type: "templateListing",
+					_id: "templateListing",
+					slug: null,
+				},
+			})
+		).toEqual({ kind: "navigate", href: "/templates" });
+
+		expect(
+			resolveLink({
+				linkType: "internal",
+				internalRef: { _type: "contactPage", _id: "contactPage", slug: null },
+			})
+		).toEqual({ kind: "navigate", href: "/contact" });
+	});
+
+	it("internal -> blogPostTemplate/templateDetail cannot resolve to an href — not a page a link can mean", () => {
+		// The primary guard here is at compile time, not runtime:
+		// `DereferencedDoc._type` is `InternalDocType`, which does not include
+		// "blogPostTemplate" or "templateDetail" (they are excluded from
+		// routes.ts's `LinkableFixedRouteType`, which `InternalDocType` folds
+		// in). Writing `internalRef: { _type: "blogPostTemplate", ... }`
+		// against the real `LinkValue` type below does not compile — proven by
+		// the `@ts-expect-error` line, which fails `tsc --noEmit` if this
+		// exclusion ever regresses.
+		//
+		// The runtime guard is the fallback for the one path that bypasses the
+		// type system: a stale document reference written before this
+		// restriction existed, or a hand-crafted query result. `as unknown as
+		// LinkValue` simulates exactly that — a value that reaches the
+		// resolver despite the schema no longer allowing an editor to create
+		// it — and the resolver must still fail closed rather than produce a
+		// broken href.
+		const staleBlogPostTemplateLink: LinkValue = {
+			linkType: "internal",
+			internalRef: {
+				// @ts-expect-error — "blogPostTemplate" is not a member of InternalDocType
+				_type: "blogPostTemplate",
+				_id: "blogPostTemplate",
+				slug: null,
+			},
+		};
+		expect(resolveLink(staleBlogPostTemplateLink)).toBeNull();
+
+		const staleTemplateDetailLink = {
+			linkType: "internal",
+			internalRef: {
+				_type: "templateDetail",
+				_id: "templateDetail",
+				slug: null,
+			},
+		} as unknown as LinkValue;
+		expect(resolveLink(staleTemplateDetailLink)).toBeNull();
+	});
+
 	it("anchor resolves to /{pageSlug}#{anchorId} when the target page differs from the current page", () => {
 		const link: LinkValue = {
 			linkType: "anchor",

@@ -13,17 +13,13 @@
  */
 
 // Source: schema.json
-export type ContactPage = {
+export type TemplateDetail = {
   _id: string;
-  _type: "contactPage";
+  _type: "templateDetail";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
   route?: string;
-  seo?: Seo;
-  tag?: string;
-  heading?: string;
-  subtitle?: string;
   sectionsAbove?: PageBuilder;
   sectionsBelow?: PageBuilder;
 };
@@ -46,38 +42,6 @@ export type PageBuilder = Array<{
   _key: string;
 } & CtaBlock>;
 
-export type Seo = {
-  _type: "seo";
-  metaTitle?: string;
-  metaDescription?: string;
-};
-
-export type TemplateDetail = {
-  _id: string;
-  _type: "templateDetail";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  route?: string;
-  sectionsAbove?: PageBuilder;
-  sectionsBelow?: PageBuilder;
-};
-
-export type TemplateListing = {
-  _id: string;
-  _type: "templateListing";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  route?: string;
-  seo?: Seo;
-  tag?: string;
-  heading?: string;
-  subtitle?: string;
-  sectionsAbove?: PageBuilder;
-  sectionsBelow?: PageBuilder;
-};
-
 export type BlogPostTemplate = {
   _id: string;
   _type: "blogPostTemplate";
@@ -85,21 +49,6 @@ export type BlogPostTemplate = {
   _updatedAt: string;
   _rev: string;
   route?: string;
-  sectionsAbove?: PageBuilder;
-  sectionsBelow?: PageBuilder;
-};
-
-export type BlogListing = {
-  _id: string;
-  _type: "blogListing";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  route?: string;
-  seo?: Seo;
-  tag?: string;
-  heading?: string;
-  subtitle?: string;
   sectionsAbove?: PageBuilder;
   sectionsBelow?: PageBuilder;
 };
@@ -158,6 +107,49 @@ export type SiteSettings = {
     link?: Link;
   };
   ctaFootnote?: string;
+  siteTitle?: string;
+  siteDescription?: string;
+  ogImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    altText?: string;
+    _type: "image";
+  };
+  favicon?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
 };
 
 export type Link = {
@@ -183,6 +175,21 @@ export type Link = {
     _type: "reference";
     _weak?: boolean;
     [internalGroqTypeReferenceTo]?: "legalPage";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "blogListing";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "templateListing";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "contactPage";
   };
   anchorPage?: {
     _ref: string;
@@ -194,22 +201,6 @@ export type Link = {
   href?: string;
   openInNewTab?: boolean;
   calLink?: string;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
 };
 
 export type CaseStudy = {
@@ -319,6 +310,12 @@ export type CaseStudy = {
   };
   showOnHome?: boolean;
   seo?: Seo;
+};
+
+export type Seo = {
+  _type: "seo";
+  metaTitle?: string;
+  metaDescription?: string;
 };
 
 export type Slug = {
@@ -641,6 +638,51 @@ export type Category = {
   name?: string;
   slug?: Slug;
   description?: string;
+};
+
+export type ContactPage = {
+  _id: string;
+  _type: "contactPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  route?: string;
+  seo?: Seo;
+  tag?: string;
+  heading?: string;
+  subtitle?: string;
+  sectionsAbove?: PageBuilder;
+  sectionsBelow?: PageBuilder;
+};
+
+export type TemplateListing = {
+  _id: string;
+  _type: "templateListing";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  route?: string;
+  seo?: Seo;
+  tag?: string;
+  heading?: string;
+  subtitle?: string;
+  sectionsAbove?: PageBuilder;
+  sectionsBelow?: PageBuilder;
+};
+
+export type BlogListing = {
+  _id: string;
+  _type: "blogListing";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  route?: string;
+  seo?: Seo;
+  tag?: string;
+  heading?: string;
+  subtitle?: string;
+  sectionsAbove?: PageBuilder;
+  sectionsBelow?: PageBuilder;
 };
 
 export type LegalPage = {
@@ -1007,7 +1049,7 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type AllSanitySchemaTypes = ContactPage | PageBuilder | Seo | TemplateDetail | TemplateListing | BlogPostTemplate | BlogListing | SiteSettings | Link | SanityImageCrop | SanityImageHotspot | CaseStudy | Slug | Tool | LogoList | Faq | Client | CtaBlock | FaqBlock | TestimonialsBlock | ResultsBlock | ProcessBlock | ToolsStripBlock | CapabilitiesBlock | HeroBlock | WorkflowCategory | Location | Category | LegalPage | WorkflowTemplate | BlogPost | Author | Page | Code | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
+export type AllSanitySchemaTypes = TemplateDetail | PageBuilder | BlogPostTemplate | SiteSettings | SanityImageCrop | SanityImageHotspot | Link | CaseStudy | Seo | Slug | Tool | LogoList | Faq | Client | CtaBlock | FaqBlock | TestimonialsBlock | ResultsBlock | ProcessBlock | ToolsStripBlock | CapabilitiesBlock | HeroBlock | WorkflowCategory | Location | Category | ContactPage | TemplateListing | BlogListing | LegalPage | WorkflowTemplate | BlogPost | Author | Page | Code | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./lib/sanity/queries.ts
 // Variable: BLOG_POSTS_QUERY
@@ -1979,9 +2021,17 @@ export type PAGE_QUERYResult = {
       link: {
         linkType: "anchor" | "calBooking" | "external" | "internal" | null;
         internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
         } | {
           _type: "legalPage";
           _id: string;
@@ -1990,6 +2040,10 @@ export type PAGE_QUERYResult = {
           _type: "page";
           _id: string;
           slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
         } | {
           _type: "workflowTemplate";
           _id: string;
@@ -2016,9 +2070,17 @@ export type PAGE_QUERYResult = {
       link: {
         linkType: "anchor" | "calBooking" | "external" | "internal" | null;
         internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
         } | {
           _type: "legalPage";
           _id: string;
@@ -2027,6 +2089,10 @@ export type PAGE_QUERYResult = {
           _type: "page";
           _id: string;
           slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
         } | {
           _type: "workflowTemplate";
           _id: string;
@@ -2048,9 +2114,17 @@ export type PAGE_QUERYResult = {
       link: {
         linkType: "anchor" | "calBooking" | "external" | "internal" | null;
         internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
         } | {
           _type: "legalPage";
           _id: string;
@@ -2059,6 +2133,10 @@ export type PAGE_QUERYResult = {
           _type: "page";
           _id: string;
           slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
         } | {
           _type: "workflowTemplate";
           _id: string;
@@ -2146,9 +2224,17 @@ export type PAGE_QUERYResult = {
       link: {
         linkType: "anchor" | "calBooking" | "external" | "internal" | null;
         internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
         } | {
           _type: "legalPage";
           _id: string;
@@ -2157,6 +2243,10 @@ export type PAGE_QUERYResult = {
           _type: "page";
           _id: string;
           slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
         } | {
           _type: "workflowTemplate";
           _id: string;
@@ -2429,9 +2519,17 @@ export type PAGE_CTA_DEFAULTS_QUERYResult = {
     link: {
       linkType: "anchor" | "calBooking" | "external" | "internal" | null;
       internalRef: {
+        _type: "blogListing";
+        _id: string;
+        slug: null;
+      } | {
         _type: "blogPost";
         _id: string;
         slug: Slug | null;
+      } | {
+        _type: "contactPage";
+        _id: string;
+        slug: null;
       } | {
         _type: "legalPage";
         _id: string;
@@ -2440,6 +2538,10 @@ export type PAGE_CTA_DEFAULTS_QUERYResult = {
         _type: "page";
         _id: string;
         slug: Slug | null;
+      } | {
+        _type: "templateListing";
+        _id: string;
+        slug: null;
       } | {
         _type: "workflowTemplate";
         _id: string;
@@ -2463,6 +2565,15621 @@ export type PAGE_SLUGS_QUERYResult = Array<string | null>;
 // Variable: HOME_PAGE_SLUG_QUERY
 // Query: *[_id == "siteSettings"][0].homePage->slug.current
 export type HOME_PAGE_SLUG_QUERYResult = string | null;
+// Variable: BLOG_LISTING_QUERY
+// Query: *[_id == "blogListing"][0]{    _id,    _type,    seo,    tag,    heading,    subtitle,    sectionsAbove[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  },    sectionsBelow[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  }  }
+export type BLOG_LISTING_QUERYResult = {
+  _id: string;
+  _type: "author";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "blogListing";
+  seo: Seo | null;
+  tag: string | null;
+  heading: string | null;
+  subtitle: string | null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "blogPost";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "blogPostTemplate";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "caseStudy";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "category";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "client";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "contactPage";
+  seo: Seo | null;
+  tag: string | null;
+  heading: string | null;
+  subtitle: string | null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "faq";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "legalPage";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "location";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "logoList";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "page";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "sanity.fileAsset";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "sanity.imageAsset";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "siteSettings";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "templateDetail";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "templateListing";
+  seo: Seo | null;
+  tag: string | null;
+  heading: string | null;
+  subtitle: string | null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "tool";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "workflowCategory";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "workflowTemplate";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | null;
+// Variable: BLOG_LISTING_PUBLISHED_QUERY
+// Query: *[_id == "blogListing"][0]._id
+export type BLOG_LISTING_PUBLISHED_QUERYResult = string | null;
+// Variable: TEMPLATE_LISTING_QUERY
+// Query: *[_id == "templateListing"][0]{    _id,    _type,    seo,    tag,    heading,    subtitle,    sectionsAbove[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  },    sectionsBelow[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  }  }
+export type TEMPLATE_LISTING_QUERYResult = {
+  _id: string;
+  _type: "author";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "blogListing";
+  seo: Seo | null;
+  tag: string | null;
+  heading: string | null;
+  subtitle: string | null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "blogPost";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "blogPostTemplate";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "caseStudy";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "category";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "client";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "contactPage";
+  seo: Seo | null;
+  tag: string | null;
+  heading: string | null;
+  subtitle: string | null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "faq";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "legalPage";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "location";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "logoList";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "page";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "sanity.fileAsset";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "sanity.imageAsset";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "siteSettings";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "templateDetail";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "templateListing";
+  seo: Seo | null;
+  tag: string | null;
+  heading: string | null;
+  subtitle: string | null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "tool";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "workflowCategory";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "workflowTemplate";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | null;
+// Variable: TEMPLATE_LISTING_PUBLISHED_QUERY
+// Query: *[_id == "templateListing"][0]._id
+export type TEMPLATE_LISTING_PUBLISHED_QUERYResult = string | null;
+// Variable: CONTACT_PAGE_QUERY
+// Query: *[_id == "contactPage"][0]{    _id,    _type,    seo,    tag,    heading,    subtitle,    sectionsAbove[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  },    sectionsBelow[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  }  }
+export type CONTACT_PAGE_QUERYResult = {
+  _id: string;
+  _type: "author";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "blogListing";
+  seo: Seo | null;
+  tag: string | null;
+  heading: string | null;
+  subtitle: string | null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "blogPost";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "blogPostTemplate";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "caseStudy";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "category";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "client";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "contactPage";
+  seo: Seo | null;
+  tag: string | null;
+  heading: string | null;
+  subtitle: string | null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "faq";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "legalPage";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "location";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "logoList";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "page";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "sanity.fileAsset";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "sanity.imageAsset";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "siteSettings";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "templateDetail";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "templateListing";
+  seo: Seo | null;
+  tag: string | null;
+  heading: string | null;
+  subtitle: string | null;
+  sectionsAbove: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  sectionsBelow: Array<{
+    _key: string;
+    _type: "capabilitiesBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    items: Array<{
+      _key: string;
+      tag: string | null;
+      title: string | null;
+      description: string | null;
+      featured: boolean | null;
+      snippet: Array<string> | null;
+    }> | null;
+    link: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "ctaBlock";
+    anchorId: string | null;
+    ctaHeading: string | null;
+    ctaSubtitle: string | null;
+    ctaButton: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    ctaFootnote: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "faqBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoCategory: "general" | "pricing" | "support" | "technical" | null;
+    autoItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      question: string | null;
+      slug: Slug | null;
+      answer: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      order: number | null;
+      category: "general" | "pricing" | "support" | "technical" | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "heroBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    primaryCtaLabel: string | null;
+    secondaryCta: {
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+      } | null;
+    } | null;
+    showTrustedBy: boolean | null;
+  } | {
+    _key: string;
+    _type: "processBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    body: string | null;
+    steps: Array<{
+      _key: string;
+      stepLabel: string | null;
+      title: string | null;
+      description: string | null;
+      duration: string | null;
+    }> | null;
+    footnote: string | null;
+  } | {
+    _key: string;
+    _type: "resultsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    stats: Array<{
+      _key: string;
+      value: string | null;
+      suffix: string | null;
+      label: string | null;
+    }> | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      title: string | null;
+      slug: Slug | null;
+      client: {
+        _id: string;
+        name: string | null;
+        company: string | null;
+      } | null;
+      industry: {
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        country: string | null;
+        region: string | null;
+      } | null;
+      excerpt: string | null;
+      featuredImage: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+      loomUrl: string | null;
+      techStack: Array<{
+        _id: string;
+        name: string | null;
+        slug: Slug | null;
+        integrationType: "ads" | "analytics" | "api" | "cms" | "crm" | "database" | "internal" | null;
+      }> | null;
+      results: Array<{
+        metric: string | null;
+        value: string | null;
+        description: string | null;
+      }> | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "testimonialsBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      authorName: string | null;
+      company: string | null;
+      role: string | null;
+      testimonial: Array<{
+        children?: Array<{
+          marks?: Array<string>;
+          text?: string;
+          _type: "span";
+          _key: string;
+        }>;
+        style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+        listItem?: "bullet" | "number";
+        markDefs?: Array<{
+          href?: string;
+          _type: "link";
+          _key: string;
+        }>;
+        level?: number;
+        _type: "block";
+        _key: string;
+      }> | null;
+      headshot: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      companyLogo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: null;
+      } | null;
+      location: {
+        name: string | null;
+      } | null;
+    }> | null;
+  } | {
+    _key: string;
+    _type: "toolsStripBlock";
+    anchorId: string | null;
+    eyebrow: string | null;
+    heading: string | null;
+    intro: string | null;
+    sourceMode: "auto" | "manual" | null;
+    autoItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }>;
+    manualItems: Array<{
+      _id: string;
+      name: string | null;
+      logo: {
+        asset: {
+          _ref: string;
+          _type: "reference";
+          _weak?: boolean;
+          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+        } | null;
+        alt: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+} | {
+  _id: string;
+  _type: "tool";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "workflowCategory";
+  seo: null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | {
+  _id: string;
+  _type: "workflowTemplate";
+  seo: Seo | null;
+  tag: null;
+  heading: null;
+  subtitle: null;
+  sectionsAbove: null;
+  sectionsBelow: null;
+} | null;
+// Variable: CONTACT_PAGE_PUBLISHED_QUERY
+// Query: *[_id == "contactPage"][0]._id
+export type CONTACT_PAGE_PUBLISHED_QUERYResult = string | null;
 
 // Query TypeMap
 import "@sanity/client";
@@ -2496,5 +18213,11 @@ declare module "@sanity/client" {
     "\n    *[_id == \"siteSettings\"][0] {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote\n    }\n  ": PAGE_CTA_DEFAULTS_QUERYResult;
     "\n    *[_type == \"page\"].slug.current\n  ": PAGE_SLUGS_QUERYResult;
     "\n    *[_id == \"siteSettings\"][0].homePage->slug.current\n  ": HOME_PAGE_SLUG_QUERYResult;
+    "*[_id == \"blogListing\"][0]{\n    _id,\n    _type,\n    seo,\n    tag,\n    heading,\n    subtitle,\n    sectionsAbove[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  },\n    sectionsBelow[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  }\n  }": BLOG_LISTING_QUERYResult;
+    "*[_id == \"blogListing\"][0]._id": BLOG_LISTING_PUBLISHED_QUERYResult;
+    "*[_id == \"templateListing\"][0]{\n    _id,\n    _type,\n    seo,\n    tag,\n    heading,\n    subtitle,\n    sectionsAbove[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  },\n    sectionsBelow[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  }\n  }": TEMPLATE_LISTING_QUERYResult;
+    "*[_id == \"templateListing\"][0]._id": TEMPLATE_LISTING_PUBLISHED_QUERYResult;
+    "*[_id == \"contactPage\"][0]{\n    _id,\n    _type,\n    seo,\n    tag,\n    heading,\n    subtitle,\n    sectionsAbove[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  },\n    sectionsBelow[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  }\n  }": CONTACT_PAGE_QUERYResult;
+    "*[_id == \"contactPage\"][0]._id": CONTACT_PAGE_PUBLISHED_QUERYResult;
   }
 }

@@ -26,6 +26,30 @@ import type { SingletonType } from "./singletons";
 // placeholder value nobody would trust.
 export type FixedRouteType = Exclude<SingletonType, "siteSettings">;
 
+// PART 2 (2026-07-19, U21/U22 prep) — ROUTE_BY_TYPE above was a display-only
+// map from the start (studio-components/route-field.tsx's read-only "Route"
+// field is its one consumer), but it held two different kinds of string:
+// blogListing/templateListing/contactPage are real, resolvable routes,
+// while blogPostTemplate/templateDetail are human-readable descriptions of
+// a URL *pattern* applied to many records ("/blog/… (applies to every blog
+// post)") — never a URL anyone could navigate to. That distinction did not
+// matter while the only consumer was a label. It became a live bug the
+// moment something needed to resolve an actual href from this map (the
+// `link` union, lib/sanity/lib/resolve-link.ts): a link to blogPostTemplate
+// would produce the literal, broken href "/blog/… (applies to every blog
+// post)".
+//
+// ROUTE_BY_TYPE keeps its name and its exact values — Studio's Route field
+// must render identically to before, unchanged, so route-field.tsx needs no
+// changes and the existing display-string test keeps passing. What's new
+// is LINKABLE_ROUTE_BY_TYPE below: a second, narrower map that only exists
+// for the three types that serve a real route, keyed by a type
+// (`LinkableFixedRouteType`) that *excludes* blogPostTemplate and
+// templateDetail at the type level. That is deliberately stronger than a
+// function returning `string | undefined` for the excluded two: with a
+// function, "this type has no route" is a runtime fact a caller can forget
+// to check; with an excluded key, `LINKABLE_ROUTE_BY_TYPE.blogPostTemplate`
+// does not compile at all — there is no href to accidentally produce.
 export const ROUTE_BY_TYPE: Record<FixedRouteType, string> = {
 	blogListing: "/blog",
 	templateListing: "/templates",
@@ -33,3 +57,48 @@ export const ROUTE_BY_TYPE: Record<FixedRouteType, string> = {
 	blogPostTemplate: "/blog/… (applies to every blog post)",
 	templateDetail: "/templates/… (applies to every template)",
 };
+
+/**
+ * The fixed-route types an editor can pick as a `link` union target — see
+ * `lib/sanity/studio-schemas/objects/link.ts`'s `internalRef.to`. Excludes
+ * blogPostTemplate and templateDetail: both describe chrome applied to many
+ * per-record pages, not a page of their own, so there is no single href a
+ * link to either of them could mean.
+ */
+export type LinkableFixedRouteType = Exclude<
+	FixedRouteType,
+	"blogPostTemplate" | "templateDetail"
+>;
+
+const LINKABLE_FIXED_ROUTE_TYPES: readonly LinkableFixedRouteType[] = [
+	"blogListing",
+	"templateListing",
+	"contactPage",
+];
+
+// Sourced FROM ROUTE_BY_TYPE rather than hand-typed a second time — the
+// same "exactly one string per route" rule the file header already states,
+// now enforced across two maps instead of one. If ROUTE_BY_TYPE's value for
+// one of these three ever changes, this map changes with it automatically;
+// it cannot quietly drift to a stale copy.
+export const LINKABLE_ROUTE_BY_TYPE: Record<LinkableFixedRouteType, string> =
+	Object.fromEntries(
+		LINKABLE_FIXED_ROUTE_TYPES.map((type) => [type, ROUTE_BY_TYPE[type]])
+	) as Record<LinkableFixedRouteType, string>;
+
+const LINKABLE_FIXED_ROUTE_TYPE_SET = new Set<string>(
+	LINKABLE_FIXED_ROUTE_TYPES
+);
+
+/**
+ * Runtime companion to the type-level exclusion above. Needed because a
+ * dereferenced `internalRef->{ _type, ... }` value's `_type` is a plain
+ * string at runtime (GROQ has no way to prove it statically) — this is what
+ * lets `resolve-link.ts` index `LINKABLE_ROUTE_BY_TYPE` safely instead of
+ * casting.
+ */
+export function isLinkableFixedRouteType(
+	type: string | undefined
+): type is LinkableFixedRouteType {
+	return type !== undefined && LINKABLE_FIXED_ROUTE_TYPE_SET.has(type);
+}

@@ -1,5 +1,10 @@
 import { stegaClean } from "@sanity/client/stega";
 import { CAL_LINK } from "@/components/data";
+import {
+	LINKABLE_ROUTE_BY_TYPE,
+	isLinkableFixedRouteType,
+	type LinkableFixedRouteType,
+} from "../routes";
 
 // The single resolver turning a `link` object (lib/sanity/studio-schemas/objects/link.ts)
 // into either a navigation target or a Cal.com booking instruction, everywhere
@@ -26,7 +31,18 @@ import { CAL_LINK } from "@/components/data";
 // runtime bug — see resolve-link.test.ts's "cannot be rendered as a plain
 // href by mistake" case for the regression guard.
 
-type InternalDocType = "page" | "blogPost" | "workflowTemplate" | "legalPage";
+// U21/U22 prep (2026-07-19) — the three fixed-route singletons an editor can
+// now target from `internalRef` (see link.ts's `to` array). Folded into
+// `InternalDocType` via `LinkableFixedRouteType` rather than hand-typed
+// again: that type is already the single place excluding blogPostTemplate
+// and templateDetail (routes.ts), and repeating its members here would be
+// exactly the kind of second copy that file's header comment warns against.
+type InternalDocType =
+	| "page"
+	| "blogPost"
+	| "workflowTemplate"
+	| "legalPage"
+	| LinkableFixedRouteType;
 
 /**
  * The shape a GROQ query produces once an internal reference has been
@@ -91,10 +107,29 @@ export type ResolveLinkContext = {
  * a shared fallthrough so a document type that's silently missing from this
  * switch fails closed (returns null) instead of accidentally inheriting
  * another type's path scheme.
+ *
+ * blogListing/templateListing/contactPage are handled BEFORE the slug
+ * guard below, not inside the switch — they are fixed-route singletons
+ * with no `slug` field at all (see routes.ts's `LinkableFixedRouteType`),
+ * so the `!slug` check that every other branch relies on would reject them
+ * outright, and their path never came from a slug in the first place. It
+ * comes from `LINKABLE_ROUTE_BY_TYPE`, the same map U21/U22's Route display
+ * field reads its label from — one string per route, not a second copy
+ * hand-typed into this switch. Checking `isLinkableFixedRouteType` first,
+ * rather than adding cases to the switch below, is what keeps
+ * blogPostTemplate and templateDetail structurally unresolvable: neither is
+ * a member of `LinkableFixedRouteType`, so there is no `LINKABLE_ROUTE_BY_TYPE`
+ * entry for either to fall into even by accident.
  */
 function pathForInternalDoc(doc: DereferencedDoc): string | null {
-	const slug = doc?.slug?.current;
-	if (!doc || !slug) return null;
+	if (!doc) return null;
+
+	if (isLinkableFixedRouteType(doc._type)) {
+		return LINKABLE_ROUTE_BY_TYPE[doc._type];
+	}
+
+	const slug = doc.slug?.current;
+	if (!slug) return null;
 
 	switch (doc._type) {
 		case "blogPost":

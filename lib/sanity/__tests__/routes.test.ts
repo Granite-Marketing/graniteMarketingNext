@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { ROUTE_BY_TYPE } from "../routes";
+import {
+	ROUTE_BY_TYPE,
+	LINKABLE_ROUTE_BY_TYPE,
+	isLinkableFixedRouteType,
+} from "../routes";
 import { SINGLETON_TYPE_LIST } from "../singletons";
 
 // PART 1 of the fixed-route-visibility unit (2026-07-19) — the one map from
@@ -30,5 +34,59 @@ describe("routes — fixed-route map (PART 1)", () => {
 			blogPostTemplate: "/blog/… (applies to every blog post)",
 			templateDetail: "/templates/… (applies to every template)",
 		});
+	});
+});
+
+// PART 2 (2026-07-19, U21/U22 prep) — the route/label split. ROUTE_BY_TYPE
+// above must keep holding exactly the same five display strings (pinned by
+// the test immediately above this block — a regression guard for the
+// Studio's read-only Route field, which must render identically to before).
+// LINKABLE_ROUTE_BY_TYPE is the new, narrower map: only the three types a
+// `link` union can actually target.
+describe("routes — linkable-route map (PART 2)", () => {
+	it("covers exactly the three types with a real, navigable route", () => {
+		expect(Object.keys(LINKABLE_ROUTE_BY_TYPE).sort()).toEqual(
+			["blogListing", "contactPage", "templateListing"].sort()
+		);
+	});
+
+	it("maps each linkable type to the same route string ROUTE_BY_TYPE holds for it — sourced from one map, not a second hand-typed copy", () => {
+		expect(LINKABLE_ROUTE_BY_TYPE).toEqual({
+			blogListing: ROUTE_BY_TYPE.blogListing,
+			templateListing: ROUTE_BY_TYPE.templateListing,
+			contactPage: ROUTE_BY_TYPE.contactPage,
+		});
+		expect(LINKABLE_ROUTE_BY_TYPE).toEqual({
+			blogListing: "/blog",
+			templateListing: "/templates",
+			contactPage: "/contact",
+		});
+	});
+
+	it("blogPostTemplate and templateDetail are absent from the linkable map — not merely undefined, structurally not a key", () => {
+		expect(
+			Object.prototype.hasOwnProperty.call(
+				LINKABLE_ROUTE_BY_TYPE,
+				"blogPostTemplate"
+			)
+		).toBe(false);
+		expect(
+			Object.prototype.hasOwnProperty.call(
+				LINKABLE_ROUTE_BY_TYPE,
+				"templateDetail"
+			)
+		).toBe(false);
+	});
+
+	it("isLinkableFixedRouteType is true for the three linkable types and false for the two pattern types and junk", () => {
+		expect(isLinkableFixedRouteType("blogListing")).toBe(true);
+		expect(isLinkableFixedRouteType("templateListing")).toBe(true);
+		expect(isLinkableFixedRouteType("contactPage")).toBe(true);
+
+		expect(isLinkableFixedRouteType("blogPostTemplate")).toBe(false);
+		expect(isLinkableFixedRouteType("templateDetail")).toBe(false);
+
+		expect(isLinkableFixedRouteType("blogPost")).toBe(false);
+		expect(isLinkableFixedRouteType(undefined)).toBe(false);
 	});
 });

@@ -7,12 +7,21 @@ import { CAL_LINK } from "@/components/data";
 // union on `linkType` — string enum with `options.list` + radio layout, per
 // Sanity's own schema rule preferring a string enum over parallel booleans.
 //
-// `page` and `legalPage` do not exist as document types yet (they land in
-// U8 and U10). Referencing them by name here is intentional and safe: Sanity
-// tolerates forward references inside `to: [{ type: "..." }]` at
-// schema-definition time — verified via `npx sanity schema extract`, which
-// does not error even though those two document types are not yet
-// registered in the schema.
+// `internalRef.to` below lists every document type an editor can pick as an
+// internal link target. Sanity tolerates forward references inside
+// `to: [{ type: "..." }]` at schema-definition time — verified via
+// `npx sanity schema extract`, which does not error even for a type not yet
+// registered in the schema — which mattered when this comment was written
+// and `page`/`legalPage` did not exist yet (U8, U10). All six types listed
+// now (page, blogPost, workflowTemplate, legalPage, blogListing,
+// templateListing, contactPage) are already defined and registered in
+// studio-schemas/index.ts, so that forward-reference tolerance is no longer
+// being relied on here — it just isn't needed to add blogListing,
+// templateListing and contactPage (U21/U22 prep, 2026-07-19). Deliberately
+// NOT added: blogPostTemplate and templateDetail. Both describe chrome
+// applied to many per-record pages, not a page of their own — see
+// routes.ts's `LinkableFixedRouteType` for the type that keeps them out of
+// resolve-link.ts's reach too.
 //
 // The destination is resolved by `lib/sanity/lib/resolve-link.ts` — nothing
 // in this schema file computes an href. `calBooking` is the one exception to
@@ -100,6 +109,9 @@ export const link = defineType({
 				{ type: "blogPost" },
 				{ type: "workflowTemplate" },
 				{ type: "legalPage" },
+				{ type: "blogListing" },
+				{ type: "templateListing" },
+				{ type: "contactPage" },
 			],
 			hidden: ({ parent }) => !isInternal(parent as LinkParent),
 			// A hidden variant's `required()` still blocks publish unless the

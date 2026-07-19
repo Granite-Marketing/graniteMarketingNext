@@ -2,7 +2,6 @@ import { defineQuery } from "next-sanity";
 import { client } from "./client";
 import { fetchQuery } from "./lib/fetch";
 import { adaptCaseStudyToCard } from "./lib/adapters";
-import { SINGLETON_TYPES } from "./singletons";
 import type { Section } from "./lib/page-sections";
 
 // =============================================================================
@@ -1102,8 +1101,30 @@ const PAGE_TYPE_SECTION_FIELDS = `{
 // omit them) because components/page-builder.tsx's `PageBuilder` requires
 // both as props for its Presentation data attributes and optimistic-update
 // matching — neither slot can render through it without them.
-function pageTypeChromeQuery(id: string): string {
-	return `*[_id == "${id}"][0]{
+//
+// The document ids below are hard-coded string literals rather than
+// `SINGLETON_TYPES.blogListing` etc, and the queries are written out per
+// type rather than built by a helper function. A helper reads better, but `sanity typegen` can only statically
+// analyse a literal passed to `defineQuery` — hand it a function call and it
+// fails with "Unsupported expression type: BlockStatement" and silently
+// generates ZERO queries FOR THE WHOLE FILE, taking every `*QueryResult`
+// type with it. That is what U5's convention ("every query string wrapped in
+// defineQuery and assigned to a uniquely named top-level const") is actually
+// protecting against; a first cut of these queries used a helper and broke
+// typegen exactly this way — and it fails SILENTLY, in the sense that
+// `npm run build`, `tsc` and the whole test suite still pass afterwards
+// (they read the previously-generated sanity.types.ts, which is checked in).
+// Only re-running typegen reveals it.
+//
+// The same limitation rules out interpolating the registry constant:
+// `${SINGLETON_TYPES.blogListing}` is a member expression, which typegen
+// also cannot resolve — verified by trying it, not assumed. So these three
+// ids are the one place a singleton id is written out by hand instead of
+// coming from lib/sanity/singletons.ts. The tests below pin them against the
+// registry so the copies cannot drift.
+//
+// The duplication below is the price of having generated types at all.
+const PAGE_TYPE_CHROME_FIELDS = `{
     _id,
     _type,
     seo,
@@ -1113,22 +1134,14 @@ function pageTypeChromeQuery(id: string): string {
     sectionsAbove[] ${PAGE_TYPE_SECTION_FIELDS},
     sectionsBelow[] ${PAGE_TYPE_SECTION_FIELDS}
   }`;
-}
-
-// Existence-only projection for the forcePublished gate below — cheaper
-// than fetching the whole document just to test whether a published copy
-// exists at all.
-function pageTypeExistsQuery(id: string): string {
-	return `*[_id == "${id}"][0]._id`;
-}
 
 // --- Blog Listing (/blog) ---
 
 export const BLOG_LISTING_QUERY = defineQuery(
-	pageTypeChromeQuery(SINGLETON_TYPES.blogListing)
+	`*[_id == "blogListing"][0]${PAGE_TYPE_CHROME_FIELDS}`
 );
 export const BLOG_LISTING_PUBLISHED_QUERY = defineQuery(
-	pageTypeExistsQuery(SINGLETON_TYPES.blogListing)
+	`*[_id == "blogListing"][0]._id`
 );
 
 /**
@@ -1159,10 +1172,10 @@ export async function getBlogListing(): Promise<PageTypeChromeResult> {
 // --- Template Listing (/templates) ---
 
 export const TEMPLATE_LISTING_QUERY = defineQuery(
-	pageTypeChromeQuery(SINGLETON_TYPES.templateListing)
+	`*[_id == "templateListing"][0]${PAGE_TYPE_CHROME_FIELDS}`
 );
 export const TEMPLATE_LISTING_PUBLISHED_QUERY = defineQuery(
-	pageTypeExistsQuery(SINGLETON_TYPES.templateListing)
+	`*[_id == "templateListing"][0]._id`
 );
 
 export async function getTemplateListingPublished(): Promise<boolean> {
@@ -1181,10 +1194,10 @@ export async function getTemplateListing(): Promise<PageTypeChromeResult> {
 // --- Contact (/contact) ---
 
 export const CONTACT_PAGE_QUERY = defineQuery(
-	pageTypeChromeQuery(SINGLETON_TYPES.contactPage)
+	`*[_id == "contactPage"][0]${PAGE_TYPE_CHROME_FIELDS}`
 );
 export const CONTACT_PAGE_PUBLISHED_QUERY = defineQuery(
-	pageTypeExistsQuery(SINGLETON_TYPES.contactPage)
+	`*[_id == "contactPage"][0]._id`
 );
 
 export async function getContactPagePublished(): Promise<boolean> {
