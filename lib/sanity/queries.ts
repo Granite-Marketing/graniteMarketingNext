@@ -1294,3 +1294,112 @@ export async function getContactPagePublished(): Promise<boolean> {
 export async function getContactPage(): Promise<PageTypeChromeResult> {
 	return fetchQuery<PageTypeChromeResult>(CONTACT_PAGE_QUERY, {});
 }
+
+// =============================================================================
+// PAGE TYPE TEMPLATES (U19b of the Sanity page builder plan, Phase 6)
+// =============================================================================
+
+// blogPostTemplate and templateDetail (lib/sanity/studio-schemas/documents/
+// {blogPostTemplate,templateDetail}.ts) share a narrower shape than the
+// three chrome singletons above: no `seo`, no ContentHero fields — only
+// `sectionsAbove`/`sectionsBelow` wrapped around EVERY blogPost/
+// workflowTemplate record's existing detail page. One result type covers
+// both, mirroring PageTypeChromeResult immediately above it.
+export type PageTypeSectionsResult = {
+	_id: string;
+	_type: string;
+	sectionsAbove: Section[] | null;
+	sectionsBelow: Section[] | null;
+} | null;
+
+// Named *_SECTIONS_QUERY rather than reusing blogPostTemplate.ts's/
+// templateDetail.ts's own BLOG_POST_TEMPLATE_QUERY/TEMPLATE_DETAIL_QUERY
+// names — those are plain strings (not `defineQuery`) used for the Studio's
+// own placeholder preview and are never imported here (this file has never
+// imported from studio-schemas), but a same-named export in each of two
+// files reads as one query drifting from itself. Reuses
+// PAGE_TYPE_SECTION_FIELDS, the identical per-block projection
+// BLOG_LISTING_QUERY/TEMPLATE_LISTING_QUERY/CONTACT_PAGE_QUERY already
+// share above, so a block's field list can't drift between the five
+// singletons. `_id`/`_type` are projected for the same reason as
+// PAGE_TYPE_CHROME_FIELDS: components/page-builder.tsx's `PageBuilder`
+// requires both.
+//
+// Written out per type with literal ids, not built by a helper function or
+// by interpolating SINGLETON_TYPES — see PAGE_TYPE_CHROME_FIELDS's comment
+// above for why: `sanity typegen` only statically analyses a literal
+// `defineQuery(...)` call, and a helper call or a member-expression
+// interpolation both make it emit ZERO queries for this entire file,
+// SILENTLY (build/tsc/tests all still pass against the checked-in
+// sanity.types.ts). The tests below pin these ids against the registry so
+// the copies cannot drift.
+
+// --- Blog Post Template (wraps every /blog/[slug]) ---
+
+export const BLOG_POST_TEMPLATE_SECTIONS_QUERY = defineQuery(
+	`*[_id == "blogPostTemplate"][0]{
+    _id,
+    _type,
+    sectionsAbove[] ${PAGE_TYPE_SECTION_FIELDS},
+    sectionsBelow[] ${PAGE_TYPE_SECTION_FIELDS}
+  }`
+);
+export const BLOG_POST_TEMPLATE_SECTIONS_PUBLISHED_QUERY = defineQuery(
+	`*[_id == "blogPostTemplate"][0]._id`
+);
+
+/**
+ * PUBLISHED-only existence check — mirrors getBlogListingPublished's
+ * `forcePublished: true` gate (see that function's comment for the full
+ * rationale). blogPostTemplate is seeded and currently exists only as a
+ * draft, so this must resolve `false`, and every post must render exactly
+ * as it does today, until an editor presses Publish.
+ */
+export async function getBlogPostTemplatePublished(): Promise<boolean> {
+	const id = await fetchQuery<string | null>(
+		BLOG_POST_TEMPLATE_SECTIONS_PUBLISHED_QUERY,
+		{},
+		{ forcePublished: true }
+	);
+	return id != null;
+}
+
+/**
+ * The sections content itself, draft-mode-aware (unlike the check above) so
+ * an editor previewing further edits in Presentation after publishing sees
+ * them live — mirrors getBlogListing being called after
+ * getBlogListingPublished. Only called by app/blog/[slug]/page.tsx once
+ * getBlogPostTemplatePublished has already proved a published document
+ * exists, so a real post is never held up on a template that hasn't been
+ * published yet.
+ */
+export async function getBlogPostTemplate(): Promise<PageTypeSectionsResult> {
+	return fetchQuery<PageTypeSectionsResult>(BLOG_POST_TEMPLATE_SECTIONS_QUERY, {});
+}
+
+// --- Template Detail (wraps every /templates/[slug]) ---
+
+export const TEMPLATE_DETAIL_SECTIONS_QUERY = defineQuery(
+	`*[_id == "templateDetail"][0]{
+    _id,
+    _type,
+    sectionsAbove[] ${PAGE_TYPE_SECTION_FIELDS},
+    sectionsBelow[] ${PAGE_TYPE_SECTION_FIELDS}
+  }`
+);
+export const TEMPLATE_DETAIL_SECTIONS_PUBLISHED_QUERY = defineQuery(
+	`*[_id == "templateDetail"][0]._id`
+);
+
+export async function getTemplateDetailPublished(): Promise<boolean> {
+	const id = await fetchQuery<string | null>(
+		TEMPLATE_DETAIL_SECTIONS_PUBLISHED_QUERY,
+		{},
+		{ forcePublished: true }
+	);
+	return id != null;
+}
+
+export async function getTemplateDetail(): Promise<PageTypeSectionsResult> {
+	return fetchQuery<PageTypeSectionsResult>(TEMPLATE_DETAIL_SECTIONS_QUERY, {});
+}

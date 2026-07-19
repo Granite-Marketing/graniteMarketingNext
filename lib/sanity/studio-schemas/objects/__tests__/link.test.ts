@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { FieldDefinition, ValidationContext } from "sanity";
 import { link } from "../link";
+import { AnchorIdInput } from "../../../studio-components/anchor-id-input";
 
 // A minimal stand-in for Sanity's `Rule` builder. `defineField`/`defineType`
 // are identity functions at runtime (verified in
@@ -168,6 +169,35 @@ describe("studio-schemas/objects/link", () => {
 			expect(runValidation("internalRef", undefined, parent)).toBe(true);
 			expect(runValidation("anchorId", undefined, parent)).toBe(true);
 			expect(runValidation("href", undefined, parent)).toBe(true);
+		});
+	});
+
+	describe("anchorId field — custom dropdown input (U11)", () => {
+		it("is still declared as a plain string field, not a slug or other type — the stored shape is unchanged", () => {
+			const anchorIdField = findField("anchorId");
+			expect(anchorIdField.type).toBe("string");
+		});
+
+		it("wires the anchor picker component in as its input, without touching hidden/validation", () => {
+			const anchorIdField = findField("anchorId");
+			expect(
+				(anchorIdField as unknown as { components?: { input?: unknown } })
+					.components?.input
+			).toBe(AnchorIdInput);
+			// hidden/validation are the same callbacks exercised throughout this
+			// file's "hidden" and "validation" describe blocks above — this test
+			// only proves the component swap didn't replace or drop them.
+			expect(typeof anchorIdField.hidden).toBe("function");
+			expect(typeof anchorIdField.validation).toBe("function");
+		});
+
+		it("required-when-anchor validation still runs the same as before the input swap", () => {
+			expect(
+				runValidation("anchorId", undefined, { linkType: "anchor" })
+			).not.toBe(true);
+			expect(
+				runValidation("anchorId", "services", { linkType: "anchor" })
+			).toBe(true);
 		});
 	});
 

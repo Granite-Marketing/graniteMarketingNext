@@ -1,6 +1,7 @@
 import { defineType, defineField } from "sanity";
 import type { ValidationContext } from "sanity";
 import { CAL_LINK } from "@/components/data";
+import { AnchorIdInput } from "../../studio-components/anchor-id-input";
 
 // The reusable link union every nav item, CTA button and in-body link target
 // resolves through (U7 of the Sanity page builder plan). A discriminated
@@ -140,8 +141,24 @@ export const link = defineType({
 		defineField({
 			name: "anchorId",
 			title: "Anchor",
+			description:
+				"Pick a section from the dropdown once a page is selected above. You can still type an id directly — useful for a draft page, a section that doesn't exist yet, or a page's own current-page anchors.",
 			type: "string",
 			hidden: ({ parent }) => !isAnchor(parent as LinkParent),
+			// The stored value stays a plain string — U11 (Sanity page builder
+			// plan) replaces only the INPUT below, not the type. A free-text
+			// `anchorId` is the single most likely way a client breaks their own
+			// site: type it from memory, typo it, and the link silently scrolls
+			// nowhere — no error in Studio, none on publish. `AnchorIdInput`
+			// (lib/sanity/studio-components/anchor-id-input.tsx) swaps in a
+			// dropdown of the anchor ids that actually exist on the referenced
+			// page, built from the pure logic in
+			// studio-components/anchor-options.ts, while always keeping a
+			// free-text escape hatch next to it — see that file's own comments
+			// for why the escape hatch can't be a mode switch.
+			components: {
+				input: AnchorIdInput,
+			},
 			validation: (Rule) =>
 				Rule.custom((value, context) => {
 					const parent = parentOf(context);

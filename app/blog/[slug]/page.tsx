@@ -4,14 +4,19 @@ import { PostContent } from "@/components/post-content";
 import { ContentCtaBanner } from "@/components/content-cta-banner";
 import { RelatedPosts } from "@/components/related-posts";
 import { Footer } from "@/components/footer";
+import { PageBuilder } from "@/components/page-builder";
 import { notFound } from "next/navigation";
 import {
 	getBlogPost,
 	getBlogPostSlugs,
 	getBlogPosts,
+	getBlogPostTemplatePublished,
+	getBlogPostTemplate,
+	getPageCtaDefaults,
 } from "@/lib/sanity/queries";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
 import type { PortableTextBlock } from "@portabletext/types";
+import type { SiteSettingsCtaDefaults } from "@/lib/sanity/lib/resolve-cta";
 import type { Metadata } from "next";
 import { siteConfig, pageMetadata } from "@/lib/seo";
 import { stegaClean } from "next-sanity";
@@ -120,7 +125,23 @@ export default async function BlogPostPage({
 		notFound();
 	}
 
-	const related = await getBlogPosts();
+	const [related, templatePublished, ctaDefaults] = await Promise.all([
+		getBlogPosts(),
+		getBlogPostTemplatePublished(),
+		getPageCtaDefaults() as Promise<SiteSettingsCtaDefaults | null>,
+	]);
+
+	// blogPostTemplate (U19b of the Sanity page builder plan, Phase 6) exists
+	// ONLY as a draft right now, and dev/production share one Sanity dataset
+	// (see app/page.tsx's generateMetadata for the full rationale this
+	// mirrors), so this must resolve to no extra sections around any post
+	// until an editor PUBLISHES it — never at deploy time. getBlogPostTemplate
+	// is only called once the check above has proved a published document
+	// exists, exactly like getBlogListing following getBlogListingPublished
+	// in app/blog/page.tsx (U21).
+	const template = templatePublished ? await getBlogPostTemplate() : null;
+	const sectionsAbove = template?.sectionsAbove ?? [];
+	const sectionsBelow = template?.sectionsBelow ?? [];
 
 	const heroPost = {
 		title: post.title,
@@ -162,10 +183,26 @@ export default async function BlogPostPage({
 	return (
 		<div className="min-h-screen bg-background">
 			<Nav />
+			{sectionsAbove.length > 0 && (
+				<PageBuilder
+					documentId={template!._id}
+					documentType={template!._type}
+					sections={sectionsAbove}
+					siteSettingsCtaDefaults={ctaDefaults}
+				/>
+			)}
 			<BlogPostHero post={heroPost} slug={slug} relatedTemplates={templateLinks} />
 			<PostContent content={(post.content ?? []) as PortableTextBlock[]} />
 			<ContentCtaBanner />
 			<RelatedPosts posts={related as any[]} currentSlug={post.slug.current} />
+			{sectionsBelow.length > 0 && (
+				<PageBuilder
+					documentId={template!._id}
+					documentType={template!._type}
+					sections={sectionsBelow}
+					siteSettingsCtaDefaults={ctaDefaults}
+				/>
+			)}
 			<Footer />
 		</div>
 	);

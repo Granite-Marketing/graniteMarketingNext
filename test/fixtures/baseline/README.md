@@ -30,14 +30,34 @@ reproduced via a `git checkout` of the pre-migration tree.
 `/blog/[slug]` and `/templates/[slug]` are SSG per-post pages and are out of scope for this
 unit.
 
-## How to regenerate
+## How to compare against these fixtures
 
 ```
-npm run baseline:capture
+npm run baseline:check
 ```
 
-This runs `next build` and then `test/regression/capture-baseline.ts`, which reads the
-build output, normalises it (see below), and overwrites these fixtures.
+Builds, then compares the output against these fixtures and exits non-zero on any
+difference. Writes nothing. This is the command you want almost always.
+
+It reports two tiers per route: **markup-only** (script blocks excluded) drives the
+pass/fail, and **strict** (the whole document) is reported alongside it. A route that
+differs in strict but not markup-only is bundler bookkeeping — reordered module ids in
+the inlined RSC payload — not a content regression.
+
+## How to regenerate (destructive)
+
+```
+npm run baseline:overwrite-fixtures
+```
+
+Overwrites every fixture with the current build output. These fixtures are the
+PRE-MIGRATION baseline: once a route renders from Sanity, its original output cannot be
+regenerated, only restored from git. Regenerating blesses whatever is current as correct,
+so do it deliberately and never to "fix" a failing check.
+
+The script previously overwrote fixtures by default and silently ignored unrecognised
+flags — `--check` was accepted and ignored, destroying the fixtures it was meant to
+verify against. Unknown arguments are now a hard error.
 
 ## Normalisation — what, and the evidence it was necessary
 
