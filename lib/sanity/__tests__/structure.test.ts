@@ -148,18 +148,48 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 	// the passthrough row opens an uncapped list of every document of that
 	// type, and the two look identical in the sidebar. An editor who picks
 	// the wrong one creates a second Blog Listing that nothing ever reads.
-	it("mechanism (2): lists every registered singleton exactly once, never alongside a generic list", () => {
+	it("mechanism (2): reaches every registered singleton exactly once, never alongside a generic list", () => {
 		const { S, getList } = createStubS(
 			SINGLETON_TYPE_LIST.map((type) => createListItemStub(type))
 		);
 
 		structure(S as never, {} as never);
 
-		const items = getList().items as ReturnType<typeof createListItemStub>[];
-		const ids = items.map((item) => item.getId?.());
+		// Walks the whole tree, not just the top level: singletons now live at
+		// two depths (Contact is a top-level pin, Blog Post Detail sits inside
+		// the Blogs section), and a top-level-only check would read a nested
+		// singleton as missing and a leaked duplicate as fine.
+		//
+		// Counts the document each entry OPENS rather than the entry's id,
+		// because the desk id and the schema type deliberately diverge — a
+		// section is id'd for its listing type, and each pinned entry is
+		// id'd `<type>-document`. What must be unique is the document
+		// reached, not the label on the row.
+		const openedTypes: string[] = [];
+		const visit = (items: unknown[]) => {
+			for (const item of items) {
+				const entry = item as {
+					getChild?: () => unknown;
+					getItems?: () => unknown[];
+				};
+				const child = entry.getChild?.() as
+					| (ReturnType<typeof createDocumentBuilderStub> & {
+							getItems?: () => unknown[];
+					  })
+					| undefined;
+				if (!child) continue;
+
+				const schemaType = child.getSchemaType?.();
+				if (schemaType) openedTypes.push(schemaType);
+
+				const nested = child.getItems?.();
+				if (nested) visit(nested);
+			}
+		};
+		visit(getList().items as unknown[]);
 
 		for (const type of SINGLETON_TYPE_LIST) {
-			expect(ids.filter((id) => id === type)).toEqual([type]);
+			expect(openedTypes.filter((t) => t === type)).toEqual([type]);
 		}
 	});
 
@@ -191,15 +221,13 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 
 		expect(ids).toEqual([
 			"siteSettings",
-			// Fixed-route page types: always exist, edit-only. Listing and
-			// detail pairs sit together so the relationship reads off the desk.
-			// blogListing/templateListing are nested containers now (U20), but
-			// keep the same desk id and position — nesting only changes what's
-			// inside their `.child()`.
+			// One row per topic. Each is a container holding that topic's
+			// listing settings, its detail layout, and its records — so
+			// blogPostTemplate/templateDetail are deliberately absent here.
+			// The section keeps its listing type as the desk id to hold the
+			// /studio/structure/<id> URL stable.
 			"blogListing",
-			"blogPostTemplate",
 			"templateListing",
-			"templateDetail",
 			"contactPage",
 			// Creatable page lists, below the fixed ones.
 			"page",
@@ -259,6 +287,80 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 		const recordListEntry = childItems.find((item) => item.getId?.() === "blogPost");
 		expect(recordListEntry).toBeDefined();
 	});
+
+	// The point of a section is that everything for a topic is inside it.
+	// A detail layout sitting outside its topic is the thing this replaced:
+	// five sibling rows where two of them only made sense next to the other
+	// three.
+	it.each([
+		["blogListing", ["blogListing", "blogPostTemplate"], "blogPost"],
+		["templateListing", ["templateListing", "templateDetail"], "workflowTemplate"],
+	])("%s's section holds its own documents and records", (type, singletons, recordType) => {
+		const { S, getList } = createStubS([]);
+
+		structure(S as never, {} as never);
+
+		const items = getList().items as ReturnType<typeof createListItemStub>[];
+		const section = items.find((item) => item.getId?.() === type);
+
+		const childItems = (
+			section!.getChild() as { getItems: () => unknown[] }
+		).getItems() as Array<{
+			getId?: () => string;
+			getChild?: () => unknown;
+		}>;
+
+		const openedTypes = childItems
+			.map(
+				(child) =>
+					(
+						child.getChild?.() as
+							| ReturnType<typeof createDocumentBuilderStub>
+							| undefined
+					)?.getSchemaType?.()
+			)
+			.filter(Boolean);
+		expect(openedTypes).toEqual(singletons);
+
+		// ...and the records themselves, via the real document type list.
+		expect(childItems.some((child) => child.getId?.() === recordType)).toBe(true);
+	});
+
+	// A nested listing's section title and its inner document title must not
+	// be the same string. They were, at first: a "Blog Listing" row opened a
+	// panel headed "Blog Listing" whose first row was also "Blog Listing".
+	// Nothing was broken, but it reads as a rendering bug, and the desk shape
+	// tests all passed because none of them looked at titles.
+	it.each([
+		["blogListing", "Blogs", "Listing"],
+		["templateListing", "Templates", "Listing"],
+	])(
+		"%s names the section for its topic and its entries for the concept",
+		(type, sectionTitle, documentTitle) => {
+			const { S, getList } = createStubS([]);
+
+			structure(S as never, {} as never);
+
+			const items = getList().items as ReturnType<typeof createListItemStub>[];
+			const item = items.find((i) => i.getId?.() === type);
+
+			// Emoji prefixes are presentation, so assert on the words rather
+			// than pinning the exact glyph — changing an icon should not fail
+			// a test about naming.
+			expect(item!.getTitle()).toContain(sectionTitle);
+
+			const childItems = (
+				item!.getChild() as { getItems: () => unknown[] }
+			).getItems() as Array<{ getTitle?: () => string; getId?: () => string }>;
+
+			const documentEntry = childItems.find(
+				(child) => child.getId?.() === `${type}-document`
+			);
+			// Emoji are presentation: assert the words, so swapping an icon
+			// never fails a test about naming.
+			expect(documentEntry!.getTitle?.()).toContain(documentTitle);
+		}
+	);
 
 	// Same shape, mirrored for Template Listing / Workflow Templates.
 	it("templateListing's desk entry nests both the singleton document and a workflowTemplate list under one child", () => {

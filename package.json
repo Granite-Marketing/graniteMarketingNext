@@ -23,6 +23,7 @@
     "migrate:all": "npx tsx --env-file=.env.local scripts/migrate-all.ts",
     "seed:pages": "npx tsx --env-file=.env.local scripts/seed-pages.ts",
     "seed:pages:publish": "npx tsx --env-file=.env.local scripts/seed-pages.ts --publish",
+    "seed:page-types": "npx tsx --env-file=.env.local scripts/seed-page-types.ts",
     "typegen": "sanity schema extract && sanity typegen generate"
   },
   "dependencies": {

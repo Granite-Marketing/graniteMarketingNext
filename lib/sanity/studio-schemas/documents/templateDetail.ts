@@ -28,12 +28,21 @@ export const TEMPLATE_DETAIL_QUERY = `*[_id == "${TEMPLATE_DETAIL_TYPE}"][0]{
 
 export const templateDetail = defineType({
 	name: TEMPLATE_DETAIL_TYPE,
-	title: "Template Detail",
+	title: "⚙️ Template Detail",
 	type: "document",
 	fields: [...slotFields()],
 	preview: {
+		// `select` is required even though nothing is selected from the
+		// document: without it Sanity skips `prepare()` entirely and falls
+		// back to "Untitled", because these singletons have no title field
+		// for it to read.
+		select: {},
 		prepare() {
-			return { title: "Template Detail" };
+			return {
+				title: "Template Detail",
+				subtitle:
+					"The sections that appear on every template page, above and below the main content.",
+			};
 		},
 	},
 });

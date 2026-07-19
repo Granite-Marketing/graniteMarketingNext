@@ -33,12 +33,21 @@ export const BLOG_POST_TEMPLATE_QUERY = `*[_id == "${BLOG_POST_TEMPLATE_TYPE}"][
 
 export const blogPostTemplate = defineType({
 	name: BLOG_POST_TEMPLATE_TYPE,
-	title: "Blog Post Template",
+	title: "⚙️ Blog Post Detail",
 	type: "document",
 	fields: [...slotFields()],
 	preview: {
+		// `select` is required even though nothing is selected from the
+		// document: without it Sanity skips `prepare()` entirely and falls
+		// back to "Untitled", because these singletons have no title field
+		// for it to read.
+		select: {},
 		prepare() {
-			return { title: "Blog Post Template" };
+			return {
+				title: "Blog Post Detail",
+				subtitle:
+					"The sections that appear on every blog post page, above and below the main content.",
+			};
 		},
 	},
 });

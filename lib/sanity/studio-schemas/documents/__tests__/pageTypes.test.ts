@@ -163,10 +163,17 @@ describe("studio-schemas/documents — page type singletons (U19b)", () => {
 		});
 	});
 
-	describe("each has a preview.prepare producing the expected fixed title", () => {
+	// These singletons have no title field, so their name in the Studio comes
+	// entirely from `preview`. Two things have to be true or an editor opens
+	// a document headed "Untitled": `prepare()` must return a title, AND
+	// `select` must be present — without it Sanity never calls `prepare()`
+	// at all and falls straight through to its own fallback.
+	describe("each previews with a fixed title and a plain-English subtitle", () => {
 		const expected: Record<string, string> = {
 			blogListing: "Blog Listing",
-			blogPostTemplate: "Blog Post Template",
+			// Named "…Detail" to match templateDetail. Both do the same job —
+			// wrap every record of their type — so they read as a pair.
+			blogPostTemplate: "Blog Post Detail",
 			templateListing: "Template Listing",
 			templateDetail: "Template Detail",
 			contactPage: "Contact",
@@ -174,11 +181,37 @@ describe("studio-schemas/documents — page type singletons (U19b)", () => {
 
 		it.each(Object.keys(SCHEMAS))("%s", (key) => {
 			const { schema } = SCHEMAS[key];
-			const prepare = (schema as unknown as SchemaTypeDefinition & {
-				preview?: { prepare?: () => { title: string } };
-			}).preview?.prepare;
-			expect(prepare).toBeTypeOf("function");
-			expect(prepare?.()).toEqual({ title: expected[key] });
+			const preview = (schema as unknown as SchemaTypeDefinition & {
+				preview?: {
+					select?: Record<string, string>;
+					prepare?: () => { title: string; subtitle?: string };
+				};
+			}).preview;
+
+			expect(preview?.select).toBeDefined();
+			expect(preview?.prepare).toBeTypeOf("function");
+
+			const prepared = preview?.prepare?.();
+			expect(prepared?.title).toBe(expected[key]);
+
+			// The subtitle is what tells a non-technical editor what the page
+			// is for. An empty one is the same failure as no subtitle.
+			expect(prepared?.subtitle).toBeTruthy();
 		});
+	});
+
+	// The two detail types wrap every record of their type and are described
+	// identically on purpose: an editor should not have to work out whether
+	// they behave differently, because they do not.
+	it("describes both detail types the same way", () => {
+		const subtitleOf = (key: string) =>
+			(SCHEMAS[key].schema as unknown as {
+				preview?: { prepare?: () => { subtitle?: string } };
+			}).preview?.prepare?.()?.subtitle;
+
+		const blog = subtitleOf("blogPostTemplate");
+		const template = subtitleOf("templateDetail");
+
+		expect(blog?.replace("blog post", "template")).toBe(template);
 	});
 });

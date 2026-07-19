@@ -90,26 +90,51 @@ function pinnedSingletonListItem(
 //      blog post from inside this nested list goes through the ordinary
 //      create flow and lands with the right `_type`, exactly as it would
 //      from a top-level list — only where the entry point lives changed.
-function nestedListingListItem(
+// A topic section: one sidebar row holding everything for that topic — the
+// listing page's own settings, the layout applied to every record, and the
+// records themselves.
+//
+// `title` names the SECTION; each entry inside carries its own title, and
+// they must differ from it. Passing one title into every position produced a
+// "Blog Listing" row that opened a panel headed "Blog Listing" whose first
+// row was also "Blog Listing", which reads as a rendering bug rather than a
+// hierarchy. The section is the topic ("Blogs"); the entries are the
+// specific documents inside it.
+//
+// The section keeps the listing singleton's own type as its desk id so the
+// /studio/structure/<id> URL stays stable, even though the row is now a
+// container rather than a direct pin.
+//
+// `S.documentTypeListItem(nestedType)` is the real builder Sanity ships for
+// "every document of this type", not a substitute — creating a blog post
+// from inside this section goes through the ordinary create flow and lands
+// with the right `_type`, exactly as it would from a top-level list. Only
+// where the entry point lives changed.
+function pageSection(
 	S: Parameters<StructureResolver>[0],
-	type: SingletonType,
+	sectionId: SingletonType,
 	title: string,
+	singletonEntries: readonly { type: SingletonType; title: string }[],
 	nestedType: string,
 	nestedTitle: string
 ): ListItemBuilder {
 	return S.listItem()
 		.title(title)
-		.id(type)
+		.id(sectionId)
 		.child(
 			S.list()
 				.title(title)
 				.items([
-					S.listItem()
-						.title(title)
-						.id(`${type}-document`)
-						.child(
-							S.document().schemaType(type).documentId(singletonDocumentId(type))
-						),
+					...singletonEntries.map((entry) =>
+						S.listItem()
+							.title(entry.title)
+							.id(`${entry.type}-document`)
+							.child(
+								S.document()
+									.schemaType(entry.type)
+									.documentId(singletonDocumentId(entry.type))
+							)
+					),
 					S.documentTypeListItem(nestedType).title(nestedTitle),
 				])
 		);
@@ -152,17 +177,52 @@ export const structure: StructureResolver = (S) => {
 			// listing document AND its record list, so Blog Posts lives under
 			// Blog Listing and Workflow Templates under Template Listing
 			// instead of both sitting as unrelated top-level rows.
-			nestedListingListItem(S, "blogListing", "Blog Listing", "blogPost", "Blog Posts"),
-			pinnedSingletonListItem(S, "blogPostTemplate", "Blog Post Template"),
-			nestedListingListItem(
+			// Everything for a topic lives inside that topic's section: the
+			// listing page's settings, the layout wrapped around every record,
+			// and the records. Two rows instead of five, and nothing
+			// blog-shaped sits outside "Blogs".
+			//
+			// Emoji prefixes match the convention the record types already use
+			// (📊 Case Study, 👤 Client, …) so these rows don't read as a
+			// different class of thing sitting above them.
+			// Entries inside a section are named for the CONCEPT, not the topic:
+			// "Blogs > Listing" reads better than "Blogs > Blog Listing", and
+			// the pair Listing/Detail is the vocabulary editors are taught
+			// once and then recognise in every section. "Blog Posts Detail"
+			// would also have been quietly wrong — the detail page is not the
+			// posts, it is the frame around each one.
+			//
+			// The gear marks a page-settings document; the records below it
+			// carry no gear. That is the second thing the desk teaches: gear
+			// means how a page is built, plain means your content.
+			//
+			// Each document's OWN title stays contextual ("Blog Post Detail",
+			// see its preview.prepare) — a bare "Detail" is fine nested under
+			// "Blogs" but ambiguous in search, a browser tab, or Presentation,
+			// where the tree isn't there to supply the topic.
+			pageSection(
+				S,
+				"blogListing",
+				"📝 Blogs",
+				[
+					{ type: "blogListing", title: "⚙️ Listing" },
+					{ type: "blogPostTemplate", title: "⚙️ Detail" },
+				],
+				"blogPost",
+				"Blog Posts"
+			),
+			pageSection(
 				S,
 				"templateListing",
-				"Template Listing",
+				"⚡ Templates",
+				[
+					{ type: "templateListing", title: "⚙️ Listing" },
+					{ type: "templateDetail", title: "⚙️ Detail" },
+				],
 				"workflowTemplate",
 				"Workflow Templates"
 			),
-			pinnedSingletonListItem(S, "templateDetail", "Template Detail"),
-			pinnedSingletonListItem(S, "contactPage", "Contact"),
+			pinnedSingletonListItem(S, "contactPage", "✉️ Contact"),
 			S.divider(),
 			...listFor(PAGE_TYPES),
 			S.divider(),

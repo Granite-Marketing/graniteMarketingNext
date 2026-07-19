@@ -35,7 +35,7 @@ export const TEMPLATE_LISTING_QUERY = `*[_id == "${TEMPLATE_LISTING_TYPE}"][0]{
 
 export const templateListing = defineType({
 	name: TEMPLATE_LISTING_TYPE,
-	title: "Template Listing",
+	title: "⚙️ Template Listing",
 	type: "document",
 	fields: [
 		defineField({
@@ -47,8 +47,17 @@ export const templateListing = defineType({
 		...slotFields(),
 	],
 	preview: {
+		// `select` is required even though nothing is selected from the
+		// document: without it Sanity skips `prepare()` entirely and falls
+		// back to "Untitled", because these singletons have no title field
+		// for it to read.
+		select: {},
 		prepare() {
-			return { title: "Template Listing" };
+			return {
+				title: "Template Listing",
+				subtitle:
+					"The heading, intro and extra sections on the page that lists all templates.",
+			};
 		},
 	},
 });

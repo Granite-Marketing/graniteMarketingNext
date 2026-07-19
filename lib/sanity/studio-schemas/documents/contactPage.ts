@@ -41,7 +41,7 @@ export const CONTACT_PAGE_QUERY = `*[_id == "${CONTACT_PAGE_TYPE}"][0]{
 
 export const contactPage = defineType({
 	name: CONTACT_PAGE_TYPE,
-	title: "Contact",
+	title: "✉️ Contact",
 	type: "document",
 	fields: [
 		defineField({
@@ -53,8 +53,17 @@ export const contactPage = defineType({
 		...slotFields(),
 	],
 	preview: {
+		// `select` is required even though nothing is selected from the
+		// document: without it Sanity skips `prepare()` entirely and falls
+		// back to "Untitled", because these singletons have no title field
+		// for it to read.
+		select: {},
 		prepare() {
-			return { title: "Contact" };
+			return {
+				title: "Contact",
+				subtitle:
+					"The heading, intro and extra sections on the contact page. The form itself is fixed.",
+			};
 		},
 	},
 });
