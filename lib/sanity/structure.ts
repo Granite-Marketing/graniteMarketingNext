@@ -32,9 +32,25 @@ import {
 // singleton, then composed pages, then editorial content, then the records
 // that feed content blocks, then taxonomy.
 const PAGE_TYPES = ["page", "legalPage"];
-const EDITORIAL_TYPES = ["blogPost", "workflowTemplate", "caseStudy"];
+// caseStudy is the only editorial type left here (U20) — blogPost and
+// workflowTemplate moved out to become children of their listing singleton
+// below. caseStudy stays because it has no listing page type to nest under:
+// Phase 6's desk shape gives Blog and Templates a chrome singleton
+// (blogListing/templateListing) to own their record list, but there is no
+// equivalent "case study listing" document, so caseStudy keeps a plain
+// top-level row.
+const EDITORIAL_TYPES = ["caseStudy"];
 const RECORD_TYPES = ["client", "faq", "logoList", "tool"];
 const TAXONOMY_TYPES = ["author", "category", "location", "workflowCategory"];
+// The two record types nested under a listing singleton (U20). Not derived
+// from EDITORIAL_TYPES/PAGE_TYPES because neither list means "nested" —
+// this is its own axis (top-level vs. nested), and blogPost/workflowTemplate
+// no longer belong to any of the grouped arrays above. They still need to
+// land in the `grouped` exclusion Set below, or they would ALSO pass the
+// auto-generated passthrough filter at the bottom of the resolver and
+// appear a second time as an ordinary top-level document list — see that
+// comment for why the Set exists at all.
+const NESTED_RECORD_TYPES = ["blogPost", "workflowTemplate"];
 
 // Mechanism (1) — pin a singleton's desk list item to the fixed document
 // id, so opening it always edits the same document regardless of what (if
@@ -56,18 +72,64 @@ function pinnedSingletonListItem(
 		.child(S.document().schemaType(type).documentId(singletonDocumentId(type)));
 }
 
+// U20 — nests a record type's document list under its listing singleton,
+// rather than pinning the singleton straight to its document (what
+// `pinnedSingletonListItem` does for the other four page-type singletons).
+// Presentation only: no schema change, no URL change, no document
+// migration, so getting this wrong costs a re-render, not a URL — see
+// Phase 6's "Model, and what was deliberately rejected" for why hierarchy
+// lives in desk structure rather than in a `parent` field.
+//
+// The child is a two-item list, not a hand-rolled record list:
+//   1. an entry that reopens the singleton document itself (identical
+//      shape to `pinnedSingletonListItem`'s child), so the listing page's
+//      own chrome/SEO fields stay reachable from inside the nest — nesting
+//      must not make the listing document itself harder to find;
+//   2. `S.documentTypeListItem(nestedType)`, the real builder Sanity ships
+//      for "every document of this type", not a substitute. Creating a
+//      blog post from inside this nested list goes through the ordinary
+//      create flow and lands with the right `_type`, exactly as it would
+//      from a top-level list — only where the entry point lives changed.
+function nestedListingListItem(
+	S: Parameters<StructureResolver>[0],
+	type: SingletonType,
+	title: string,
+	nestedType: string,
+	nestedTitle: string
+): ListItemBuilder {
+	return S.listItem()
+		.title(title)
+		.id(type)
+		.child(
+			S.list()
+				.title(title)
+				.items([
+					S.listItem()
+						.title(title)
+						.id(`${type}-document`)
+						.child(
+							S.document().schemaType(type).documentId(singletonDocumentId(type))
+						),
+					S.documentTypeListItem(nestedType).title(nestedTitle),
+				])
+		);
+}
+
 export const structure: StructureResolver = (S) => {
 	// Mechanism (2) — every registered singleton type is excluded here, not
 	// only the ones with a desk entry above. Without this any of them would
 	// ALSO appear as an ordinary (uncapped) document list the moment its
 	// schema is registered, defeating the pin before anyone remembers to add
-	// the exclusion.
+	// the exclusion. blogPost and workflowTemplate are added on top of the
+	// four grouped arrays for the same reason (U20): they're nested rather
+	// than grouped, but still need keeping out of the bottom passthrough.
 	const grouped = new Set([
 		...SINGLETON_TYPE_LIST,
 		...PAGE_TYPES,
 		...EDITORIAL_TYPES,
 		...RECORD_TYPES,
 		...TAXONOMY_TYPES,
+		...NESTED_RECORD_TYPES,
 	]);
 
 	const listFor = (types: string[]) =>
@@ -84,9 +146,21 @@ export const structure: StructureResolver = (S) => {
 			// edited, never created or deleted; `page`/`legalPage` below are
 			// the ad-hoc ones an editor adds. Listing/detail pairs sit
 			// together so the relationship reads off the desk.
-			pinnedSingletonListItem(S, "blogListing", "Blog Listing"),
+			//
+			// blogListing and templateListing use `nestedListingListItem`
+			// rather than `pinnedSingletonListItem` (U20): each expands to the
+			// listing document AND its record list, so Blog Posts lives under
+			// Blog Listing and Workflow Templates under Template Listing
+			// instead of both sitting as unrelated top-level rows.
+			nestedListingListItem(S, "blogListing", "Blog Listing", "blogPost", "Blog Posts"),
 			pinnedSingletonListItem(S, "blogPostTemplate", "Blog Post Template"),
-			pinnedSingletonListItem(S, "templateListing", "Template Listing"),
+			nestedListingListItem(
+				S,
+				"templateListing",
+				"Template Listing",
+				"workflowTemplate",
+				"Workflow Templates"
+			),
 			pinnedSingletonListItem(S, "templateDetail", "Template Detail"),
 			pinnedSingletonListItem(S, "contactPage", "Contact"),
 			S.divider(),

@@ -14,12 +14,10 @@ import { SINGLETON_TYPE_LIST } from "../singletons";
 // sanity.config.ts for mechanism (3). There is no `singleton: true` option
 // and no `__experimental_actions` in sanity@4.21.1.
 //
-// Only siteSettings has a desk entry today — the other five registered
-// singleton types (blogListing, blogPostTemplate, templateListing,
-// templateDetail, contactPage) don't have schemas yet, so pinning them
-// would throw at runtime. The filter functions below are still exercised
-// against every registered type, because they operate on type name alone
-// and don't require a desk entry to exist.
+// All six registered singletons now have desk entries. Four are pinned
+// straight to their document; blogListing and templateListing instead expand
+// to a nested list holding both the listing document and its record type
+// (U20), which is why the stub below has to model more than one `S.list()`.
 //
 // `structure` is exercised against a minimal recorder stub of the desk
 // StructureBuilder API (`S`), the same stubbing approach
@@ -67,25 +65,39 @@ function createListItemStub(id: string) {
 	return item;
 }
 
+// `S.list()` is called more than once once U20 nests a record list under its
+// listing singleton (the nested container passed to `.child()` is itself an
+// `S.list()`), so the stub can no longer funnel every call through one
+// shared `list` object — the nested call's `.items()` would clobber the
+// outer one before `getList()` is ever read. Each call now gets its own
+// independent state with its own `getTitle()`/`getItems()`, and `getList()`
+// keeps returning the *outermost* list — the first one `structure()`
+// constructs, since `S.list()` at the top of the resolver is evaluated
+// before any nested list built while its `.items([...])` argument array is
+// assembled.
 function createStubS(documentTypeListItems: ReturnType<typeof createListItemStub>[]) {
-	const list = {
-		title: undefined as string | undefined,
-		items: undefined as unknown[] | undefined,
-	};
+	let outerList: { title?: string; items?: unknown[] } | undefined;
+
+	function makeListBuilder() {
+		const state: { title?: string; items?: unknown[] } = {};
+		const builder = {
+			title(t: string) {
+				state.title = t;
+				return builder;
+			},
+			items(i: unknown[]) {
+				state.items = i;
+				return builder;
+			},
+			getTitle: () => state.title,
+			getItems: () => state.items,
+		};
+		if (!outerList) outerList = state;
+		return builder;
+	}
 
 	const S = {
-		list() {
-			return {
-				title(t: string) {
-					list.title = t;
-					return this;
-				},
-				items(i: unknown[]) {
-					list.items = i;
-					return this;
-				},
-			};
-		},
+		list: makeListBuilder,
 		listItem: (id?: string) => createListItemStub(id ?? ""),
 		document: () => createDocumentBuilderStub(),
 		divider: () => ({ __type: "divider" as const }),
@@ -95,7 +107,7 @@ function createStubS(documentTypeListItems: ReturnType<typeof createListItemStub
 		documentTypeListItem: (typeName: string) => createListItemStub(typeName),
 	};
 
-	return { S, getList: () => list };
+	return { S, getList: () => outerList as { title?: string; items?: unknown[] } };
 }
 
 describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
@@ -163,6 +175,11 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 	// Ordering is the point of the explicit structure: the auto-generated list
 	// sorted by registration order, which buried `page` among the taxonomy
 	// types even though it is the most-reached-for type.
+	//
+	// blogPost and workflowTemplate no longer appear in this top-level list
+	// (U20): they moved to become children of blogListing/templateListing.
+	// Their absence here is the point, not an oversight — see the nesting
+	// tests below for where they now live.
 	it("orders groups from most-edited to least, with page types directly after Site Settings", () => {
 		const { S, getList } = createStubS([]);
 
@@ -176,6 +193,9 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 			"siteSettings",
 			// Fixed-route page types: always exist, edit-only. Listing and
 			// detail pairs sit together so the relationship reads off the desk.
+			// blogListing/templateListing are nested containers now (U20), but
+			// keep the same desk id and position — nesting only changes what's
+			// inside their `.child()`.
 			"blogListing",
 			"blogPostTemplate",
 			"templateListing",
@@ -184,8 +204,8 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 			// Creatable page lists, below the fixed ones.
 			"page",
 			"legalPage",
-			"blogPost",
-			"workflowTemplate",
+			// caseStudy has no listing page type to nest under (Phase 6's desk
+			// shape), so it stays here rather than moving under a singleton.
 			"caseStudy",
 			"client",
 			"faq",
@@ -198,6 +218,146 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 		]);
 
 		expect(ids.indexOf("page")).toBeLessThan(ids.indexOf("author"));
+	});
+
+	// U20 — Blog Listing's desk entry is a container, not a document pin: it
+	// must expose both the blogListing document itself (so its chrome/SEO
+	// fields stay reachable) and the blogPost record list (so creating a post
+	// from the desk still goes through the real create flow). Nesting is
+	// presentation only — no schema change, no URL change, no migration —
+	// so this is checking desk shape, not data.
+	it("blogListing's desk entry nests both the singleton document and a blogPost list under one child", () => {
+		const { S, getList } = createStubS([]);
+
+		structure(S as never, {} as never);
+
+		const items = getList().items as ReturnType<typeof createListItemStub>[];
+		const blogListingItem = items.find((item) => item.getId?.() === "blogListing");
+		expect(blogListingItem).toBeDefined();
+
+		const child = blogListingItem!.getChild() as {
+			getItems: () => unknown[];
+		};
+		const childItems = child.getItems() as Array<{
+			getId?: () => string;
+			getChild?: () => unknown;
+		}>;
+
+		// One entry opens the singleton document itself...
+		const documentEntry = childItems.find((item) =>
+			(item.getChild?.() as ReturnType<typeof createDocumentBuilderStub> | undefined)
+				?.getSchemaType?.() === "blogListing"
+		);
+		expect(documentEntry).toBeDefined();
+		expect(
+			(documentEntry!.getChild?.() as ReturnType<typeof createDocumentBuilderStub>).getDocumentId()
+		).toBe("blogListing");
+
+		// ...and the other is the real document type list for blogPost, not a
+		// hand-rolled stand-in — so creating a post from here still lands with
+		// the right `_type`.
+		const recordListEntry = childItems.find((item) => item.getId?.() === "blogPost");
+		expect(recordListEntry).toBeDefined();
+	});
+
+	// Same shape, mirrored for Template Listing / Workflow Templates.
+	it("templateListing's desk entry nests both the singleton document and a workflowTemplate list under one child", () => {
+		const { S, getList } = createStubS([]);
+
+		structure(S as never, {} as never);
+
+		const items = getList().items as ReturnType<typeof createListItemStub>[];
+		const templateListingItem = items.find(
+			(item) => item.getId?.() === "templateListing"
+		);
+		expect(templateListingItem).toBeDefined();
+
+		const child = templateListingItem!.getChild() as {
+			getItems: () => unknown[];
+		};
+		const childItems = child.getItems() as Array<{
+			getId?: () => string;
+			getChild?: () => unknown;
+		}>;
+
+		const documentEntry = childItems.find((item) =>
+			(item.getChild?.() as ReturnType<typeof createDocumentBuilderStub> | undefined)
+				?.getSchemaType?.() === "templateListing"
+		);
+		expect(documentEntry).toBeDefined();
+		expect(
+			(documentEntry!.getChild?.() as ReturnType<typeof createDocumentBuilderStub>).getDocumentId()
+		).toBe("templateListing");
+
+		const recordListEntry = childItems.find(
+			(item) => item.getId?.() === "workflowTemplate"
+		);
+		expect(recordListEntry).toBeDefined();
+	});
+
+	// The trap this guards against: blogPost/workflowTemplate used to feed
+	// EDITORIAL_TYPES, which fed the `grouped` exclusion Set. Moving them out
+	// of that array without keeping them excluded some other way means they'd
+	// pass the auto-generated passthrough filter at the bottom of the
+	// resolver and appear a second time as an ordinary top-level document
+	// list — identical-looking to, but not the same as, the nested one. An
+	// editor who picks the wrong row creates a post that the nested list
+	// (and its "how many posts" context) never shows.
+	it("blogPost and workflowTemplate each appear exactly once across the whole desk", () => {
+		const { S, getList } = createStubS([
+			createListItemStub("blogPost"),
+			createListItemStub("workflowTemplate"),
+		]);
+
+		structure(S as never, {} as never);
+
+		const topLevelIds = (getList().items as ReturnType<typeof createListItemStub>[]).map(
+			(item) => item.getId?.()
+		);
+
+		// Neither type sits directly in the top-level list...
+		expect(topLevelIds).not.toContain("blogPost");
+		expect(topLevelIds).not.toContain("workflowTemplate");
+
+		// ...each appears exactly once, nested under its listing.
+		const blogListingItem = (
+			getList().items as ReturnType<typeof createListItemStub>[]
+		).find((item) => item.getId?.() === "blogListing")!;
+		const templateListingItem = (
+			getList().items as ReturnType<typeof createListItemStub>[]
+		).find((item) => item.getId?.() === "templateListing")!;
+
+		const blogListingChildItems = (
+			blogListingItem.getChild() as { getItems: () => Array<{ getId?: () => string }> }
+		).getItems();
+		const templateListingChildItems = (
+			templateListingItem.getChild() as {
+				getItems: () => Array<{ getId?: () => string }>;
+			}
+		).getItems();
+
+		expect(
+			blogListingChildItems.filter((item) => item.getId?.() === "blogPost")
+		).toHaveLength(1);
+		expect(
+			templateListingChildItems.filter(
+				(item) => item.getId?.() === "workflowTemplate"
+			)
+		).toHaveLength(1);
+	});
+
+	// caseStudy has no listing page type in this codebase — it stays a plain
+	// top-level entry rather than getting nested under anything.
+	it("caseStudy remains a top-level entry, not nested under any listing", () => {
+		const { S, getList } = createStubS([]);
+
+		structure(S as never, {} as never);
+
+		const topLevelIds = (getList().items as ReturnType<typeof createListItemStub>[]).map(
+			(item) => item.getId?.()
+		);
+
+		expect(topLevelIds).toContain("caseStudy");
 	});
 
 	// A new document type must never be silently missing from the desk just
