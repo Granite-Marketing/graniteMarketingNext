@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useIsPresentationTool } from "next-sanity/hooks";
 
 export type WireTool = {
 	id: string;
@@ -34,8 +35,25 @@ export function ToolWire({ tools }: { tools: WireTool[] }) {
 	);
 	const [fadingSlot, setFadingSlot] = useState<number | null>(null);
 
+	// Only six of the tool pool are on the wire at once, and rotating one
+	// swaps which tool documents exist in the DOM. Presentation builds its
+	// "Documents on this page" panel by scanning stega-encoded content, so on
+	// the live site that rotation is the effect — inside Presentation it is a
+	// panel that flashes every 2.6s while an editor is trying to read it.
+	//
+	// Freezing the rotation here rather than rendering every tool and hiding
+	// the extras: the hidden-extras version would change the homepage's
+	// server-rendered HTML, which the U6 baseline pins byte-for-byte, and it
+	// would put duplicate tool names in the accessibility tree. Visitors keep
+	// the animation; only the editing surface goes still.
+	const isPresentationTool = useIsPresentationTool();
+
 	useEffect(() => {
 		if (tools.length <= SLOT_COUNT) return;
+		// `null` means "still resolving". Treating that as false would let one
+		// swap through before it settles — a single flash instead of a
+		// continuous one, which is harder to spot and no more correct.
+		if (isPresentationTool !== false) return;
 		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
 		const timeouts: ReturnType<typeof setTimeout>[] = [];
@@ -65,7 +83,10 @@ export function ToolWire({ tools }: { tools: WireTool[] }) {
 			clearInterval(interval);
 			timeouts.forEach(clearTimeout);
 		};
-	}, [tools]);
+		// isPresentationTool resolves from null after mount, so it has to be a
+		// dependency: without it the effect keeps its first (null) reading and
+		// rotation never starts for real visitors.
+	}, [tools, isPresentationTool]);
 
 	return (
 		<div className="relative">
