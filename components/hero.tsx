@@ -14,7 +14,7 @@ export type ClientLogo = {
 
 type SecondaryCta = { label: string; href: string } | null;
 
-type RelayHeroProps = {
+type HeroProps = {
 	clientLogos?: ClientLogo[];
 	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
 	 * falls back to the original hardcoded copy so existing callers (the
@@ -33,7 +33,7 @@ type RelayHeroProps = {
 	dataSanity?: string;
 };
 
-export function RelayHero({
+export function Hero({
 	clientLogos = [],
 	eyebrow = "// workflow automation, done for you",
 	heading = "We connect your tools into workflows that run themselves.",
@@ -43,7 +43,7 @@ export function RelayHero({
 	showTrustedBy = true,
 	id,
 	dataSanity,
-}: RelayHeroProps) {
+}: HeroProps) {
 	return (
 		<section
 			{...sectionIdProps(id)}

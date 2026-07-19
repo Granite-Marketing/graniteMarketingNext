@@ -6,7 +6,7 @@ import { BrandMark } from "./brand-mark";
 import { CalButton } from "./cal-button";
 import { navLinks } from "./data";
 
-export function RelayNav() {
+export function Nav() {
 	const [open, setOpen] = useState(false);
 
 	return (

@@ -1,10 +1,10 @@
-import { RelayNav } from "@/components/nav";
+import { Nav } from "@/components/nav";
 import { TemplatePostHero } from "@/components/template-post-hero";
 import { PostContent } from "@/components/post-content";
 import { ContentCtaBanner } from "@/components/content-cta-banner";
 import { RelatedBlogPosts } from "@/components/related-blog-posts";
 import { RelatedTemplates } from "@/components/related-templates";
-import { RelayFooter } from "@/components/footer";
+import { Footer } from "@/components/footer";
 import { notFound } from "next/navigation";
 import {
 	getWorkflowTemplate,
@@ -154,7 +154,7 @@ export default async function TemplateDetailPage({
 
 	return (
 		<div className="min-h-screen bg-background">
-			<RelayNav />
+			<Nav />
 			<TemplatePostHero post={heroPost} />
 			<PostContent content={(template.content ?? []) as PortableTextBlock[]} />
 			{template.relatedBlogPosts && template.relatedBlogPosts.length > 0 && (
@@ -162,7 +162,7 @@ export default async function TemplateDetailPage({
 			)}
 			<ContentCtaBanner />
 			<RelatedTemplates templates={related as any[]} currentSlug={template.slug.current} />
-			<RelayFooter />
+			<Footer />
 		</div>
 	);
 }

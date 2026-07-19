@@ -1,5 +1,5 @@
-import { RelayNav } from "@/components/nav";
-import { RelayFooter } from "@/components/footer";
+import { Nav } from "@/components/nav";
+import { Footer } from "@/components/footer";
 import { PageBuilder } from "@/components/page-builder";
 import { notFound } from "next/navigation";
 import {
@@ -125,7 +125,7 @@ export default async function CatchAllPage({
 
 	return (
 		<div className="bg-relay-bg text-relay-ink selection:bg-relay-cyan selection:text-relay-bg">
-			<RelayNav />
+			<Nav />
 			<main className="min-h-screen">
 				<PageBuilder
 					documentId={page._id}
@@ -136,7 +136,7 @@ export default async function CatchAllPage({
 					siteSettingsCtaDefaults={ctaDefaults}
 				/>
 			</main>
-			<RelayFooter />
+			<Footer />
 		</div>
 	);
 }

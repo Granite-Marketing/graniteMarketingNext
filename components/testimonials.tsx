@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { TestimonialItem } from "@/lib/sanity/lib/adapters";
 import { PortableTextRenderer } from "@/lib/sanity/components/PortableTextRenderer";
 
-type RelayTestimonialsProps = {
+type TestimonialsProps = {
 	testimonials: TestimonialItem[];
 	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
 	 * falls back to the original hardcoded copy so existing callers render
@@ -27,13 +27,13 @@ function initials(name: string) {
 		.toUpperCase();
 }
 
-export function RelayTestimonials({
+export function Testimonials({
 	testimonials,
 	eyebrow = "// what clients say",
 	heading = "In their words, not ours.",
 	id,
 	dataSanity,
-}: RelayTestimonialsProps) {
+}: TestimonialsProps) {
 	return (
 		<section
 			{...sectionIdProps(id, "testimonials")}

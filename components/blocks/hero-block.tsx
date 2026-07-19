@@ -1,6 +1,6 @@
 "use client";
 
-import { RelayHero, type ClientLogo } from "@/components/hero";
+import { Hero, type ClientLogo } from "@/components/hero";
 import { resolveAnchorId } from "@/lib/sanity/lib/anchor-id";
 import { resolveLink, type ResolveLinkContext } from "@/lib/sanity/lib/resolve-link";
 import { useLiveSection } from "@/lib/sanity/lib/use-live-section";
@@ -54,7 +54,7 @@ export function HeroBlockAdapter({
 		: null;
 
 	return (
-		<RelayHero
+		<Hero
 			clientLogos={clientLogos}
 			eyebrow={value.eyebrow ?? undefined}
 			heading={value.heading ?? undefined}

@@ -1,13 +1,13 @@
-import { RelayNav } from "@/components/nav";
-import { RelayHero } from "@/components/hero";
-import { RelayCapabilities } from "@/components/capabilities";
-import { RelayToolsStrip } from "@/components/tools-strip";
-import { RelayProcess } from "@/components/process";
-import { RelayResults } from "@/components/results";
-import { RelayTestimonials } from "@/components/testimonials";
-import { RelayFAQ } from "@/components/faq";
-import { RelayCTA } from "@/components/cta";
-import { RelayFooter } from "@/components/footer";
+import { Nav } from "@/components/nav";
+import { Hero } from "@/components/hero";
+import { Capabilities } from "@/components/capabilities";
+import { ToolsStrip } from "@/components/tools-strip";
+import { Process } from "@/components/process";
+import { Results } from "@/components/results";
+import { Testimonials } from "@/components/testimonials";
+import { FAQ } from "@/components/faq";
+import { CTA } from "@/components/cta";
+import { Footer } from "@/components/footer";
 import { getHomeContent, getTools } from "@/lib/sanity/queries";
 import {
 	adaptClientTestimonial,
@@ -32,20 +32,20 @@ export default async function Home() {
 
 	return (
 		<div className="bg-relay-bg text-relay-ink selection:bg-relay-cyan selection:text-relay-bg">
-			<RelayNav />
+			<Nav />
 			<main className="min-h-screen">
-				<RelayHero clientLogos={homeContent.featuredLogos ?? []} />
-				<RelayCapabilities />
-				<RelayToolsStrip tools={tools ?? []} />
-				<RelayProcess />
-				<RelayResults caseStudies={homeContent.caseStudies ?? []} />
+				<Hero clientLogos={homeContent.featuredLogos ?? []} />
+				<Capabilities />
+				<ToolsStrip tools={tools ?? []} />
+				<Process />
+				<Results caseStudies={homeContent.caseStudies ?? []} />
 				{testimonials.length > 0 && (
-					<RelayTestimonials testimonials={testimonials} />
+					<Testimonials testimonials={testimonials} />
 				)}
-				{faqs.length > 0 && <RelayFAQ faqs={faqs} />}
-				<RelayCTA />
+				{faqs.length > 0 && <FAQ faqs={faqs} />}
+				<CTA />
 			</main>
-			<RelayFooter />
+			<Footer />
 		</div>
 	);
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { RelayResults } from "@/components/results";
+import { Results } from "@/components/results";
 import { resolveAnchorId } from "@/lib/sanity/lib/anchor-id";
 import { resolveDataBlockItems } from "@/lib/sanity/lib/resolve-data-block";
 import { adaptCaseStudyToCard } from "@/lib/sanity/lib/adapters";
@@ -57,7 +57,7 @@ export function ResultsBlockAdapter({
 	}).map((doc) => adaptCaseStudyToCard(doc));
 
 	return (
-		<RelayResults
+		<Results
 			caseStudies={caseStudies}
 			eyebrow={value.eyebrow ?? undefined}
 			heading={value.heading ?? undefined}

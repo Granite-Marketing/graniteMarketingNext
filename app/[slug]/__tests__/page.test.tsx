@@ -11,10 +11,10 @@ import type { PAGE_QUERYResult } from "@/sanity.types";
 // notFound, metadata, reserved-slug shadowing) rather than that chrome's
 // own internals.
 vi.mock("@/components/nav", () => ({
-	RelayNav: () => <div data-testid="nav-stub" />,
+	Nav: () => <div data-testid="nav-stub" />,
 }));
 vi.mock("@/components/footer", () => ({
-	RelayFooter: () => <div data-testid="footer-stub" />,
+	Footer: () => <div data-testid="footer-stub" />,
 }));
 
 const getPage = vi.fn();

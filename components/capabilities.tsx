@@ -3,7 +3,7 @@ import { capabilities as defaultCapabilities, type Capability } from "./data";
 
 type CapabilityFooterLink = { label: string; href: string } | null;
 
-type RelayCapabilitiesProps = {
+type CapabilitiesProps = {
 	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
 	 * falls back to the original hardcoded copy so existing callers (the
 	 * still-unmigrated homepage) render byte-identically when omitted. */
@@ -20,7 +20,7 @@ type RelayCapabilitiesProps = {
 	dataSanity?: string;
 };
 
-export function RelayCapabilities({
+export function Capabilities({
 	eyebrow = "// capabilities",
 	heading = "Built for the work you're tired of doing.",
 	body = "Six systems, each scoped to a job your team currently does by hand. Start with one. They're designed to be wired together.",
@@ -28,7 +28,7 @@ export function RelayCapabilities({
 	link = { label: "Map your first automation →", href: "#contact" },
 	id,
 	dataSanity,
-}: RelayCapabilitiesProps) {
+}: CapabilitiesProps) {
 	return (
 		<section
 			{...sectionIdProps(id, "services")}

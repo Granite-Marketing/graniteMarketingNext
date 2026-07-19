@@ -1,6 +1,6 @@
 "use client";
 
-import { RelayProcess } from "@/components/process";
+import { Process } from "@/components/process";
 import { resolveAnchorId } from "@/lib/sanity/lib/anchor-id";
 import { useLiveSection } from "@/lib/sanity/lib/use-live-section";
 import type { BlockOf } from "@/lib/sanity/lib/page-sections";
@@ -34,7 +34,7 @@ export function ProcessBlockAdapter({
 	);
 
 	return (
-		<RelayProcess
+		<Process
 			eyebrow={value.eyebrow ?? undefined}
 			heading={value.heading ?? undefined}
 			body={value.body ?? undefined}

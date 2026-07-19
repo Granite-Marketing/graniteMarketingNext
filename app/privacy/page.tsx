@@ -1,5 +1,5 @@
-import { RelayNav } from "@/components/nav";
-import { RelayFooter } from "@/components/footer";
+import { Nav } from "@/components/nav";
+import { Footer } from "@/components/footer";
 
 export const metadata = {
 	title: "Privacy Policy - Granite Marketing",
@@ -12,7 +12,7 @@ export const dynamic = "force-static";
 export default function PrivacyPage() {
 	return (
 		<>
-			<RelayNav />
+			<Nav />
 			<main className="min-h-screen pt-32 pb-16">
 				<div className="container mx-auto px-4">
 					<div className="max-w-4xl mx-auto">
@@ -196,7 +196,7 @@ export default function PrivacyPage() {
 					</div>
 				</div>
 			</main>
-			<RelayFooter />
+			<Footer />
 		</>
 	);
 }

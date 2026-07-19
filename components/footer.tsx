@@ -3,7 +3,7 @@ import Image from "next/image";
 import { BrandMark } from "./brand-mark";
 import { complianceLinks, footerColumns } from "./data";
 
-export function RelayFooter() {
+export function Footer() {
 	return (
 		<footer className="border-t border-relay-line">
 			<div className="mx-auto container px-6">

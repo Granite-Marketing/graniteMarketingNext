@@ -11,7 +11,7 @@ type Tool = {
 	};
 };
 
-type RelayToolsStripProps = {
+type ToolsStripProps = {
 	tools: Tool[];
 	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
 	 * falls back to the original hardcoded copy so existing callers render
@@ -30,14 +30,14 @@ type RelayToolsStripProps = {
  * wire of tool nodes where names swap in and out at random, instead
  * of an infinite logo marquee.
  */
-export function RelayToolsStrip({
+export function ToolsStrip({
 	tools,
 	eyebrow = "// toolkit",
 	heading = "Built with industry-leading tools",
 	intro = "We leverage the best automation and development platforms to deliver powerful solutions.",
 	id,
 	dataSanity,
-}: RelayToolsStripProps) {
+}: ToolsStripProps) {
 	if (!tools || tools.length === 0) return null;
 
 	const wireTools: WireTool[] = tools.map((tool) => ({

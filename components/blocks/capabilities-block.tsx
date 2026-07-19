@@ -1,6 +1,6 @@
 "use client";
 
-import { RelayCapabilities } from "@/components/capabilities";
+import { Capabilities } from "@/components/capabilities";
 import { resolveAnchorId } from "@/lib/sanity/lib/anchor-id";
 import { resolveLink, type ResolveLinkContext } from "@/lib/sanity/lib/resolve-link";
 import { useLiveSection } from "@/lib/sanity/lib/use-live-section";
@@ -52,7 +52,7 @@ export function CapabilitiesBlockAdapter({
 			: null;
 
 	return (
-		<RelayCapabilities
+		<Capabilities
 			eyebrow={value.eyebrow ?? undefined}
 			heading={value.heading ?? undefined}
 			body={value.body ?? undefined}

@@ -1,6 +1,6 @@
 "use client";
 
-import { RelayFAQ } from "@/components/faq";
+import { FAQ } from "@/components/faq";
 import { resolveAnchorId } from "@/lib/sanity/lib/anchor-id";
 import { resolveDataBlockItems } from "@/lib/sanity/lib/resolve-data-block";
 import { adaptFAQItem } from "@/lib/sanity/lib/adapters";
@@ -36,7 +36,7 @@ export type FaqBlockAdapterProps = {
 };
 
 /**
- * See testimonials-block.tsx's comment: `RelayFAQ` also routes through
+ * See testimonials-block.tsx's comment: `FAQ` also routes through
  * `PortableTextRenderer`'s async `code` renderer, but `faq.answer`
  * (lib/sanity/studio-schemas/documents/faq.ts) has the same `of: [{type:
  * "block"}]` restriction — no `code` member, so that path is unreachable
@@ -68,7 +68,7 @@ export function FaqBlockAdapter({
 	}).map((doc) => adaptFAQItem(doc));
 
 	return (
-		<RelayFAQ
+		<FAQ
 			faqs={faqs}
 			eyebrow={value.eyebrow ?? undefined}
 			heading={value.heading ?? undefined}

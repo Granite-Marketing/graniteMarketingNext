@@ -760,6 +760,17 @@ cheap and guard exactly the regression overlays introduce:
 - zero-width characters in `.next/server/app/**/*.html` must be **0**
 - `SANITY_API_READ_TOKEN` occurrences in `.next/static` must be **0**
 
+**Known normaliser gap, found during U14.** Adding a new route shifts Turbopack's module
+graph, which changes module reference ids inside the RSC flight payload (`self.__next_f.push`)
+on *unrelated* pages — `blog.html` trips on it. Stripping every `<script>` block makes the files
+byte-identical, so it is inert to hydration and invisible to users and crawlers, but it is a
+false positive the harness currently reports as a regression.
+
+This is a third nondeterminism category beyond the two the capture script documents, and it did
+not exist until a route was added. U18 should extend the normaliser to strip Flight-payload
+module ids — deliberately, with the same "prove it can still fail" test, rather than by
+loosening the comparison until it goes quiet.
+
 **Approach — cutover.** One dataset serves dev and production (C1), so sequence deliberately:
 
 1. `npx sanity dataset export production` — the restore point, non-negotiable

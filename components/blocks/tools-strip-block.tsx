@@ -1,6 +1,6 @@
 "use client";
 
-import { RelayToolsStrip } from "@/components/tools-strip";
+import { ToolsStrip } from "@/components/tools-strip";
 import { resolveAnchorId } from "@/lib/sanity/lib/anchor-id";
 import { resolveDataBlockItems } from "@/lib/sanity/lib/resolve-data-block";
 import { useLiveSection } from "@/lib/sanity/lib/use-live-section";
@@ -48,7 +48,7 @@ export function ToolsStripBlockAdapter({
 	}));
 
 	return (
-		<RelayToolsStrip
+		<ToolsStrip
 			tools={tools}
 			eyebrow={value.eyebrow ?? undefined}
 			heading={value.heading ?? undefined}

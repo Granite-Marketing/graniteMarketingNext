@@ -19,7 +19,7 @@ const DEFAULT_STEPS: ProcessStep[] = processSteps.map((step) => ({
 	duration: step.duration,
 }));
 
-type RelayProcessProps = {
+type ProcessProps = {
 	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
 	 * falls back to the original hardcoded copy so existing callers (the
 	 * still-unmigrated homepage) render byte-identically when omitted. */
@@ -36,7 +36,7 @@ type RelayProcessProps = {
 	dataSanity?: string;
 };
 
-export function RelayProcess({
+export function Process({
 	eyebrow = "// how we ship",
 	heading = "From first call to running in production.",
 	body = "No discovery decks, no six-week scoping phase. We map, design and deploy. Then the workflow does its job.",
@@ -44,7 +44,7 @@ export function RelayProcess({
 	footnote = "typical first build: 3 weeks from intro call to production.",
 	id,
 	dataSanity,
-}: RelayProcessProps) {
+}: ProcessProps) {
 	return (
 		<section
 			{...sectionIdProps(id, "process")}

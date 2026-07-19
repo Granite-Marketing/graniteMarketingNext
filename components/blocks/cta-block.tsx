@@ -1,6 +1,6 @@
 "use client";
 
-import { RelayCTA } from "@/components/cta";
+import { CTA } from "@/components/cta";
 import { resolveAnchorId } from "@/lib/sanity/lib/anchor-id";
 import { resolveLink, type ResolveLinkContext } from "@/lib/sanity/lib/resolve-link";
 import {
@@ -79,7 +79,7 @@ export function CtaBlockAdapter({
 			: null;
 
 	return (
-		<RelayCTA
+		<CTA
 			heading={resolved.heading ?? undefined}
 			subtitle={resolved.subtitle ?? undefined}
 			primaryCtaLabel={resolved.button?.label ?? undefined}

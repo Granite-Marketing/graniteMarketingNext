@@ -1,6 +1,6 @@
 "use client";
 
-import { RelayTestimonials } from "@/components/testimonials";
+import { Testimonials } from "@/components/testimonials";
 import { resolveAnchorId } from "@/lib/sanity/lib/anchor-id";
 import { resolveDataBlockItems } from "@/lib/sanity/lib/resolve-data-block";
 import { adaptClientTestimonial } from "@/lib/sanity/lib/adapters";
@@ -37,7 +37,7 @@ export type TestimonialsBlockAdapterProps = {
 };
 
 /**
- * The renderer this adapter feeds — `RelayTestimonials` — routes testimonial
+ * The renderer this adapter feeds — `Testimonials` — routes testimonial
  * quotes through `PortableTextRenderer`, whose `code` block renderer is an
  * async Server Component (shiki syntax highlighting). That is safe to keep
  * in this 'use client' adapter's tree only because `client.testimonial`
@@ -63,7 +63,7 @@ export function TestimonialsBlockAdapter({
 	}).map((doc) => adaptClientTestimonial(doc, doc.location?.name ?? undefined));
 
 	return (
-		<RelayTestimonials
+		<Testimonials
 			testimonials={testimonials}
 			eyebrow={value.eyebrow ?? undefined}
 			heading={value.heading ?? undefined}

@@ -8,7 +8,7 @@ import {
 import type { FAQItem } from "@/lib/sanity/lib/adapters";
 import { PortableTextRenderer } from "@/lib/sanity/components/PortableTextRenderer";
 
-type RelayFAQProps = {
+type FAQProps = {
 	faqs: FAQItem[];
 	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
 	 * falls back to the original hardcoded copy so existing callers render
@@ -24,14 +24,14 @@ type RelayFAQProps = {
 	dataSanity?: string;
 };
 
-export function RelayFAQ({
+export function FAQ({
 	faqs,
 	eyebrow = "// faq",
 	heading = "FAQs.",
 	intro = "The ones every team asks on the intro call, answered before you book it.",
 	id,
 	dataSanity,
-}: RelayFAQProps) {
+}: FAQProps) {
 	return (
 		<section
 			{...sectionIdProps(id, "faq")}

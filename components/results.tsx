@@ -10,7 +10,7 @@ export type ResultStat = {
 	label: string;
 };
 
-type RelayResultsProps = {
+type ResultsProps = {
 	caseStudies: CaseStudyCard[];
 	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
 	 * falls back to the original hardcoded copy so existing callers render
@@ -26,14 +26,14 @@ type RelayResultsProps = {
 	dataSanity?: string;
 };
 
-export function RelayResults({
+export function Results({
 	caseStudies,
 	eyebrow = "// results",
 	heading = "Measured in hours back, not features shipped.",
 	stats = resultStats,
 	id,
 	dataSanity,
-}: RelayResultsProps) {
+}: ResultsProps) {
 	return (
 		<section
 			{...sectionIdProps(id, "results")}

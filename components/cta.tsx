@@ -4,7 +4,7 @@ import { CalButton } from "./cal-button";
 
 type SecondaryCta = { label: string; href: string } | null;
 
-type RelayCTAProps = {
+type CTAProps = {
 	heading?: string;
 	subtitle?: string;
 	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
@@ -21,7 +21,7 @@ type RelayCTAProps = {
 	dataSanity?: string;
 };
 
-export function RelayCTA({
+export function CTA({
 	heading = "Stop doing work a workflow could do.",
 	subtitle = "Thirty minutes, no slides. We map one of your real workflows live on the call. You keep the map either way.",
 	primaryCtaLabel = "Book an intro call",
@@ -29,7 +29,7 @@ export function RelayCTA({
 	footnote = "avg. response time: same day · first build live in ~3 weeks",
 	id,
 	dataSanity,
-}: RelayCTAProps) {
+}: CTAProps) {
 	return (
 		<section
 			{...sectionIdProps(id, "contact")}

@@ -16,7 +16,7 @@ const inquiryOptions = [
 	"Other",
 ];
 
-export function RelayContact() {
+export function Contact() {
 	return (
 		<section aria-labelledby="contact-heading" className="pt-32 pb-24">
 			<div className="container mx-auto px-6">
