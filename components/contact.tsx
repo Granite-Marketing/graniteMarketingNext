@@ -16,23 +16,45 @@ const inquiryOptions = [
 	"Other",
 ];
 
-export function Contact() {
+type ContactProps = {
+	/** Optional Sanity-driven overrides. Each falls back to the original
+	 * hardcoded copy so existing callers render byte-identically when
+	 * omitted, matching the Tier A prop convention used across this repo.
+	 *
+	 * These drive the header THIS component already owns rather than a
+	 * separate ContentHero above it. /contact briefly rendered both, which
+	 * put the heading and subtitle on the page twice: contactPage was given
+	 * hero fields by analogy with blogListing/templateListing, but unlike
+	 * those two, /contact never had a ContentHero to migrate — its header
+	 * has always lived here. */
+	tag?: string;
+	heading?: string;
+	subtitle?: string;
+};
+
+export function Contact({
+	tag = "contact",
+	heading = "Let's start a conversation.",
+	subtitle = "Reach out to discuss your automation needs and discover how we can help streamline your operations.",
+}: ContactProps = {}) {
 	return (
 		<section aria-labelledby="contact-heading" className="pt-32 pb-24">
 			<div className="container mx-auto px-6">
 				<header className="max-w-2xl">
+					{/* Template literal, not two adjacent expressions: splitting
+					    this into `{"// "}{tag}` would make React emit a `<!-- -->`
+					    separator between the text nodes and change the HTML. */}
 					<p className="mb-4 font-mono text-[13px] text-relay-cyan">
-						{"// contact"}
+						{`// ${tag}`}
 					</p>
 					<h1
 						id="contact-heading"
 						className="text-balance text-4xl font-semibold tracking-tight text-relay-ink sm:text-5xl"
 					>
-						Let's start a conversation.
+						{heading}
 					</h1>
 					<p className="mt-4 max-w-xl text-pretty leading-relaxed text-relay-body">
-						Reach out to discuss your automation needs and discover how we
-						can help streamline your operations.
+						{subtitle}
 					</p>
 				</header>
 

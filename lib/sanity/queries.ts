@@ -2,6 +2,8 @@ import { defineQuery } from "next-sanity";
 import { client } from "./client";
 import { fetchQuery } from "./lib/fetch";
 import { adaptCaseStudyToCard } from "./lib/adapters";
+import { SINGLETON_TYPES } from "./singletons";
+import type { Section } from "./lib/page-sections";
 
 // =============================================================================
 // BLOG POSTS
@@ -954,4 +956,246 @@ export async function getPage(slug: string) {
 
 export async function getPageCtaDefaults() {
 	return fetchQuery(PAGE_CTA_DEFAULTS_QUERY, {});
+}
+
+// =============================================================================
+// PAGE TYPE SINGLETONS (U21 of the Sanity page builder plan, Phase 6)
+// =============================================================================
+
+// blogListing, templateListing and contactPage (lib/sanity/studio-schemas/
+// documents/{blogListing,templateListing,contactPage}.ts) share one shape:
+// `seo`, the ContentHero chrome (`tag`/`heading`/`subtitle`), and two
+// composable `sectionsAbove`/`sectionsBelow` slots around a FIXED region
+// the schema deliberately has no field for (the blog grid, the template
+// grid, the contact form). One result type and one query builder cover all
+// three rather than tripling the same shape.
+export type PageTypeChromeResult = {
+	_id: string;
+	_type: string;
+	seo: { metaTitle?: string | null; metaDescription?: string | null } | null;
+	tag: string | null;
+	heading: string | null;
+	subtitle: string | null;
+	sectionsAbove: Section[] | null;
+	sectionsBelow: Section[] | null;
+} | null;
+
+// The identical per-block union PAGE_QUERY's `sections[]` projection
+// established (U12/U13) — reusing the very sub-projection constants
+// (labeled links, case studies, clients, FAQs) PAGE_QUERY itself reuses
+// above, so a block's field list can't drift between the two call sites.
+//
+// This is a fresh copy of the union scaffolding rather than a refactor of
+// PAGE_QUERY's own template literal into a shared constant. PAGE_QUERY
+// feeds app/page.tsx and app/[slug]/page.tsx — both explicitly out of
+// scope for U21 — and this unit's test suite has no way to prove a
+// refactor of that string left their resolved query byte-identical. The
+// three schema files this projection answers to (blogListing.ts,
+// templateListing.ts, contactPage.ts) already flagged this exact
+// duplication as deferred to "the unit that wires this into
+// lib/sanity/queries.ts" — this is that unit, and it accepts the
+// duplication in exchange for zero risk to the two routes it must not
+// touch.
+const PAGE_TYPE_SECTION_FIELDS = `{
+    _key,
+    _type,
+    anchorId,
+
+    _type == "heroBlock" => {
+      eyebrow,
+      heading,
+      body,
+      primaryCtaLabel,
+      secondaryCta ${PAGE_BUILDER_LABELED_LINK_FIELDS},
+      showTrustedBy
+    },
+
+    _type == "capabilitiesBlock" => {
+      eyebrow,
+      heading,
+      body,
+      items[]{
+        _key,
+        tag,
+        title,
+        description,
+        featured,
+        snippet
+      },
+      link ${PAGE_BUILDER_LABELED_LINK_FIELDS}
+    },
+
+    _type == "toolsStripBlock" => {
+      eyebrow,
+      heading,
+      intro,
+      sourceMode,
+      "autoItems": *[_type == "tool"] | order(name asc) {
+        _id,
+        name,
+        logo{ asset, alt }
+      },
+      "manualItems": manualTools[]->{
+        _id,
+        name,
+        logo{ asset, alt }
+      }
+    },
+
+    _type == "processBlock" => {
+      eyebrow,
+      heading,
+      body,
+      steps[]{
+        _key,
+        stepLabel,
+        title,
+        description,
+        duration
+      },
+      footnote
+    },
+
+    _type == "resultsBlock" => {
+      eyebrow,
+      heading,
+      stats[]{
+        _key,
+        value,
+        suffix,
+        label
+      },
+      sourceMode,
+      "autoItems": *[_type == "caseStudy" && showOnHome == true]
+        | order(sortOrder asc, _createdAt desc) ${PAGE_BUILDER_CASE_STUDY_FIELDS},
+      "manualItems": manualCaseStudies[]-> ${PAGE_BUILDER_CASE_STUDY_FIELDS}
+    },
+
+    _type == "testimonialsBlock" => {
+      eyebrow,
+      heading,
+      sourceMode,
+      "autoItems": *[_type == "client"] | order(dateStarted desc) ${PAGE_BUILDER_CLIENT_FIELDS},
+      "manualItems": manualTestimonials[]-> ${PAGE_BUILDER_CLIENT_FIELDS}
+    },
+
+    _type == "faqBlock" => {
+      eyebrow,
+      heading,
+      intro,
+      sourceMode,
+      autoCategory,
+      "autoItems": *[_type == "faq"] | order(order asc) ${PAGE_BUILDER_FAQ_FIELDS},
+      "manualItems": manualFaqs[]-> ${PAGE_BUILDER_FAQ_FIELDS}
+    },
+
+    _type == "ctaBlock" => {
+      ctaHeading,
+      ctaSubtitle,
+      ctaButton ${PAGE_BUILDER_LABELED_LINK_FIELDS},
+      ctaFootnote,
+      secondaryCta ${PAGE_BUILDER_LABELED_LINK_FIELDS}
+    }
+  }`;
+
+// `_id`/`_type` are projected (the schema files' own placeholder queries
+// omit them) because components/page-builder.tsx's `PageBuilder` requires
+// both as props for its Presentation data attributes and optimistic-update
+// matching — neither slot can render through it without them.
+function pageTypeChromeQuery(id: string): string {
+	return `*[_id == "${id}"][0]{
+    _id,
+    _type,
+    seo,
+    tag,
+    heading,
+    subtitle,
+    sectionsAbove[] ${PAGE_TYPE_SECTION_FIELDS},
+    sectionsBelow[] ${PAGE_TYPE_SECTION_FIELDS}
+  }`;
+}
+
+// Existence-only projection for the forcePublished gate below — cheaper
+// than fetching the whole document just to test whether a published copy
+// exists at all.
+function pageTypeExistsQuery(id: string): string {
+	return `*[_id == "${id}"][0]._id`;
+}
+
+// --- Blog Listing (/blog) ---
+
+export const BLOG_LISTING_QUERY = defineQuery(
+	pageTypeChromeQuery(SINGLETON_TYPES.blogListing)
+);
+export const BLOG_LISTING_PUBLISHED_QUERY = defineQuery(
+	pageTypeExistsQuery(SINGLETON_TYPES.blogListing)
+);
+
+/**
+ * PUBLISHED-only existence check — mirrors getHomePageSlug's
+ * `forcePublished: true` gate exactly (see that function's comment for the
+ * full rationale). Dev and production share one Sanity dataset, and
+ * blogListing currently exists only as a draft, so this must resolve
+ * `false` until an editor presses Publish — never at deploy time.
+ */
+export async function getBlogListingPublished(): Promise<boolean> {
+	const id = await fetchQuery<string | null>(
+		BLOG_LISTING_PUBLISHED_QUERY,
+		{},
+		{ forcePublished: true }
+	);
+	return id != null;
+}
+
+/**
+ * The actual chrome content, draft-mode-aware (unlike the check above) so
+ * an editor previewing further edits in Presentation after publishing sees
+ * them live — mirrors `getPage` being called after `getHomePageSlug`.
+ */
+export async function getBlogListing(): Promise<PageTypeChromeResult> {
+	return fetchQuery<PageTypeChromeResult>(BLOG_LISTING_QUERY, {});
+}
+
+// --- Template Listing (/templates) ---
+
+export const TEMPLATE_LISTING_QUERY = defineQuery(
+	pageTypeChromeQuery(SINGLETON_TYPES.templateListing)
+);
+export const TEMPLATE_LISTING_PUBLISHED_QUERY = defineQuery(
+	pageTypeExistsQuery(SINGLETON_TYPES.templateListing)
+);
+
+export async function getTemplateListingPublished(): Promise<boolean> {
+	const id = await fetchQuery<string | null>(
+		TEMPLATE_LISTING_PUBLISHED_QUERY,
+		{},
+		{ forcePublished: true }
+	);
+	return id != null;
+}
+
+export async function getTemplateListing(): Promise<PageTypeChromeResult> {
+	return fetchQuery<PageTypeChromeResult>(TEMPLATE_LISTING_QUERY, {});
+}
+
+// --- Contact (/contact) ---
+
+export const CONTACT_PAGE_QUERY = defineQuery(
+	pageTypeChromeQuery(SINGLETON_TYPES.contactPage)
+);
+export const CONTACT_PAGE_PUBLISHED_QUERY = defineQuery(
+	pageTypeExistsQuery(SINGLETON_TYPES.contactPage)
+);
+
+export async function getContactPagePublished(): Promise<boolean> {
+	const id = await fetchQuery<string | null>(
+		CONTACT_PAGE_PUBLISHED_QUERY,
+		{},
+		{ forcePublished: true }
+	);
+	return id != null;
+}
+
+export async function getContactPage(): Promise<PageTypeChromeResult> {
+	return fetchQuery<PageTypeChromeResult>(CONTACT_PAGE_QUERY, {});
 }
