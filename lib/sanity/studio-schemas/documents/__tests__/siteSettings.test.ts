@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import type { FieldDefinition, ObjectDefinition, ArrayDefinition } from "sanity";
+import type {
+	FieldDefinition,
+	ObjectDefinition,
+	ArrayDefinition,
+	ReferenceDefinition,
+} from "sanity";
 import {
 	siteSettings,
 	SITE_SETTINGS_TYPE,
@@ -42,6 +47,7 @@ describe("studio-schemas/documents/siteSettings", () => {
 		expect(fieldNames).toEqual([
 			"logo",
 			"logoLink",
+			"homePage",
 			"navLinks",
 			"headerCta",
 			"footerColumns",
@@ -86,6 +92,28 @@ describe("studio-schemas/documents/siteSettings", () => {
 		it("logoLink's description documents the / fallback so it isn't mistaken for a required field", () => {
 			expect(findField("logoLink").description).toMatch(/\//);
 			expect(findField("logoLink").description).toMatch(/homepage|fall/i);
+		});
+
+		describe("homePage — U16's homepage selection mechanism", () => {
+			it("is a reference to page, not a boolean on page itself", () => {
+				const homePage = findField("homePage") as unknown as ReferenceDefinition;
+				expect(homePage.type).toBe("reference");
+				expect(homePage.to).toEqual([{ type: "page" }]);
+			});
+
+			it("is a strong reference — Sanity blocks deleting the referenced page while this points at it", () => {
+				const homePage = findField("homePage") as unknown as ReferenceDefinition;
+				expect(homePage.weak).not.toBe(true);
+			});
+
+			it("is grouped with Brand, alongside logo/logoLink", () => {
+				expect(findField("homePage").group).toBe("brand");
+			});
+
+			it("describes that it controls what renders at /", () => {
+				expect(findField("homePage").description).toMatch(/\//);
+				expect(findField("homePage").description).toMatch(/renders|homepage/i);
+			});
 		});
 	});
 

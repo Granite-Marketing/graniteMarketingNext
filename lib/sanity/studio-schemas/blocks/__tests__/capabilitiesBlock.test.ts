@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
 	capabilitiesBlock,
-	validateExactlyOneFeatured,
+	validateFeaturedGridTiling,
 } from "../capabilitiesBlock";
 
 describe("studio-schemas/blocks/capabilitiesBlock", () => {
@@ -93,42 +93,52 @@ describe("studio-schemas/blocks/capabilitiesBlock", () => {
 	});
 });
 
-describe("studio-schemas/blocks/capabilitiesBlock — validateExactlyOneFeatured", () => {
-	it("fails with zero featured items", () => {
-		const result = validateExactlyOneFeatured([
-			{ featured: false },
-			{ featured: false },
-		]);
+describe("studio-schemas/blocks/capabilitiesBlock — validateFeaturedGridTiling", () => {
+	const featured = (n: number) => Array.from({ length: n }, () => ({ featured: true }));
+	const normal = (n: number) => Array.from({ length: n }, () => ({ featured: false }));
+
+	// The shape the live homepage actually ships: 6+6, then 3+3+3+3.
+	it("passes the real homepage layout — 2 featured + 4 normal", () => {
+		expect(validateFeaturedGridTiling([...featured(2), ...normal(4)])).toBe(true);
+	});
+
+	// The case the previous "exactly one featured" rule would have forced.
+	// 6 + 15 = 21 columns, so the last row is ragged.
+	it("fails 1 featured + 5 normal, which does not fill whole rows", () => {
+		const result = validateFeaturedGridTiling([...featured(1), ...normal(5)]);
 		expect(result).not.toBe(true);
-		expect(result as string).toContain("currently 0");
+		expect(result as string).toContain("1 featured");
 	});
 
-	it("fails with two featured items", () => {
-		const result = validateExactlyOneFeatured([
-			{ featured: true },
-			{ featured: true },
-			{ featured: false },
-		]);
-		expect(result).not.toBe(true);
-		expect(result as string).toContain("currently 2");
+	it("passes a plain row of 4 normal cards", () => {
+		expect(validateFeaturedGridTiling(normal(4))).toBe(true);
 	});
 
-	it("passes with exactly one featured item", () => {
-		expect(
-			validateExactlyOneFeatured([
-				{ featured: true },
-				{ featured: false },
-				{ featured: false },
-			])
-		).toBe(true);
+	it("passes 1 featured + 2 normal — 6+3+3 fills one row", () => {
+		expect(validateFeaturedGridTiling([...featured(1), ...normal(2)])).toBe(true);
 	});
 
-	it("treats undefined (empty draft) as zero featured, not a crash", () => {
-		expect(() => validateExactlyOneFeatured(undefined)).not.toThrow();
-		expect(validateExactlyOneFeatured(undefined)).not.toBe(true);
+	it("fails a lone featured card, which leaves half a row empty", () => {
+		expect(validateFeaturedGridTiling(featured(1))).not.toBe(true);
 	});
 
-	it("treats items missing the featured key as falsy, not a crash", () => {
-		expect(validateExactlyOneFeatured([{}, { featured: true }])).toBe(true);
+	it("fails 5 normal cards, which overflow one row by one card", () => {
+		expect(validateFeaturedGridTiling(normal(5))).not.toBe(true);
+	});
+
+	it("allows an empty draft rather than nagging before anything is entered", () => {
+		expect(() => validateFeaturedGridTiling(undefined)).not.toThrow();
+		expect(validateFeaturedGridTiling(undefined)).toBe(true);
+		expect(validateFeaturedGridTiling([])).toBe(true);
+	});
+
+	it("treats items missing the featured key as normal cards", () => {
+		expect(validateFeaturedGridTiling([{}, {}, {}, {}])).toBe(true);
+	});
+
+	it("names both counts in the message so the editor can do the arithmetic", () => {
+		const result = validateFeaturedGridTiling([...featured(1), ...normal(5)]);
+		expect(result as string).toContain("1 featured");
+		expect(result as string).toContain("5 normal");
 	});
 });

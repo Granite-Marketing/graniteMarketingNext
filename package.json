@@ -21,6 +21,8 @@
     "migrate:tools": "npx tsx scripts/migrate-tools.ts",
     "migrate:ndjson": "npx tsx scripts/migrate-from-ndjson.ts",
     "migrate:all": "npx tsx scripts/migrate-all.ts",
+    "seed:pages": "npx tsx scripts/seed-pages.ts",
+    "seed:pages:publish": "npx tsx scripts/seed-pages.ts --publish",
     "typegen": "sanity schema extract && sanity typegen generate"
   },
   "dependencies": {

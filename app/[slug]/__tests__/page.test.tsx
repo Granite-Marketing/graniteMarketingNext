@@ -21,12 +21,14 @@ const getPage = vi.fn();
 const getPageSlugs = vi.fn();
 const getPageCtaDefaults = vi.fn();
 const getFeaturedLogos = vi.fn();
+const getHomePageSlug = vi.fn();
 
 vi.mock("@/lib/sanity/queries", () => ({
 	getPage: (...args: unknown[]) => getPage(...args),
 	getPageSlugs: (...args: unknown[]) => getPageSlugs(...args),
 	getPageCtaDefaults: (...args: unknown[]) => getPageCtaDefaults(...args),
 	getFeaturedLogos: (...args: unknown[]) => getFeaturedLogos(...args),
+	getHomePageSlug: (...args: unknown[]) => getHomePageSlug(...args),
 }));
 
 import CatchAllPage, { generateMetadata, generateStaticParams } from "../page";
@@ -58,11 +60,18 @@ function pageDoc(overrides: Partial<PageDoc> = {}): PageDoc {
 }
 
 const NOT_FOUND_DIGEST = { digest: "NEXT_HTTP_ERROR_FALLBACK;404" };
+// next/navigation's permanentRedirect digest shape: "NEXT_REDIRECT;<type>;<url>;<statusCode>;"
+// — 308 is RedirectStatusCode.PermanentRedirect (verified against
+// node_modules/next/dist/client/components/redirect.js and redirect-status-code.js).
+const PERMANENT_REDIRECT_HOME_DIGEST = { digest: "NEXT_REDIRECT;replace;/;308;" };
 
 beforeEach(() => {
 	vi.clearAllMocks();
 	getPageCtaDefaults.mockResolvedValue(null);
 	getFeaturedLogos.mockResolvedValue([]);
+	// No homepage assigned by default — existing scenarios below must behave
+	// exactly as they did before U16 introduced this dependency.
+	getHomePageSlug.mockResolvedValue(null);
 });
 
 describe("app/[slug]/page — rendering", () => {
@@ -106,6 +115,44 @@ describe("app/[slug]/page — rendering", () => {
 		// And it never even reached the Content Lake for that slug.
 		expect(getPage).not.toHaveBeenCalled();
 	});
+
+	describe("U16 — homepage selection", () => {
+		it("permanentRedirects to / when the requested slug is the homepage's, rather than rendering it a second time", async () => {
+			getHomePageSlug.mockResolvedValue("home");
+
+			await expect(
+				CatchAllPage({ params: Promise.resolve({ slug: "home" }) })
+			).rejects.toMatchObject(PERMANENT_REDIRECT_HOME_DIGEST);
+
+			// Never fetched the page's own content — the redirect short-circuits
+			// before that, since the destination is `/`, not this route.
+			expect(getPage).not.toHaveBeenCalled();
+		});
+
+		it("renders normally for a slug that is not the homepage's", async () => {
+			getHomePageSlug.mockResolvedValue("home");
+			getPage.mockResolvedValue(pageDoc({ slug: { _type: "slug", current: "about" } }));
+
+			const jsx = await CatchAllPage({
+				params: Promise.resolve({ slug: "about" }),
+			});
+			render(jsx);
+
+			expect(screen.getByText("Hero heading")).toBeInTheDocument();
+		});
+
+		it("renders normally when no homePage is assigned at all", async () => {
+			getHomePageSlug.mockResolvedValue(null);
+			getPage.mockResolvedValue(pageDoc());
+
+			const jsx = await CatchAllPage({
+				params: Promise.resolve({ slug: "my-page" }),
+			});
+			render(jsx);
+
+			expect(screen.getByText("Hero heading")).toBeInTheDocument();
+		});
+	});
 });
 
 describe("app/[slug]/page — generateStaticParams", () => {
@@ -143,6 +190,26 @@ describe("app/[slug]/page — generateStaticParams", () => {
 		const params = await generateStaticParams();
 
 		expect(params).toEqual([{ slug: "genuinely-fine" }]);
+	});
+
+	describe("U16 — homepage selection", () => {
+		it("omits the homepage's own slug — it renders at / instead, and must not also build as a static route under its own slug", async () => {
+			getPageSlugs.mockResolvedValue(["home", "about", "services"]);
+			getHomePageSlug.mockResolvedValue("home");
+
+			const params = await generateStaticParams();
+
+			expect(params).toEqual([{ slug: "about" }, { slug: "services" }]);
+		});
+
+		it("omits nothing extra when no homePage is assigned", async () => {
+			getPageSlugs.mockResolvedValue(["about", "services"]);
+			getHomePageSlug.mockResolvedValue(null);
+
+			const params = await generateStaticParams();
+
+			expect(params).toEqual([{ slug: "about" }, { slug: "services" }]);
+		});
 	});
 });
 

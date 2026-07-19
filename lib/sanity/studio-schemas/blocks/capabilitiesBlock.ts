@@ -38,25 +38,40 @@ export type CapabilityItem = {
 	featured?: boolean;
 };
 
-// The layout robustness guard (C4 of the plan): capabilities.tsx gives the
-// featured item bespoke styling (a wider, taller card) — zero featured
-// items and two both look wrong, so exactly one is enforced here rather
-// than left to editorial discipline. Exported and tested directly (the
-// same pattern documents/page.ts uses for `validatePageSlug`) rather than
-// stubbing Sanity's Rule chain, since the assertion itself — "exactly
-// one" — is the behaviour worth pinning, not the fact that `Rule.custom`
-// was called.
+// The layout robustness guard (C4 of the plan). Exported and tested directly
+// — the same pattern documents/page.ts uses for `validatePageSlug` — rather
+// than stubbing Sanity's Rule chain, since the tiling arithmetic is the
+// behaviour worth pinning, not the fact that `Rule.custom` was called.
 //
-// Custom validators run even when the array field is `undefined` (Sanity
-// does not skip `Rule.custom()` on empty values the way it skips most
-// built-in rules) — treated here as zero items, which correctly fails the
-// "exactly one" check rather than throwing.
-export function validateExactlyOneFeatured(
+// Custom validators run even when the array field is `undefined` (Sanity does
+// not skip `Rule.custom()` on empty values the way it skips most built-in
+// rules), so the empty case is handled explicitly rather than throwing.
+/**
+ * The grid is 12 columns: a featured card spans 6, a normal card spans 3
+ * (see components/capabilities.tsx). Cards therefore have to tile whole rows,
+ * or the last row is ragged.
+ *
+ * `6f + 3n` must be a multiple of 12, which reduces to `2f + n ≡ 0 (mod 4)`.
+ * The live homepage ships 2 featured + 4 normal — `6+6`, then `3+3+3+3`, two
+ * clean rows.
+ *
+ * An earlier version of this rule required *exactly one* featured item. That
+ * was wrong in a way worth recording: 1 featured + 5 normal is 21 columns and
+ * leaves a ragged row, so the rule would have rejected the real design and
+ * enforced a broken one. The constraint is tiling, not a magic count.
+ */
+export function validateFeaturedGridTiling(
 	items: CapabilityItem[] | undefined
 ): true | string {
-	const featuredCount = (items ?? []).filter((item) => item?.featured).length;
-	if (featuredCount === 1) return true;
-	return `Exactly one capability must be marked "Featured" (currently ${featuredCount}). The featured item gets bespoke styling in the grid — zero or two both render incorrectly.`;
+	const list = items ?? [];
+	if (list.length === 0) return true;
+
+	const featured = list.filter((item) => item?.featured).length;
+	const normal = list.length - featured;
+
+	if ((2 * featured + normal) % 4 === 0) return true;
+
+	return `Capability cards must fill whole rows of the 12-column grid. A featured card spans 6 columns and a normal card spans 3, so (2 × featured) + normal must be divisible by 4 — currently ${featured} featured and ${normal} normal. Try 2 featured + 4 normal, or 0 featured + 4 normal.`;
 }
 
 export const capabilitiesBlock = defineType({
@@ -90,7 +105,7 @@ export const capabilitiesBlock = defineType({
 			name: "items",
 			title: "Capabilities",
 			description:
-				'Exactly one item must be marked "Featured" — it renders wider in the grid.',
+				"Cards tile a 12-column grid: featured cards are double width. Combinations that fill whole rows work — 2 featured + 4 normal (the current homepage), or 4 normal on their own.",
 			type: "array",
 			of: [
 				defineArrayMember({
@@ -122,7 +137,7 @@ export const capabilitiesBlock = defineType({
 							name: "featured",
 							title: "Featured",
 							description:
-								"Exactly one capability across the grid must have this on.",
+								"Renders this card at double width. Two featured cards fill a row between them.",
 							type: "boolean",
 							initialValue: false,
 						}),
@@ -156,7 +171,7 @@ export const capabilitiesBlock = defineType({
 			],
 			validation: (Rule) =>
 				Rule.custom((items: CapabilityItem[] | undefined) =>
-					validateExactlyOneFeatured(items)
+					validateFeaturedGridTiling(items)
 				),
 		}),
 		defineField({

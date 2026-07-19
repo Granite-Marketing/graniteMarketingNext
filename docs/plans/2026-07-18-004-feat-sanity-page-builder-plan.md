@@ -680,6 +680,19 @@ homepage copy and the reproducibility path for a fresh dataset — a gitignored 
 neither. The existing ten `migrate-*.ts` files stay untracked; auditing them for credentials is
 separate work.
 
+**Homepage selection.** `siteSettings` gains a `homePage` reference to a `page` document, and
+`app/page.tsx` renders whatever it points at.
+
+A reference on the singleton rather than an `isHomePage` boolean on `page`: a boolean lets two
+documents both claim the role with nothing to resolve the tie, and deleting the claimed page
+silently blanks the site. A reference makes "exactly one" structurally true and gives
+referential integrity — Sanity blocks the delete instead.
+
+Consequence to handle, or the site ships duplicate content: the homepage is otherwise reachable
+at both `/` and `/{its-slug}`. `/[slug]` issues a `permanentRedirect` to `/` for that slug and
+omits it from `generateStaticParams`. A redirect rather than a 404 so any link that already
+points at the slug still lands somewhere, and the SEO signal consolidates on `/`.
+
 **Approach:** Follow the established migration convention exactly (KTD6) — one `transaction()`,
 deterministic `_id`s (`page-home`, `siteSettings`), `createOrReplace`, single commit, log the
 transaction id, `migrate:pages` npm alias, registered in `migrate-all.ts` in dependency order

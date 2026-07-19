@@ -922,6 +922,32 @@ export async function getPageSlugs() {
 	return slugs;
 }
 
+// U16's "homepage selection" mechanism: `siteSettings.homePage`
+// (lib/sanity/studio-schemas/documents/siteSettings.ts) is the single
+// source of truth for which `page` document renders at `/`. Consumed by
+// app/[slug]/page.tsx to (a) omit that page's own slug from
+// generateStaticParams — it must never ALSO build as a static route under
+// its own slug, or the homepage's content is reachable (and indexable) at
+// two URLs — and (b) permanentRedirect a request for that slug back to `/`,
+// so an existing link or bookmark still lands somewhere and the SEO signal
+// consolidates on the canonical `/`.
+export const HOME_PAGE_SLUG_QUERY = defineQuery(`
+    *[_id == "siteSettings"][0].homePage->slug.current
+  `);
+
+export async function getHomePageSlug() {
+	return fetchQuery<string | null>(
+		HOME_PAGE_SLUG_QUERY,
+		{},
+		// Mirrors getPageSlugs' forcePublished:true immediately above — this
+		// feeds the same generateStaticParams call, plus the request-time
+		// redirect check, neither of which should ever resolve a draft-only
+		// homePage assignment (a draft editor picking a new homepage must not
+		// change what the static build — or an anonymous visitor — sees).
+		{ forcePublished: true }
+	);
+}
+
 export async function getPage(slug: string) {
 	return fetchQuery(PAGE_QUERY, { slug });
 }

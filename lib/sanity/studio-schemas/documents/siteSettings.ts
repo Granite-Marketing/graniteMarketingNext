@@ -138,6 +138,21 @@ export const siteSettings = defineType({
 				"Where clicking the logo goes. Falls back to the homepage (/) " +
 				"when left unset, rather than rendering a dead anchor.",
 		}),
+		defineField({
+			name: "homePage",
+			title: "Home Page",
+			type: "reference",
+			to: [{ type: "page" }],
+			group: "brand",
+			description:
+				"Controls what renders at / — the referenced page becomes the " +
+				"site's homepage. A reference rather than a boolean on the page " +
+				"itself (U16 of the Sanity page builder plan): a boolean lets two " +
+				"documents both claim the role with nothing to break the tie, and " +
+				"deleting the claimed page would silently blank the site. A " +
+				"reference makes \"exactly one\" structurally true, and Sanity " +
+				"blocks deleting the referenced page while this points at it.",
+		}),
 
 		// ---------------------------------------------------------------
 		// Navigation

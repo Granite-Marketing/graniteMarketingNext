@@ -1,12 +1,13 @@
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { PageBuilder } from "@/components/page-builder";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import {
 	getPage,
 	getPageSlugs,
 	getPageCtaDefaults,
 	getFeaturedLogos,
+	getHomePageSlug,
 } from "@/lib/sanity/queries";
 import { RESERVED_PAGE_SLUGS } from "@/lib/sanity/studio-schemas/documents/page";
 import type { PageQueryResult } from "@/lib/sanity/lib/page-sections";
@@ -38,11 +39,21 @@ export const revalidate = 3600;
 const RESERVED_SLUG_SET = new Set<string>(RESERVED_PAGE_SLUGS);
 
 export async function generateStaticParams() {
-	const slugs = await getPageSlugs();
+	// U16 homepage selection: the page siteSettings.homePage points at renders
+	// at `/` (app/page.tsx), so it must be excluded here — otherwise it would
+	// ALSO build as a static route at its own slug, reachable and indexable at
+	// two URLs for identical content.
+	const [slugs, homePageSlug] = await Promise.all([
+		getPageSlugs(),
+		getHomePageSlug(),
+	]);
 
 	return slugs
 		.filter(
-			(slug): slug is string => Boolean(slug) && !RESERVED_SLUG_SET.has(slug)
+			(slug): slug is string =>
+				Boolean(slug) &&
+				!RESERVED_SLUG_SET.has(slug) &&
+				slug !== homePageSlug
 		)
 		.map((slug) => ({ slug }));
 }
@@ -111,6 +122,18 @@ export default async function CatchAllPage({
 	// even if a document exists with a reserved slug.
 	if (RESERVED_SLUG_SET.has(slug)) {
 		notFound();
+	}
+
+	// U16 homepage selection: the homepage's page document is otherwise
+	// reachable at BOTH `/` and `/{its-slug}`. permanentRedirect — never
+	// notFound — so a link or bookmark already pointing at the slug still
+	// lands somewhere, and the SEO signal consolidates on the canonical `/`.
+	// generateStaticParams (above) already omits this slug from the static
+	// build; this covers any request that still reaches here dynamically
+	// (a stale link hit before the next revalidation, direct traffic, etc.).
+	const homePageSlug = await getHomePageSlug();
+	if (homePageSlug && slug === homePageSlug) {
+		permanentRedirect("/");
 	}
 
 	const [page, ctaDefaults, clientLogos] = await Promise.all([
