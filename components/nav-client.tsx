@@ -5,7 +5,8 @@ import Link from "next/link";
 import { BrandMark, type BrandMarkLogo } from "./brand-mark";
 import { CalButton } from "./cal-button";
 import { cn } from "@/lib/utils";
-import type { ResolvedLabeledLink } from "./nav";
+import type { ResolvedNavLink } from "@/lib/sanity/lib/resolve-site-settings";
+import type { ResolvedLink } from "@/lib/sanity/lib/resolve-link";
 
 // Mirrors CalButton's own class list (components/cal-button.tsx) — needed
 // here because a `navigate`-kind headerCta (an editor pointing the header
@@ -34,7 +35,7 @@ function NavLink({
 	className,
 	onClick,
 }: {
-	link: ResolvedLabeledLink;
+	link: ResolvedNavLink;
 	className?: string;
 	onClick?: () => void;
 }) {
@@ -66,7 +67,7 @@ function HeaderCta({
 	size = "default",
 	className,
 }: {
-	cta: ResolvedLabeledLink;
+	cta: ResolvedNavLink;
 	size?: "default" | "lg";
 	className?: string;
 }) {
@@ -97,32 +98,50 @@ function HeaderCta({
  * and a "use client" component cannot itself be the async function that
  * awaits a Sanity fetch.
  *
- * `navLinks`/`headerCta` arrive already resolved (nav.tsx picks between
- * siteSettings and components/data.ts and calls resolveLink) — this
- * component renders plain data, never a function or an unresolved link
- * object, and never fetches on its own. */
+ * `navLinks`/`headerCta`/`logoLink` arrive already resolved (nav.tsx calls
+ * lib/sanity/lib/resolve-site-settings's resolvers) — this component renders
+ * plain data, never a function or an unresolved link object, and never
+ * fetches on its own. */
 export function NavClient({
 	logo,
+	logoLink,
 	navLinks,
 	headerCta,
 }: {
 	logo: BrandMarkLogo | null;
-	navLinks: ResolvedLabeledLink[];
-	headerCta: ResolvedLabeledLink | null;
+	logoLink: ResolvedLink;
+	navLinks: ResolvedNavLink[];
+	headerCta: ResolvedNavLink | null;
 }) {
 	const [open, setOpen] = useState(false);
+	const brandMark = (
+		<>
+			<BrandMark logo={logo} hideWordmarkOnMobile />
+			<span className="sr-only">Granite Marketing home</span>
+		</>
+	);
 
 	return (
 		<header className="fixed inset-x-0 top-0 z-50 border-b border-relay-line bg-relay-bg/85 backdrop-blur-md">
 			<nav aria-label="Main" className="mx-auto container px-6">
 				<div className="flex h-16 items-center gap-9">
-					<Link
-						href="/"
-						className="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-relay-cyan"
-					>
-						<BrandMark logo={logo} hideWordmarkOnMobile />
-						<span className="sr-only">Granite Marketing home</span>
-					</Link>
+					{logoLink.kind === "calBooking" ? (
+						<CalButton
+							calLink={logoLink.calLink}
+							className="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-relay-cyan"
+						>
+							{brandMark}
+						</CalButton>
+					) : (
+						<Link
+							href={logoLink.href}
+							target={logoLink.target}
+							rel={logoLink.rel}
+							className="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-relay-cyan"
+						>
+							{brandMark}
+						</Link>
+					)}
 
 					<ul className="ml-auto hidden items-center gap-7 md:flex">
 						{navLinks.map((link) => (

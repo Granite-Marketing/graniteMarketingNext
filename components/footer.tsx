@@ -4,14 +4,22 @@ import { BrandMark, resolveBrandMarkLogo } from "./brand-mark";
 import { complianceLinks, footerColumns as hardcodedFooterColumns } from "./data";
 import { getSiteSettings } from "@/lib/sanity/queries";
 import { CalButton } from "./cal-button";
-import { resolveLabeledLinks, type ResolvedLabeledLink } from "./nav";
+import {
+	resolveFooterColumns,
+	resolveLogoLink,
+} from "@/lib/sanity/lib/resolve-site-settings";
+import type {
+	ResolvedFooterColumn,
+	ResolvedNavLink,
+} from "@/lib/sanity/lib/resolve-site-settings";
 
-/** One resolved footer column, ready to render — heading plus the same
- * resolved-link shape nav.tsx uses for navLinks/headerCta. */
-type ResolvedFooterColumn = {
-	heading: string;
-	links: ResolvedLabeledLink[];
-};
+// P1 findings #7/#4 fix: this file used to inline its own `{ heading, links
+// }` mapping against `resolveLink` directly, and hardcoded the logo's
+// `<Link href="/">` — duplicating, and never calling,
+// lib/sanity/lib/resolve-site-settings.ts's `resolveFooterColumns`/
+// `resolveLogoLink`. Footer now resolves through those shared functions
+// (nav.tsx does the same for navLinks/headerCta/logoLink), so an editor's
+// `siteSettings.logoLink` actually reaches this render site.
 
 /**
  * One resolved footer link, either kind. Mirrors nav-client.tsx's `NavLink`
@@ -25,7 +33,7 @@ function FooterLink({
 	link,
 	className,
 }: {
-	link: ResolvedLabeledLink;
+	link: ResolvedNavLink;
 	className?: string;
 }) {
 	if (link.kind === "calBooking") {
@@ -56,25 +64,18 @@ function FooterLink({
 export async function Footer() {
 	const siteSettings = await getSiteSettings();
 	const logo = resolveBrandMarkLogo(siteSettings);
+	const logoLink = resolveLogoLink(siteSettings?.logoLink);
 
 	// Per-collection fallback, same rule as nav.tsx's navLinks/headerCta:
 	// footerColumns is its own independent field on siteSettings, so it
 	// falls back to components/data.ts on its own rather than being tied to
 	// whether navLinks/headerCta are configured. A column is kept only if
 	// it has a heading; its links are resolved (and dangling ones dropped)
-	// the same way nav.tsx resolves navLinks.
+	// the same way nav.tsx resolves navLinks — both go through
+	// resolve-site-settings.ts's shared resolvers now.
 	const footerColumns: ResolvedFooterColumn[] =
 		siteSettings?.footerColumns && siteSettings.footerColumns.length > 0
-			? siteSettings.footerColumns
-					.filter(
-						(column): column is NonNullable<typeof column> & {
-							heading: string;
-						} => !!column?.heading
-					)
-					.map((column) => ({
-						heading: column.heading,
-						links: resolveLabeledLinks(column.links),
-					}))
+			? resolveFooterColumns(siteSettings.footerColumns)
 			: hardcodedFooterColumns.map((column) => ({
 					heading: column.heading,
 					links: column.links.map((link) => ({
@@ -89,10 +90,25 @@ export async function Footer() {
 			<div className="mx-auto container px-6">
 				<div className="grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr]">
 					<div>
-						<Link href="/" className="inline-block">
-							<BrandMark logo={logo} />
-							<span className="sr-only">Granite Marketing home</span>
-						</Link>
+						{logoLink.kind === "calBooking" ? (
+							<CalButton
+								calLink={logoLink.calLink}
+								className="inline-block"
+							>
+								<BrandMark logo={logo} />
+								<span className="sr-only">Granite Marketing home</span>
+							</CalButton>
+						) : (
+							<Link
+								href={logoLink.href}
+								target={logoLink.target}
+								rel={logoLink.rel}
+								className="inline-block"
+							>
+								<BrandMark logo={logo} />
+								<span className="sr-only">Granite Marketing home</span>
+							</Link>
+						)}
 						<p className="mt-4 max-w-64 text-sm leading-relaxed text-relay-faint">
 							AI automations and custom systems for lean teams who&apos;d
 							rather grow the business than run it by hand.

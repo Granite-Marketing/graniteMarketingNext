@@ -179,6 +179,66 @@ describe("Footer — footerColumns fallback", () => {
 	});
 });
 
+// P1 finding #4 — siteSettings.logoLink was schema'd, seeded and projected,
+// with resolve-site-settings.ts's resolveLogoLink fully implemented, but
+// footer.tsx hardcoded the brand-mark Link to "/" instead of resolving it.
+// Footer now resolves through the same shared function nav.tsx uses.
+describe("Footer — logoLink fallback", () => {
+	it("falls back to / when siteSettings has no logoLink", async () => {
+		getSiteSettings.mockResolvedValue({ logo: null, logoLink: null });
+
+		const jsx = await Footer();
+		render(jsx);
+
+		expect(
+			screen.getByText("Granite Marketing home").closest("a")?.getAttribute("href")
+		).toBe("/");
+	});
+
+	it("falls back to / when logoLink is set but fails to resolve", async () => {
+		getSiteSettings.mockResolvedValue({
+			logo: null,
+			logoLink: { linkType: "internal", internalRef: null },
+		});
+
+		const jsx = await Footer();
+		render(jsx);
+
+		expect(
+			screen.getByText("Granite Marketing home").closest("a")?.getAttribute("href")
+		).toBe("/");
+	});
+
+	it("reflects a configured logoLink's href, not the / fallback", async () => {
+		getSiteSettings.mockResolvedValue({
+			logo: null,
+			logoLink: { linkType: "external", href: "https://example.com/custom-home" },
+		});
+
+		const jsx = await Footer();
+		render(jsx);
+
+		expect(
+			screen.getByText("Granite Marketing home").closest("a")?.getAttribute("href")
+		).toBe("https://example.com/custom-home");
+	});
+
+	it("renders a calBooking logoLink as the Cal button, never an <a href>", async () => {
+		getSiteSettings.mockResolvedValue({
+			logo: null,
+			logoLink: { linkType: "calBooking", calLink: "team/logo-booking" },
+		});
+
+		const jsx = await Footer();
+		render(jsx);
+
+		const brandMarkText = screen.getByText("Granite Marketing home");
+		expect(brandMarkText.closest("a")).toBeNull();
+		const button = brandMarkText.closest("button");
+		expect(button?.getAttribute("data-cal-link")).toBe("team/logo-booking");
+	});
+});
+
 describe("Footer — compliance strip stays hardcoded", () => {
 	it("renders the five compliance links from code when siteSettings has no footerColumns", async () => {
 		getSiteSettings.mockResolvedValue({ logo: null, footerColumns: null });
