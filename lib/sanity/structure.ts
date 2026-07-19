@@ -61,36 +61,35 @@ const NESTED_RECORD_TYPES = ["blogPost", "workflowTemplate"];
 //
 // Pinning a schema type that isn't registered throws at runtime, so a
 // singleton earns its desk entry only once its schema is in the barrel.
+// `documentTitle` sets the PANE header, via `DocumentBuilder.title()`. This
+// is not the same lever as the schema's `preview.prepare()`, and preview
+// alone does not fix it: a singleton has no title field, and until the
+// document has actually been created there is no stored value for Sanity to
+// preview, so the header falls through to "Untitled". Setting the title on
+// the document node is independent of document state and renders correctly
+// from the very first, empty draft.
+//
+// It is deliberately the contextual name ("Blog Post Detail"), not the row
+// label ("Detail"): the header is also what the browser tab and search
+// results show, where the surrounding tree isn't there to supply the topic.
 function pinnedSingletonListItem(
 	S: Parameters<StructureResolver>[0],
 	type: SingletonType,
-	title: string
+	title: string,
+	documentTitle: string
 ): ListItemBuilder {
 	return S.listItem()
 		.title(title)
 		.id(type)
-		.child(S.document().schemaType(type).documentId(singletonDocumentId(type)));
+		.child(
+			S.document()
+				.schemaType(type)
+				.documentId(singletonDocumentId(type))
+				.title(documentTitle)
+		);
 }
 
-// U20 — nests a record type's document list under its listing singleton,
-// rather than pinning the singleton straight to its document (what
-// `pinnedSingletonListItem` does for the other four page-type singletons).
-// Presentation only: no schema change, no URL change, no document
-// migration, so getting this wrong costs a re-render, not a URL — see
-// Phase 6's "Model, and what was deliberately rejected" for why hierarchy
-// lives in desk structure rather than in a `parent` field.
-//
-// The child is a two-item list, not a hand-rolled record list:
-//   1. an entry that reopens the singleton document itself (identical
-//      shape to `pinnedSingletonListItem`'s child), so the listing page's
-//      own chrome/SEO fields stay reachable from inside the nest — nesting
-//      must not make the listing document itself harder to find;
-//   2. `S.documentTypeListItem(nestedType)`, the real builder Sanity ships
-//      for "every document of this type", not a substitute. Creating a
-//      blog post from inside this nested list goes through the ordinary
-//      create flow and lands with the right `_type`, exactly as it would
-//      from a top-level list — only where the entry point lives changed.
-// A topic section: one sidebar row holding everything for that topic — the
+// U20 — a topic section: one sidebar row holding everything for that topic — the
 // listing page's own settings, the layout applied to every record, and the
 // records themselves.
 //
@@ -114,7 +113,11 @@ function pageSection(
 	S: Parameters<StructureResolver>[0],
 	sectionId: SingletonType,
 	title: string,
-	singletonEntries: readonly { type: SingletonType; title: string }[],
+	singletonEntries: readonly {
+		type: SingletonType;
+		title: string;
+		documentTitle: string;
+	}[],
 	nestedType: string,
 	nestedTitle: string
 ): ListItemBuilder {
@@ -133,6 +136,7 @@ function pageSection(
 								S.document()
 									.schemaType(entry.type)
 									.documentId(singletonDocumentId(entry.type))
+									.title(entry.documentTitle)
 							)
 					),
 					S.documentTypeListItem(nestedType).title(nestedTitle),
@@ -163,7 +167,7 @@ export const structure: StructureResolver = (S) => {
 	return S.list()
 		.title("Content")
 		.items([
-			pinnedSingletonListItem(S, "siteSettings", "Site Settings"),
+			pinnedSingletonListItem(S, "siteSettings", "Site Settings", "Site Settings"),
 			S.divider(),
 
 			// The fixed-route page types, grouped above the creatable page
@@ -205,8 +209,16 @@ export const structure: StructureResolver = (S) => {
 				"blogListing",
 				"📝 Blogs",
 				[
-					{ type: "blogListing", title: "⚙️ Listing" },
-					{ type: "blogPostTemplate", title: "⚙️ Detail" },
+					{
+						type: "blogListing",
+						title: "⚙️ Listing",
+						documentTitle: "Blog Listing",
+					},
+					{
+						type: "blogPostTemplate",
+						title: "⚙️ Detail",
+						documentTitle: "Blog Post Detail",
+					},
 				],
 				"blogPost",
 				"Blog Posts"
@@ -216,13 +228,21 @@ export const structure: StructureResolver = (S) => {
 				"templateListing",
 				"⚡ Templates",
 				[
-					{ type: "templateListing", title: "⚙️ Listing" },
-					{ type: "templateDetail", title: "⚙️ Detail" },
+					{
+						type: "templateListing",
+						title: "⚙️ Listing",
+						documentTitle: "Template Listing",
+					},
+					{
+						type: "templateDetail",
+						title: "⚙️ Detail",
+						documentTitle: "Template Detail",
+					},
 				],
 				"workflowTemplate",
 				"Workflow Templates"
 			),
-			pinnedSingletonListItem(S, "contactPage", "✉️ Contact"),
+			pinnedSingletonListItem(S, "contactPage", "✉️ Contact", "Contact"),
 			S.divider(),
 			...listFor(PAGE_TYPES),
 			S.divider(),

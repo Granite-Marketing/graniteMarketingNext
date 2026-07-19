@@ -27,7 +27,8 @@ import { SINGLETON_TYPE_LIST } from "../singletons";
 // not reimplement Sanity's real builder classes.
 
 function createDocumentBuilderStub() {
-	const state: { schemaType?: string; documentId?: string } = {};
+	const state: { schemaType?: string; documentId?: string; title?: string } =
+		{};
 	const builder = {
 		schemaType(type: string) {
 			state.schemaType = type;
@@ -37,8 +38,17 @@ function createDocumentBuilderStub() {
 			state.documentId = id;
 			return builder;
 		},
+		// The pane header. Distinct from the list item's own `.title()`: the
+		// row can read "Detail" while the pane it opens reads "Blog Post
+		// Detail". Without this set, a singleton with no title field renders
+		// as "Untitled" until it has stored content.
+		title(t: string) {
+			state.title = t;
+			return builder;
+		},
 		getSchemaType: () => state.schemaType,
 		getDocumentId: () => state.documentId,
+		getTitle: () => state.title,
 	};
 	return builder;
 }
@@ -324,6 +334,44 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 
 		// ...and the records themselves, via the real document type list.
 		expect(childItems.some((child) => child.getId?.() === recordType)).toBe(true);
+	});
+
+	// Every singleton pane must carry an explicit title. These types have no
+	// title field, and Sanity has no stored value to preview until the
+	// document is actually created, so without this the editor opens a form
+	// headed "Untitled" — twice over, in the breadcrumb and the heading.
+	// `preview.prepare()` does NOT cover this case; only the title on the
+	// document node does.
+	it("gives every singleton pane an explicit, contextual title", () => {
+		const { S, getList } = createStubS([]);
+
+		structure(S as never, {} as never);
+
+		const paneTitles = new Map<string, string | undefined>();
+		const visit = (items: unknown[]) => {
+			for (const item of items) {
+				const child = (item as { getChild?: () => unknown }).getChild?.() as
+					| (ReturnType<typeof createDocumentBuilderStub> & {
+							getItems?: () => unknown[];
+					  })
+					| undefined;
+				if (!child) continue;
+				const schemaType = child.getSchemaType?.();
+				if (schemaType) paneTitles.set(schemaType, child.getTitle?.());
+				const nested = child.getItems?.();
+				if (nested) visit(nested);
+			}
+		};
+		visit(getList().items as unknown[]);
+
+		expect(Object.fromEntries(paneTitles)).toEqual({
+			siteSettings: "Site Settings",
+			blogListing: "Blog Listing",
+			blogPostTemplate: "Blog Post Detail",
+			templateListing: "Template Listing",
+			templateDetail: "Template Detail",
+			contactPage: "Contact",
+		});
 	});
 
 	// A nested listing's section title and its inner document title must not
