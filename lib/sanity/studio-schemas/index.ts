@@ -15,6 +15,11 @@ import { workflowTemplate } from "./documents/workflowTemplate";
 import { page } from "./documents/page";
 import { legalPage } from "./documents/legalPage";
 import { siteSettings } from "./documents/siteSettings";
+import { blogListing } from "./documents/blogListing";
+import { blogPostTemplate } from "./documents/blogPostTemplate";
+import { templateListing } from "./documents/templateListing";
+import { templateDetail } from "./documents/templateDetail";
+import { contactPage } from "./documents/contactPage";
 import { heroBlock } from "./blocks/heroBlock";
 import { capabilitiesBlock } from "./blocks/capabilitiesBlock";
 import { toolsStripBlock } from "./blocks/toolsStripBlock";
@@ -67,4 +72,16 @@ export const schemaTypes = [
 	page,
 	legalPage,
 	siteSettings,
+
+	// Page-type singletons (U19b of the Sanity page builder plan, Phase 6) —
+	// fixed-content-with-slots chrome around a grid, a post body, or a form
+	// that already exists elsewhere. Desk pins and "+"-menu/duplicate/delete
+	// exclusion live in lib/sanity/structure.ts and sanity.config.ts (see
+	// siteSettings above for the same three-mechanism pattern); this array
+	// only needs the type registered.
+	blogListing,
+	blogPostTemplate,
+	templateListing,
+	templateDetail,
+	contactPage,
 ];
