@@ -66,7 +66,7 @@ unknown arguments as a hard error.
 
 ## 4. Fields that look editable and do nothing
 
-The single most repeated defect of the session. Four instances:
+The single most repeated defect of the session. **Five** instances:
 
 | Field | Why it was inert |
 |---|---|
@@ -74,11 +74,18 @@ The single most repeated defect of the session. Four instances:
 | `siteTitle` / `siteDescription` / `ogImage` / `favicon` | `lib/seo/config.ts` stayed hardcoded |
 | `blogPostTemplate` / `templateDetail` sections | detail routes never read them |
 | `calLink` on block CTAs | absent from the server-side GROQ projection |
+| `logoLink` | `resolve-site-settings.ts` was written and tested, then never imported; nav and footer hardcoded `href="/"` |
 
 Every one was added as schema, seeded, and shown in the Studio without a
 consumer. An editor fills it in, publishes, and nothing happens — with no error
 to explain why. The client found the first one; the rest were found by asking
 "what else did I do this to?" rather than by any test.
+
+The fifth was found by code review, and it escaped that sweep — which is the
+point. The sweep looked for a *field* with no consumer. `logoLink` had one: a
+fully implemented, fully tested `resolveLogoLink`. What it lacked was a *call
+site*. Asking "which fields are unread?" does not find "which resolvers are
+uncalled?", and both produce the identical symptom for the editor.
 
 **Convention candidate:** a schema field is not done until something renders it.
 Adding a field and its renderer in the same unit makes this structural. Where
@@ -232,3 +239,61 @@ claim already written into five files and a test.
 
 Briefs should say explicitly: *if this contradicts what you find, stop and report
 with evidence rather than working around it.* It worked every time.
+
+---
+
+# Added after the code review (2026-07-19)
+
+The multi-persona review found 12 defects, all now fixed. Two of them are new
+lesson classes, not repeats of anything above.
+
+## 16. A guard that cannot fail is worse than no guard
+
+Two of the branch's safety mechanisms were structurally incapable of failing,
+and both were protecting something the earlier lessons above identify as
+high-risk.
+
+**The link-projection pin** (lesson 10's answer to forced duplication) asserted
+field names with `toContain` against *entire file contents*. Deleting `anchorId`
+from `PAGE_BUILDER_LINK_FIELDS` left it green, because `anchorId` appears three
+more times elsewhere in `queries.ts`. The guard against the duplication drifting
+did not detect drift.
+
+**The typegen assertion** (lesson 1's answer to silent zero-query failure) was
+`BLOG_POST_QUERYResult extends unknown ? true : never`. Every type extends
+`unknown`, including `any` and `never`. So the guard against typegen emitting
+nothing could not fail when typegen emitted nothing.
+
+Both passed every run. Both were written in good faith by someone who believed
+they were adding protection.
+
+**The test for a guard is not "does it pass" — it is "can I make it fail".**
+Break the thing it protects and watch it go red. Both fixes here were verified
+that way: delete the field, confirm the old test still passes, fix, delete
+again, confirm the new test fails.
+
+**Second-order trap:** the obvious replacement can be vacuous too. A `Has<>`
+key-presence check still passes against `any`, because `keyof any` includes
+every key. Verify the new assertion rejects `any`, `unknown` and `never`
+explicitly rather than assuming a stricter-looking helper is stricter.
+
+**Convention candidate:** any test whose purpose is to catch drift in a
+duplicated or generated artifact must carry a comment recording the specific
+mutation that was observed to make it fail.
+
+## 17. `fetchQuery<T>` gives T no inference site
+
+`fetchQuery<T>(query: string, ...): Promise<T>` cannot infer `T` — a plain
+`string` parameter carries no type information. Every call written without an
+explicit type argument returned `Promise<unknown>`: 22 of 23 getters.
+
+The casts written to work around that (`as Promise<X | null>`, and two
+`as unknown as ClientLogo[]`) deleted exactly the safety the typegen adoption
+was meant to buy, and were hiding a real defect — a nullable `clientName`
+reaching `next/image`'s `alt`.
+
+This is the same shape as lesson 4's dead fields: machinery adopted for a
+guarantee, wired up in a way that does not deliver it, with nothing failing to
+say so. Adopting a type-safety tool is not the same as being covered by it.
+Prove the coverage with a probe: assign a getter's result to an incompatible
+type and confirm the error names a *shape* mismatch, not `unknown`.
