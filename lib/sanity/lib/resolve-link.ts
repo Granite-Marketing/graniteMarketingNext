@@ -5,6 +5,7 @@ import {
 	isLinkableFixedRouteType,
 	type LinkableFixedRouteType,
 } from "../routes";
+import { isValidHref } from "./href";
 
 // The single resolver turning a `link` object (lib/sanity/studio-schemas/objects/link.ts)
 // into either a navigation target or a Cal.com booking instruction, everywhere
@@ -217,7 +218,15 @@ export function resolveLink(
 		}
 
 		case "external": {
-			if (!clean.href) return null;
+			// `isValidHref` (lib/sanity/lib/href.ts) is the same allowlist the
+			// Studio `Rule.custom` validator enforces at link.ts — but that
+			// validator only runs in the editor's browser and only blocks the
+			// Publish button. It does not run for a draft (which Draft Mode
+			// preview renders), a direct Content Lake write, or a seed/migration
+			// script write, so a `javascript:`/`data:` href can reach this
+			// branch unguarded without a check here too. Failing closed to
+			// `null` matches this branch's existing posture for a missing href.
+			if (!clean.href || !isValidHref(clean.href)) return null;
 
 			return clean.openInNewTab
 				? {

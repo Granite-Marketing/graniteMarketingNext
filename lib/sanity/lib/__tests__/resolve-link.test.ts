@@ -306,6 +306,60 @@ describe("resolveLink", () => {
 		});
 	});
 
+	// P0 security fix — the `Rule.custom` scheme allowlist in
+	// studio-schemas/objects/link.ts only runs in the Studio editor's
+	// browser and only blocks the Publish button. It does not run for a
+	// draft (which Draft Mode preview renders), a direct Content Lake
+	// write, or a seed/migration script write. Without a runtime guard
+	// here, an editor-authored or API-written `javascript:`/`data:` href
+	// reaches `<a href>` unguarded — stored XSS that reaches an admin's
+	// authenticated Studio session because sanity.config.ts's
+	// `basePath: "/studio"` puts Studio same-origin with rendered pages.
+	it("external rejects dangerous schemes, resolving to null rather than an unsafe href", () => {
+		expect(
+			resolveLink({ linkType: "external", href: "javascript:alert(1)" })
+		).toBeNull();
+
+		expect(
+			resolveLink({
+				linkType: "external",
+				href: "data:text/html,<script>alert(1)</script>",
+			})
+		).toBeNull();
+
+		expect(
+			resolveLink({ linkType: "external", href: "vbscript:msgbox(1)" })
+		).toBeNull();
+	});
+
+	it("external still resolves normally for every currently-accepted scheme — the fix must not narrow what editors can link to", () => {
+		expect(
+			resolveLink({ linkType: "external", href: "http://example.com" })
+		).toEqual({ kind: "navigate", href: "http://example.com" });
+
+		expect(
+			resolveLink({ linkType: "external", href: "https://n8n.io" })
+		).toEqual({ kind: "navigate", href: "https://n8n.io" });
+
+		expect(
+			resolveLink({
+				linkType: "external",
+				href: "mailto:hello@granitemarketing.co.uk",
+			})
+		).toEqual({
+			kind: "navigate",
+			href: "mailto:hello@granitemarketing.co.uk",
+		});
+
+		expect(
+			resolveLink({ linkType: "external", href: "tel:+441234567890" })
+		).toEqual({ kind: "navigate", href: "tel:+441234567890" });
+
+		expect(
+			resolveLink({ linkType: "external", href: "/contact" })
+		).toEqual({ kind: "navigate", href: "/contact" });
+	});
+
 	it("a stega-encoded linkType still resolves correctly (KTD4 regression guard)", () => {
 		// A genuine stega fixture, not a plain string standing in for one: run
 		// through @vercel/stega's own encoder (the same package

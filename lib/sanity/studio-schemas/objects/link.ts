@@ -2,6 +2,14 @@ import { defineType, defineField } from "sanity";
 import type { ValidationContext } from "sanity";
 import { CAL_LINK } from "@/components/data";
 import { AnchorIdInput } from "../../studio-components/anchor-id-input";
+import { isValidHref } from "../../lib/href";
+
+// Re-exported (not just imported) so existing call sites of
+// `studio-schemas/objects/link`'s `isValidHref` keep working unchanged. The
+// implementation itself moved to lib/sanity/lib/href.ts so the runtime
+// resolver (resolve-link.ts) can use the same allowlist without importing a
+// Studio schema file — see that module's header comment for why.
+export { isValidHref };
 
 // The reusable link union every nav item, CTA button and in-body link target
 // resolves through (U7 of the Sanity page builder plan). A discriminated
@@ -52,31 +60,6 @@ function isCalBooking(parent: LinkParent) {
 
 function parentOf(context: ValidationContext): LinkParent {
 	return context.parent as LinkParent;
-}
-
-const ABSOLUTE_HREF_SCHEMES = ["http:", "https:", "mailto:", "tel:"];
-
-/**
- * Accepts an absolute URL on an allowed scheme, or a site-relative path.
- *
- * Exported and tested directly rather than inlined, following the same
- * convention as `validatePageSlug` and `validateFeaturedGridTiling` — the
- * accept/reject boundary is the behaviour worth pinning.
- */
-export function isValidHref(value: string): boolean {
-	const trimmed = value.trim();
-	if (!trimmed) return false;
-
-	// Site-relative: "/contact", "/blog?tag=x". A protocol-relative "//host"
-	// is deliberately rejected — it is almost always a mistake here, and it
-	// silently inherits the page's scheme.
-	if (trimmed.startsWith("/")) return !trimmed.startsWith("//");
-
-	try {
-		return ABSOLUTE_HREF_SCHEMES.includes(new URL(trimmed).protocol);
-	} catch {
-		return false;
-	}
 }
 
 export const link = defineType({
