@@ -131,6 +131,121 @@ describe("resolveLink", () => {
 		expect(resolveLink(staleTemplateDetailLink)).toBeNull();
 	});
 
+	// Homepage link resolution (bug fix, 2026-07-19) — siteSettings.homePage
+	// names WHICH `page` document renders at `/` (app/[slug]/page.tsx's
+	// permanentRedirect comment: the homepage's own slug is reachable but
+	// permanently redirects to `/`). `pathForInternalDoc` used to have no way
+	// to know a given dereferenced doc WAS that page, so it fell through to
+	// the generic `/${slug}` branch and produced "/home" — a redirect behind
+	// every nav click. The GROQ projection now computes `isHomePage` per
+	// dereferenced doc (`_id == *[_id=="siteSettings"][0].homePage._ref`) and
+	// the resolver trusts that flag instead of re-deriving "is this the
+	// homepage" from a slug string, which is why these fixtures set
+	// `isHomePage` directly rather than relying on the slug being "home".
+	it("internal -> the homepage's page document resolves to / exactly, not /home and not //", () => {
+		const link: LinkValue = {
+			linkType: "internal",
+			internalRef: {
+				_type: "page",
+				_id: "page-home",
+				slug: { current: "home" },
+				isHomePage: true,
+			},
+		};
+
+		expect(resolveLink(link)).toEqual({ kind: "navigate", href: "/" });
+	});
+
+	it("anchor -> the homepage resolves to /#{anchorId}, not /home#{anchorId}", () => {
+		const link: LinkValue = {
+			linkType: "anchor",
+			anchorPage: {
+				_type: "page",
+				_id: "page-home",
+				slug: { current: "home" },
+				isHomePage: true,
+			},
+			anchorId: "services",
+		};
+
+		// currentSlug is a different page, so this must NOT collapse to a bare
+		// anchor via the isCurrentPage path — it has to go through the
+		// homepage-aware base-path branch to prove the fix, not the unrelated
+		// "anchor on the current page" branch.
+		expect(resolveLink(link, { currentSlug: "about-us" })).toEqual({
+			kind: "navigate",
+			href: "/#services",
+		});
+	});
+
+	it("internal -> a non-homepage page document still resolves to /{its-slug} (regression guard)", () => {
+		const link: LinkValue = {
+			linkType: "internal",
+			internalRef: {
+				_type: "page",
+				_id: "page-about",
+				slug: { current: "about-us" },
+				isHomePage: false,
+			},
+		};
+
+		expect(resolveLink(link)).toEqual({
+			kind: "navigate",
+			href: "/about-us",
+		});
+	});
+
+	it("anchor -> a non-homepage page still resolves to /{its-slug}#{anchorId} (regression guard)", () => {
+		const link: LinkValue = {
+			linkType: "anchor",
+			anchorPage: {
+				_type: "page",
+				_id: "page-about",
+				slug: { current: "about-us" },
+				isHomePage: false,
+			},
+			anchorId: "team",
+		};
+
+		expect(resolveLink(link, { currentSlug: "contact" })).toEqual({
+			kind: "navigate",
+			href: "/about-us#team",
+		});
+	});
+
+	it("a link value projected before this change (no isHomePage field at all) resolves exactly as it did before the fix", () => {
+		// Proves the flag is additive: a query result that predates this
+		// change (or any consumer that hasn't been updated to project it)
+		// must not silently start resolving differently. `undefined` is
+		// falsy, same as an explicit `false` above.
+		const internal: LinkValue = {
+			linkType: "internal",
+			internalRef: {
+				_type: "page",
+				_id: "page-home",
+				slug: { current: "home" },
+			},
+		};
+		expect(resolveLink(internal)).toEqual({
+			kind: "navigate",
+			href: "/home",
+		});
+
+		const anchor: LinkValue = {
+			linkType: "anchor",
+			anchorPage: {
+				_type: "page",
+				_id: "page-home",
+				slug: { current: "home" },
+			},
+			anchorId: "services",
+		};
+		expect(resolveLink(anchor, { currentSlug: "about-us" })).toEqual({
+			kind: "navigate",
+			href: "/home#services",
+		});
+	});
+
 	it("anchor resolves to /{pageSlug}#{anchorId} when the target page differs from the current page", () => {
 		const link: LinkValue = {
 			linkType: "anchor",

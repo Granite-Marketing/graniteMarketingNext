@@ -1991,7 +1991,7 @@ export type HOMEPAGE_CASE_STUDIES_QUERYResult = Array<{
   }> | null;
 }>;
 // Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0] {      _id,      _type,      title,      slug,      seo {        metaTitle,        metaDescription      },      sections[] {        _key,        _type,        anchorId,        _type == "heroBlock" => {          eyebrow,          heading,          body,          primaryCtaLabel,          secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },          showTrustedBy        },        _type == "capabilitiesBlock" => {          eyebrow,          heading,          body,          items[]{            _key,            tag,            title,            description,            featured,            snippet          },          link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }        },        _type == "toolsStripBlock" => {          eyebrow,          heading,          intro,          sourceMode,          "autoItems": *[_type == "tool"] | order(name asc) {            _id,            name,            logo{ asset, alt }          },          "manualItems": manualTools[]->{            _id,            name,            logo{ asset, alt }          }        },        _type == "processBlock" => {          eyebrow,          heading,          body,          steps[]{            _key,            stepLabel,            title,            description,            duration          },          footnote        },        _type == "resultsBlock" => {          eyebrow,          heading,          stats[]{            _key,            value,            suffix,            label          },          sourceMode,          "autoItems": *[_type == "caseStudy" && showOnHome == true]            | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },          "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }        },        _type == "testimonialsBlock" => {          eyebrow,          heading,          sourceMode,          "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },          "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }        },        _type == "faqBlock" => {          eyebrow,          heading,          intro,          sourceMode,          autoCategory,          "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },          "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }        },        _type == "ctaBlock" => {          ctaHeading,          ctaSubtitle,          ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },          ctaFootnote,          secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }        }      }    }
+// Query: *[_type == "page" && slug.current == $slug][0] {      _id,      _type,      title,      slug,      seo {        metaTitle,        metaDescription      },      sections[] {        _key,        _type,        anchorId,        _type == "heroBlock" => {          eyebrow,          heading,          body,          primaryCtaLabel,          secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },          showTrustedBy        },        _type == "capabilitiesBlock" => {          eyebrow,          heading,          body,          items[]{            _key,            tag,            title,            description,            featured,            snippet          },          link {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }        },        _type == "toolsStripBlock" => {          eyebrow,          heading,          intro,          sourceMode,          "autoItems": *[_type == "tool"] | order(name asc) {            _id,            name,            logo{ asset, alt }          },          "manualItems": manualTools[]->{            _id,            name,            logo{ asset, alt }          }        },        _type == "processBlock" => {          eyebrow,          heading,          body,          steps[]{            _key,            stepLabel,            title,            description,            duration          },          footnote        },        _type == "resultsBlock" => {          eyebrow,          heading,          stats[]{            _key,            value,            suffix,            label          },          sourceMode,          "autoItems": *[_type == "caseStudy" && showOnHome == true]            | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },          "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }        },        _type == "testimonialsBlock" => {          eyebrow,          heading,          sourceMode,          "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },          "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }        },        _type == "faqBlock" => {          eyebrow,          heading,          intro,          sourceMode,          autoCategory,          "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },          "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }        },        _type == "ctaBlock" => {          ctaHeading,          ctaSubtitle,          ctaButton {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },          ctaFootnote,          secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }        }      }    }
 export type PAGE_QUERYResult = {
   _id: string;
   _type: "page";
@@ -2024,39 +2024,48 @@ export type PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -2073,39 +2082,48 @@ export type PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -2117,39 +2135,48 @@ export type PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -2227,39 +2254,48 @@ export type PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -2505,7 +2541,7 @@ export type PAGE_QUERYResult = {
   }> | null;
 } | null;
 // Variable: PAGE_CTA_DEFAULTS_QUERY
-// Query: *[_id == "siteSettings"][0] {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote    }
+// Query: *[_id == "siteSettings"][0] {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      ctaFootnote    }
 export type PAGE_CTA_DEFAULTS_QUERYResult = {
   ctaHeading: null;
   ctaSubtitle: null;
@@ -2522,39 +2558,48 @@ export type PAGE_CTA_DEFAULTS_QUERYResult = {
         _type: "blogListing";
         _id: string;
         slug: null;
+        isHomePage: boolean | false;
       } | {
         _type: "blogPost";
         _id: string;
         slug: Slug | null;
+        isHomePage: boolean | false;
       } | {
         _type: "contactPage";
         _id: string;
         slug: null;
+        isHomePage: boolean | false;
       } | {
         _type: "legalPage";
         _id: string;
         slug: Slug | null;
+        isHomePage: boolean | false;
       } | {
         _type: "page";
         _id: string;
         slug: Slug | null;
+        isHomePage: boolean | false;
       } | {
         _type: "templateListing";
         _id: string;
         slug: null;
+        isHomePage: boolean | false;
       } | {
         _type: "workflowTemplate";
         _id: string;
         slug: Slug | null;
+        isHomePage: boolean | false;
       } | null;
       anchorPage: {
         _type: "page";
         _id: string;
         slug: Slug | null;
+        isHomePage: boolean | false;
       } | null;
       anchorId: string | null;
       href: string | null;
       openInNewTab: boolean | null;
+      calLink: string | null;
     } | null;
   } | null;
   ctaFootnote: string | null;
@@ -2566,7 +2611,7 @@ export type PAGE_SLUGS_QUERYResult = Array<string | null>;
 // Query: *[_id == "siteSettings"][0].homePage->slug.current
 export type HOME_PAGE_SLUG_QUERYResult = string | null;
 // Variable: BLOG_LISTING_QUERY
-// Query: *[_id == "blogListing"][0]{    _id,    _type,    seo,    tag,    heading,    subtitle,    sectionsAbove[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  },    sectionsBelow[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  }  }
+// Query: *[_id == "blogListing"][0]{    _id,    _type,    seo,    tag,    heading,    subtitle,    sectionsAbove[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    }  },    sectionsBelow[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    }  }  }
 export type BLOG_LISTING_QUERYResult = {
   _id: string;
   _type: "author";
@@ -2606,39 +2651,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -2655,39 +2709,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -2699,39 +2762,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -2809,39 +2881,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -3108,39 +3189,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -3157,39 +3247,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -3201,39 +3300,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -3311,39 +3419,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -3626,39 +3743,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -3675,39 +3801,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -3719,39 +3854,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -3829,39 +3973,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -4128,39 +4281,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -4177,39 +4339,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -4221,39 +4392,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -4331,39 +4511,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -4664,39 +4853,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -4713,39 +4911,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -4757,39 +4964,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -4867,39 +5083,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -5166,39 +5391,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -5215,39 +5449,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -5259,39 +5502,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -5369,39 +5621,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -5747,39 +6008,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -5796,39 +6066,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -5840,39 +6119,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -5950,39 +6238,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -6249,39 +6546,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -6298,39 +6604,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -6342,39 +6657,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -6452,39 +6776,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -6758,39 +7091,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -6807,39 +7149,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -6851,39 +7202,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -6961,39 +7321,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -7260,39 +7629,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -7309,39 +7687,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -7353,39 +7740,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -7463,39 +7859,48 @@ export type BLOG_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -7771,7 +8176,7 @@ export type BLOG_LISTING_QUERYResult = {
 // Query: *[_id == "blogListing"][0]._id
 export type BLOG_LISTING_PUBLISHED_QUERYResult = string | null;
 // Variable: TEMPLATE_LISTING_QUERY
-// Query: *[_id == "templateListing"][0]{    _id,    _type,    seo,    tag,    heading,    subtitle,    sectionsAbove[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  },    sectionsBelow[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  }  }
+// Query: *[_id == "templateListing"][0]{    _id,    _type,    seo,    tag,    heading,    subtitle,    sectionsAbove[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    }  },    sectionsBelow[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    }  }  }
 export type TEMPLATE_LISTING_QUERYResult = {
   _id: string;
   _type: "author";
@@ -7811,39 +8216,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -7860,39 +8274,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -7904,39 +8327,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -8014,39 +8446,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -8313,39 +8754,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -8362,39 +8812,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -8406,39 +8865,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -8516,39 +8984,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -8831,39 +9308,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -8880,39 +9366,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -8924,39 +9419,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -9034,39 +9538,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -9333,39 +9846,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -9382,39 +9904,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -9426,39 +9957,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -9536,39 +10076,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -9869,39 +10418,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -9918,39 +10476,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -9962,39 +10529,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -10072,39 +10648,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -10371,39 +10956,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -10420,39 +11014,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -10464,39 +11067,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -10574,39 +11186,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -10952,39 +11573,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -11001,39 +11631,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -11045,39 +11684,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -11155,39 +11803,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -11454,39 +12111,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -11503,39 +12169,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -11547,39 +12222,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -11657,39 +12341,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -11963,39 +12656,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -12012,39 +12714,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -12056,39 +12767,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -12166,39 +12886,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -12465,39 +13194,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -12514,39 +13252,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -12558,39 +13305,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -12668,39 +13424,48 @@ export type TEMPLATE_LISTING_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -12976,7 +13741,7 @@ export type TEMPLATE_LISTING_QUERYResult = {
 // Query: *[_id == "templateListing"][0]._id
 export type TEMPLATE_LISTING_PUBLISHED_QUERYResult = string | null;
 // Variable: CONTACT_PAGE_QUERY
-// Query: *[_id == "contactPage"][0]{    _id,    _type,    seo,    tag,    heading,    subtitle,    sectionsAbove[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  },    sectionsBelow[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{ _type, _id, slug },    anchorPage->{ _type, _id, slug },    anchorId,    href,    openInNewTab  }  }    }  }  }
+// Query: *[_id == "contactPage"][0]{    _id,    _type,    seo,    tag,    heading,    subtitle,    sectionsAbove[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    }  },    sectionsBelow[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    }  }  }
 export type CONTACT_PAGE_QUERYResult = {
   _id: string;
   _type: "author";
@@ -13016,39 +13781,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -13065,39 +13839,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -13109,39 +13892,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -13219,39 +14011,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -13518,39 +14319,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -13567,39 +14377,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -13611,39 +14430,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -13721,39 +14549,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -14036,39 +14873,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -14085,39 +14931,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -14129,39 +14984,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -14239,39 +15103,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -14538,39 +15411,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -14587,39 +15469,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -14631,39 +15522,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -14741,39 +15641,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -15074,39 +15983,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -15123,39 +16041,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -15167,39 +16094,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -15277,39 +16213,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -15576,39 +16521,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -15625,39 +16579,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -15669,39 +16632,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -15779,39 +16751,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -16157,39 +17138,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -16206,39 +17196,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -16250,39 +17249,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -16360,39 +17368,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -16659,39 +17676,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -16708,39 +17734,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -16752,39 +17787,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -16862,39 +17906,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -17168,39 +18221,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -17217,39 +18279,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -17261,39 +18332,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -17371,39 +18451,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -17670,39 +18759,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -17719,39 +18817,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     ctaFootnote: string | null;
@@ -17763,39 +18870,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
   } | {
@@ -17873,39 +18989,48 @@ export type CONTACT_PAGE_QUERYResult = {
           _type: "blogListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "blogPost";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "contactPage";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "legalPage";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | {
           _type: "templateListing";
           _id: string;
           slug: null;
+          isHomePage: boolean | false;
         } | {
           _type: "workflowTemplate";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorPage: {
           _type: "page";
           _id: string;
           slug: Slug | null;
+          isHomePage: boolean | false;
         } | null;
         anchorId: string | null;
         href: string | null;
         openInNewTab: boolean | null;
+        calLink: string | null;
       } | null;
     } | null;
     showTrustedBy: boolean | null;
@@ -18209,15 +19334,15 @@ declare module "@sanity/client" {
     "\n    *[_type == \"author\"] | order(name asc) {\n      _id,\n      name,\n      slug,\n      image,\n      bio,\n      role,\n      social\n    }\n  ": AUTHORS_QUERYResult;
     "\n    *[_type == \"author\" && slug.current == $slug][0] {\n      _id,\n      name,\n      slug,\n      image,\n      bio,\n      role,\n      social\n    }\n  ": AUTHOR_QUERYResult;
     "\n    *[_type == \"caseStudy\" && showOnHome == true]\n      | order(sortOrder asc, _createdAt desc) [0...$limit]{\n      _id,\n      title,\n      slug,\n      client->{\n        _id,\n        name,\n        company\n      },\n      industry->{\n        _id,\n        name,\n        slug,\n        country,\n        region\n      },\n      excerpt,\n      featuredImage{\n        asset,\n        alt\n      },\n      loomUrl,\n      techStack[]->{\n        _id,\n        name,\n        slug,\n        integrationType\n      },\n      results[]{\n        metric,\n        value,\n        description\n      }\n    }\n  ": HOMEPAGE_CASE_STUDIES_QUERYResult;
-    "\n    *[_type == \"page\" && slug.current == $slug][0] {\n      _id,\n      _type,\n      title,\n      slug,\n      seo {\n        metaTitle,\n        metaDescription\n      },\n      sections[] {\n        _key,\n        _type,\n        anchorId,\n\n        _type == \"heroBlock\" => {\n          eyebrow,\n          heading,\n          body,\n          primaryCtaLabel,\n          secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n          showTrustedBy\n        },\n\n        _type == \"capabilitiesBlock\" => {\n          eyebrow,\n          heading,\n          body,\n          items[]{\n            _key,\n            tag,\n            title,\n            description,\n            featured,\n            snippet\n          },\n          link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n        },\n\n        _type == \"toolsStripBlock\" => {\n          eyebrow,\n          heading,\n          intro,\n          sourceMode,\n          \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n            _id,\n            name,\n            logo{ asset, alt }\n          },\n          \"manualItems\": manualTools[]->{\n            _id,\n            name,\n            logo{ asset, alt }\n          }\n        },\n\n        _type == \"processBlock\" => {\n          eyebrow,\n          heading,\n          body,\n          steps[]{\n            _key,\n            stepLabel,\n            title,\n            description,\n            duration\n          },\n          footnote\n        },\n\n        _type == \"resultsBlock\" => {\n          eyebrow,\n          heading,\n          stats[]{\n            _key,\n            value,\n            suffix,\n            label\n          },\n          sourceMode,\n          \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n            | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n          \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n        },\n\n        _type == \"testimonialsBlock\" => {\n          eyebrow,\n          heading,\n          sourceMode,\n          \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n          \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n        },\n\n        _type == \"faqBlock\" => {\n          eyebrow,\n          heading,\n          intro,\n          sourceMode,\n          autoCategory,\n          \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n          \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n        },\n\n        _type == \"ctaBlock\" => {\n          ctaHeading,\n          ctaSubtitle,\n          ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n          ctaFootnote,\n          secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n        }\n      }\n    }\n  ": PAGE_QUERYResult;
-    "\n    *[_id == \"siteSettings\"][0] {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote\n    }\n  ": PAGE_CTA_DEFAULTS_QUERYResult;
+    "\n    *[_type == \"page\" && slug.current == $slug][0] {\n      _id,\n      _type,\n      title,\n      slug,\n      seo {\n        metaTitle,\n        metaDescription\n      },\n      sections[] {\n        _key,\n        _type,\n        anchorId,\n\n        _type == \"heroBlock\" => {\n          eyebrow,\n          heading,\n          body,\n          primaryCtaLabel,\n          secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n          showTrustedBy\n        },\n\n        _type == \"capabilitiesBlock\" => {\n          eyebrow,\n          heading,\n          body,\n          items[]{\n            _key,\n            tag,\n            title,\n            description,\n            featured,\n            snippet\n          },\n          link {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n        },\n\n        _type == \"toolsStripBlock\" => {\n          eyebrow,\n          heading,\n          intro,\n          sourceMode,\n          \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n            _id,\n            name,\n            logo{ asset, alt }\n          },\n          \"manualItems\": manualTools[]->{\n            _id,\n            name,\n            logo{ asset, alt }\n          }\n        },\n\n        _type == \"processBlock\" => {\n          eyebrow,\n          heading,\n          body,\n          steps[]{\n            _key,\n            stepLabel,\n            title,\n            description,\n            duration\n          },\n          footnote\n        },\n\n        _type == \"resultsBlock\" => {\n          eyebrow,\n          heading,\n          stats[]{\n            _key,\n            value,\n            suffix,\n            label\n          },\n          sourceMode,\n          \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n            | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n          \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n        },\n\n        _type == \"testimonialsBlock\" => {\n          eyebrow,\n          heading,\n          sourceMode,\n          \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n          \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n        },\n\n        _type == \"faqBlock\" => {\n          eyebrow,\n          heading,\n          intro,\n          sourceMode,\n          autoCategory,\n          \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n          \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n        },\n\n        _type == \"ctaBlock\" => {\n          ctaHeading,\n          ctaSubtitle,\n          ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n          ctaFootnote,\n          secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n        }\n      }\n    }\n  ": PAGE_QUERYResult;
+    "\n    *[_id == \"siteSettings\"][0] {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote\n    }\n  ": PAGE_CTA_DEFAULTS_QUERYResult;
     "\n    *[_type == \"page\"].slug.current\n  ": PAGE_SLUGS_QUERYResult;
     "\n    *[_id == \"siteSettings\"][0].homePage->slug.current\n  ": HOME_PAGE_SLUG_QUERYResult;
-    "*[_id == \"blogListing\"][0]{\n    _id,\n    _type,\n    seo,\n    tag,\n    heading,\n    subtitle,\n    sectionsAbove[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  },\n    sectionsBelow[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  }\n  }": BLOG_LISTING_QUERYResult;
+    "*[_id == \"blogListing\"][0]{\n    _id,\n    _type,\n    seo,\n    tag,\n    heading,\n    subtitle,\n    sectionsAbove[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    }\n  },\n    sectionsBelow[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    }\n  }\n  }": BLOG_LISTING_QUERYResult;
     "*[_id == \"blogListing\"][0]._id": BLOG_LISTING_PUBLISHED_QUERYResult;
-    "*[_id == \"templateListing\"][0]{\n    _id,\n    _type,\n    seo,\n    tag,\n    heading,\n    subtitle,\n    sectionsAbove[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  },\n    sectionsBelow[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  }\n  }": TEMPLATE_LISTING_QUERYResult;
+    "*[_id == \"templateListing\"][0]{\n    _id,\n    _type,\n    seo,\n    tag,\n    heading,\n    subtitle,\n    sectionsAbove[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    }\n  },\n    sectionsBelow[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    }\n  }\n  }": TEMPLATE_LISTING_QUERYResult;
     "*[_id == \"templateListing\"][0]._id": TEMPLATE_LISTING_PUBLISHED_QUERYResult;
-    "*[_id == \"contactPage\"][0]{\n    _id,\n    _type,\n    seo,\n    tag,\n    heading,\n    subtitle,\n    sectionsAbove[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  },\n    sectionsBelow[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n    }\n  }\n  }": CONTACT_PAGE_QUERYResult;
+    "*[_id == \"contactPage\"][0]{\n    _id,\n    _type,\n    seo,\n    tag,\n    heading,\n    subtitle,\n    sectionsAbove[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    }\n  },\n    sectionsBelow[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    }\n  }\n  }": CONTACT_PAGE_QUERYResult;
     "*[_id == \"contactPage\"][0]._id": CONTACT_PAGE_PUBLISHED_QUERYResult;
   }
 }

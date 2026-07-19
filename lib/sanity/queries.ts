@@ -704,14 +704,37 @@ export async function getHomeContent() {
 // dereferences `internalRef`/`anchorPage` with exactly the shape
 // lib/sanity/lib/resolve-link.ts's `LinkValue` needs to discriminate on.
 // Mirrors siteSettings.ts's own (non-exported) `LINK_PROJECTION` field for
-// field, since resolve-link.ts is the single resolver both must feed.
+// field, since resolve-link.ts is the single resolver both must feed —
+// including `isHomePage`, which fixes a link to the homepage resolving to
+// "/home" (a permanent redirect behind every click — see
+// app/[slug]/page.tsx) instead of "/". The literal "siteSettings" below
+// mirrors HOME_PAGE_SLUG_QUERY further down this file, which hardcodes the
+// same id rather than importing SITE_SETTINGS_ID — this file has never
+// imported from studio-schemas, and siteSettings's `_id` is defined to
+// always equal its `_type` (see singletons.ts), so the literal can't drift
+// independently of that one.
 const PAGE_BUILDER_LINK_FIELDS = `{
     linkType,
-    internalRef->{ _type, _id, slug },
-    anchorPage->{ _type, _id, slug },
+    internalRef->{
+      _type,
+      _id,
+      slug,
+      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref
+    },
+    anchorPage->{
+      _type,
+      _id,
+      slug,
+      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref
+    },
     anchorId,
     href,
-    openInNewTab
+    openInNewTab,
+    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's
+    // default Cal handle when this is absent, so a per-block override
+    // appeared to save and then did nothing — no error, just the wrong
+    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.
+    calLink
   }`;
 
 const PAGE_BUILDER_LABELED_LINK_FIELDS = `{

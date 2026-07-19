@@ -53,6 +53,18 @@ type DereferencedDoc =
 			_type: InternalDocType;
 			_id?: string;
 			slug?: { current?: string | null } | null;
+			/**
+			 * Projected by the GROQ query (siteSettings.ts's `LINK_PROJECTION`,
+			 * queries.ts's `PAGE_BUILDER_LINK_FIELDS`) as
+			 * `_id == *[_id == "siteSettings"][0].homePage._ref` — true when
+			 * this dereferenced doc IS the page siteSettings.homePage currently
+			 * points at. See `pathForInternalDoc`'s comment for why this has to
+			 * be data read off the value rather than a hardcoded slug check.
+			 * Optional so a link value projected before this field existed (or
+			 * any future consumer that forgets to project it) degrades to
+			 * "not the homepage" rather than throwing.
+			 */
+			isHomePage?: boolean | null;
 	  }
 	| null
 	| undefined;
@@ -120,6 +132,20 @@ export type ResolveLinkContext = {
  * blogPostTemplate and templateDetail structurally unresolvable: neither is
  * a member of `LinkableFixedRouteType`, so there is no `LINKABLE_ROUTE_BY_TYPE`
  * entry for either to fall into even by accident.
+ *
+ * The homepage check runs next, ahead of the slug fallback, for the same
+ * reason: `siteSettings.homePage` (a reference, not a hardcoded slug — see
+ * siteSettings.ts's field description) names whichever `page` document
+ * currently renders at `/`. That page is ALSO reachable at its own
+ * `/{slug}` — app/[slug]/page.tsx permanentRedirects that slug back to `/`
+ * — so resolving it to `/{slug}` here would be technically correct today
+ * and silently wrong the moment an editor repoints `homePage` at a
+ * different page, or even just renames the current one's slug. Hardcoding
+ * "home" would only fix the former case, not the latter, and both are
+ * exactly the kind of drift `isHomePage` exists to prevent: it's read off
+ * the projected value (computed in GROQ by comparing the doc's `_id`
+ * against `siteSettings.homePage._ref`), not re-derived from a string this
+ * function has no reliable way to keep in sync.
  */
 function pathForInternalDoc(doc: DereferencedDoc): string | null {
 	if (!doc) return null;
@@ -127,6 +153,8 @@ function pathForInternalDoc(doc: DereferencedDoc): string | null {
 	if (isLinkableFixedRouteType(doc._type)) {
 		return LINKABLE_ROUTE_BY_TYPE[doc._type];
 	}
+
+	if (doc.isHomePage) return "/";
 
 	const slug = doc.slug?.current;
 	if (!slug) return null;
@@ -165,13 +193,27 @@ export function resolveLink(
 		case "anchor": {
 			if (!clean.anchorId) return null;
 
-			const targetSlug = clean.anchorPage?.slug?.current ?? null;
+			const targetDoc = clean.anchorPage ?? null;
+			const targetSlug = targetDoc?.slug?.current ?? null;
 			const isCurrentPage =
 				!targetSlug || targetSlug === context.currentSlug;
 
-			return isCurrentPage
-				? { kind: "navigate", href: `#${clean.anchorId}` }
-				: { kind: "navigate", href: `/${targetSlug}#${clean.anchorId}` };
+			if (isCurrentPage) {
+				return { kind: "navigate", href: `#${clean.anchorId}` };
+			}
+
+			// Routed through pathForInternalDoc rather than a hand-built
+			// `/${targetSlug}` here, specifically so an anchor into the
+			// homepage gets the same `isHomePage` treatment as a plain
+			// internal link to it (see pathForInternalDoc's comment) instead
+			// of a second, easily-forgotten copy of that check. `targetDoc` is
+			// guaranteed non-null and slugged at this point — `isCurrentPage`
+			// already ruled out `!targetSlug` — so the `?? /${targetSlug}`
+			// fallback is unreachable in practice; it's there only so this
+			// stays total if that invariant is ever violated, rather than
+			// silently producing `undefined#anchorId`.
+			const basePath = pathForInternalDoc(targetDoc) ?? `/${targetSlug}`;
+			return { kind: "navigate", href: `${basePath}#${clean.anchorId}` };
 		}
 
 		case "external": {

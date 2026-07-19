@@ -1,6 +1,7 @@
 "use client";
 
 import { CTA } from "@/components/cta";
+import { LIVE_LINK_PROJECTION } from "@/lib/sanity/lib/link-projection";
 import { resolveAnchorId } from "@/lib/sanity/lib/anchor-id";
 import { resolveLink, type ResolveLinkContext } from "@/lib/sanity/lib/resolve-link";
 import {
@@ -17,28 +18,12 @@ const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
   ctaSubtitle,
   ctaButton{
     label,
-    link{
-      linkType,
-      internalRef->{ _type, _id, slug },
-      anchorPage->{ _type, _id, slug },
-      anchorId,
-      href,
-      openInNewTab,
-      calLink
-    }
+    link${LIVE_LINK_PROJECTION}
   },
   ctaFootnote,
   secondaryCta{
     label,
-    link{
-      linkType,
-      internalRef->{ _type, _id, slug },
-      anchorPage->{ _type, _id, slug },
-      anchorId,
-      href,
-      openInNewTab,
-      calLink
-    }
+    link${LIVE_LINK_PROJECTION}
   },
   anchorId
 }`;

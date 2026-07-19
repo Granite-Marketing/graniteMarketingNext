@@ -1,6 +1,7 @@
 "use client";
 
 import { Capabilities } from "@/components/capabilities";
+import { LIVE_LINK_PROJECTION } from "@/lib/sanity/lib/link-projection";
 import { resolveAnchorId } from "@/lib/sanity/lib/anchor-id";
 import { resolveLink, type ResolveLinkContext } from "@/lib/sanity/lib/resolve-link";
 import { useLiveSection } from "@/lib/sanity/lib/use-live-section";
@@ -15,15 +16,7 @@ const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
   items[]{ _key, tag, title, description, featured, snippet },
   link{
     label,
-    link{
-      linkType,
-      internalRef->{ _type, _id, slug },
-      anchorPage->{ _type, _id, slug },
-      anchorId,
-      href,
-      openInNewTab,
-      calLink
-    }
+    link${LIVE_LINK_PROJECTION}
   },
   anchorId
 }`;

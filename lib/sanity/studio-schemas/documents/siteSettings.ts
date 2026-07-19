@@ -33,10 +33,35 @@ export const SITE_SETTINGS_ID = singletonDocumentId(SITE_SETTINGS_TYPE);
 // `LinkValue` expects — `internalRef`/`anchorPage` projected with `_type`
 // and `slug` so the resolver can tell page/blogPost/workflowTemplate/
 // legalPage apart and build the right path.
+//
+// `isHomePage` is the fix for a bug where a link TO the homepage resolved
+// to "/home" (its `page` document's own slug) instead of "/" — a permanent
+// redirect behind every click, since that slug also permanentRedirects to
+// `/` (app/[slug]/page.tsx). Which page IS the homepage is decided by
+// `homePage` above, a reference the repo owner can repoint at any `page`
+// document at any time — not the literal string "home" — so this can't be
+// solved with a slug comparison anywhere, in GROQ or in resolve-link.ts.
+// It's computed here, once, as a boolean sitting next to the dereferenced
+// doc (`_id == *[_id == "..."][0].homePage._ref`) rather than threaded
+// through every `resolveLink` call site as an extra argument: siteSettings
+// is a single document, so the subquery costs nothing, and resolve-link.ts
+// stays a pure function over the projected value with no new imports or
+// second round-trip. See resolve-link.ts's `DereferencedDoc.isHomePage`
+// and `pathForInternalDoc` for how the flag is consumed.
 const LINK_PROJECTION = `{
 	linkType,
-	internalRef->{ _type, _id, slug },
-	anchorPage->{ _type, _id, slug },
+	internalRef->{
+		_type,
+		_id,
+		slug,
+		"isHomePage": _id == *[_id == "${SITE_SETTINGS_ID}"][0].homePage._ref
+	},
+	anchorPage->{
+		_type,
+		_id,
+		slug,
+		"isHomePage": _id == *[_id == "${SITE_SETTINGS_ID}"][0].homePage._ref
+	},
 	anchorId,
 	href,
 	openInNewTab,
