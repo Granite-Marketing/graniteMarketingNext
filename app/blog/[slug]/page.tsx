@@ -188,6 +188,7 @@ export default async function BlogPostPage({
 					documentId={template!._id}
 					documentType={template!._type}
 					sections={sectionsAbove}
+					sectionsPath="sectionsAbove"
 					siteSettingsCtaDefaults={ctaDefaults}
 				/>
 			)}
@@ -200,6 +201,7 @@ export default async function BlogPostPage({
 					documentId={template!._id}
 					documentType={template!._type}
 					sections={sectionsBelow}
+					sectionsPath="sectionsBelow"
 					siteSettingsCtaDefaults={ctaDefaults}
 				/>
 			)}

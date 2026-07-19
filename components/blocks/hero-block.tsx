@@ -9,7 +9,13 @@ import type { BlockOf } from "@/lib/sanity/lib/page-sections";
 
 type HeroBlockValue = BlockOf<"heroBlock">;
 
-const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
+// Built from `sectionsPath`, not a top-level `defineQuery` constant — this
+// string is passed to `usePresentationQuery` (via `useLiveSection`), never
+// to `defineQuery`, so it sits outside `sanity typegen`'s static analysis
+// entirely (see components/page-builder.tsx's `sectionsPath` comment for
+// why the field name varies per document type).
+function buildLiveQuery(sectionsPath: string): string {
+	return `*[_id == $id][0].${sectionsPath}[_key == $key][0]{
   eyebrow,
   heading,
   body,
@@ -21,11 +27,14 @@ const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
   showTrustedBy,
   anchorId
 }`;
+}
 
 export type HeroBlockAdapterProps = {
 	value: HeroBlockValue;
 	documentId: string;
 	dataSanity: string;
+	/** See components/page-builder.tsx's `sectionsPath` prop comment. */
+	sectionsPath?: string;
 	linkContext?: ResolveLinkContext;
 	clientLogos?: ClientLogo[];
 };
@@ -34,11 +43,12 @@ export function HeroBlockAdapter({
 	value: initial,
 	documentId,
 	dataSanity,
+	sectionsPath = "sections",
 	linkContext,
 	clientLogos,
 }: HeroBlockAdapterProps) {
 	const value = useLiveSection(
-		LIVE_QUERY,
+		buildLiveQuery(sectionsPath),
 		{ id: documentId, key: initial._key },
 		initial
 	);

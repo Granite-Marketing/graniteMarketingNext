@@ -183,6 +183,7 @@ export default async function TemplateDetailPage({
 					documentId={templateDetailDoc!._id}
 					documentType={templateDetailDoc!._type}
 					sections={sectionsAbove}
+					sectionsPath="sectionsAbove"
 					siteSettingsCtaDefaults={ctaDefaults}
 				/>
 			)}
@@ -198,6 +199,7 @@ export default async function TemplateDetailPage({
 					documentId={templateDetailDoc!._id}
 					documentType={templateDetailDoc!._type}
 					sections={sectionsBelow}
+					sectionsPath="sectionsBelow"
 					siteSettingsCtaDefaults={ctaDefaults}
 				/>
 			)}

@@ -125,6 +125,7 @@ export default async function BlogPage() {
 								documentId={listing._id}
 								documentType={listing._type}
 								sections={sectionsAbove}
+								sectionsPath="sectionsAbove"
 								siteSettingsCtaDefaults={ctaDefaults}
 							/>
 						)}
@@ -140,6 +141,7 @@ export default async function BlogPage() {
 								documentId={listing._id}
 								documentType={listing._type}
 								sections={sectionsBelow}
+								sectionsPath="sectionsBelow"
 								siteSettingsCtaDefaults={ctaDefaults}
 							/>
 						)}

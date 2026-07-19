@@ -8,7 +8,11 @@ import type { BlockOf } from "@/lib/sanity/lib/page-sections";
 
 type ToolsStripBlockValue = BlockOf<"toolsStripBlock">;
 
-const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
+// See components/blocks/hero-block.tsx's `buildLiveQuery` comment: built
+// from `sectionsPath`, never handed to `defineQuery`, so it is outside
+// typegen's static analysis.
+function buildLiveQuery(sectionsPath: string): string {
+	return `*[_id == $id][0].${sectionsPath}[_key == $key][0]{
   eyebrow,
   heading,
   intro,
@@ -17,20 +21,24 @@ const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
   "manualItems": manualTools[]->{ _id, name, logo{ asset, alt } },
   anchorId
 }`;
+}
 
 export type ToolsStripBlockAdapterProps = {
 	value: ToolsStripBlockValue;
 	documentId: string;
 	dataSanity: string;
+	/** See components/page-builder.tsx's `sectionsPath` prop comment. */
+	sectionsPath?: string;
 };
 
 export function ToolsStripBlockAdapter({
 	value: initial,
 	documentId,
 	dataSanity,
+	sectionsPath = "sections",
 }: ToolsStripBlockAdapterProps) {
 	const value = useLiveSection(
-		LIVE_QUERY,
+		buildLiveQuery(sectionsPath),
 		{ id: documentId, key: initial._key },
 		initial
 	);

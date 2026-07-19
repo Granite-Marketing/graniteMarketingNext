@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { PageBuilder } from "@/components/page-builder";
+import { PageBuilder, createSectionsReducer } from "@/components/page-builder";
 import type { Section } from "@/lib/sanity/lib/page-sections";
 
 // U13 of the Sanity page builder plan. `useOptimistic` (next-sanity, via
@@ -53,9 +53,14 @@ const UNKNOWN_SECTION = {
 	anchorId: null,
 } as unknown as Section;
 
-function renderPage(sections: Section[]) {
+function renderPage(sections: Section[], sectionsPath?: string) {
 	return render(
-		<PageBuilder documentId="page-1" documentType="page" sections={sections} />
+		<PageBuilder
+			documentId="page-1"
+			documentType="page"
+			sections={sections}
+			{...(sectionsPath ? { sectionsPath } : {})}
+		/>
 	);
 }
 
@@ -141,5 +146,101 @@ describe("PageBuilder", () => {
 		const section = container.querySelector('[aria-labelledby="cta-heading"]');
 		expect(section).not.toBeNull();
 		expect(section?.hasAttribute("id")).toBe(false);
+	});
+
+	// Finding #6 (2026-07-19 code review): the five page-type singletons
+	// (blogListing, blogPostTemplate, templateListing, templateDetail,
+	// contactPage) store their blocks in `sectionsAbove`/`sectionsBelow`, not
+	// `sections`, and their routes (app/blog/page.tsx etc.) pass that field
+	// name in via the `sectionsPath` prop. Before the fix, both data-sanity
+	// helpers hardcoded `"sections"`, so every attribute on those five routes
+	// named a field the document doesn't have — click-to-select silently
+	// targeted nothing. These tests render with `sectionsPath="sectionsAbove"`
+	// (standing in for any page-type singleton call site) and assert the
+	// rendered attributes actually name that field.
+	it("the container's data-sanity path names sectionsAbove, not sections, when sectionsPath is passed", () => {
+		const { container } = renderPage([HERO_SECTION], "sectionsAbove");
+		const root = container.firstElementChild;
+
+		expect(root?.getAttribute("data-sanity")).toContain("sectionsAbove");
+	});
+
+	it("a section's data-sanity path names sectionsBelow, not sections, when sectionsPath is passed", () => {
+		const { container } = renderPage([HERO_SECTION], "sectionsBelow");
+		const heroSection = container.querySelector('[aria-labelledby="hero-heading"]');
+
+		expect(heroSection?.getAttribute("data-sanity")).toContain("sectionsBelow");
+		expect(heroSection?.getAttribute("data-sanity")).toContain("hero-1");
+	});
+
+	it("omitting sectionsPath still targets sections (page/legalPage documents unchanged)", () => {
+		const { container } = renderPage([HERO_SECTION]);
+		const root = container.firstElementChild;
+
+		expect(root?.getAttribute("data-sanity")).toContain("sections");
+		expect(root?.getAttribute("data-sanity")).not.toContain("sectionsAbove");
+		expect(root?.getAttribute("data-sanity")).not.toContain("sectionsBelow");
+	});
+});
+
+// Finding #6's other broken piece: `useOptimistic`'s reducer used to read
+// `event.document?.sections` unconditionally, so a mutation event for a
+// page-type singleton (whose document only ever has `sectionsAbove`/
+// `sectionsBelow`) always fell through to `?? state` and silently dropped
+// every live reorder. `createSectionsReducer` is exported from
+// components/page-builder.tsx specifically so this can be proven directly:
+// jsdom has no real Presentation comlink connection, so `useOptimistic`
+// never actually dispatches an event through rendering alone (see this
+// file's header comment) — calling the reducer function is the only way to
+// exercise it.
+describe("createSectionsReducer", () => {
+	const CURRENT_STATE = [HERO_SECTION];
+	const NEW_SECTIONS = [CTA_SECTION, HERO_SECTION];
+
+	it("reads sectionsAbove off the event document when sectionsPath is sectionsAbove", () => {
+		const reducer = createSectionsReducer("page-1", "sectionsAbove");
+		const result = reducer(CURRENT_STATE, {
+			id: "page-1",
+			document: { sectionsAbove: NEW_SECTIONS },
+		});
+		expect(result).toBe(NEW_SECTIONS);
+	});
+
+	it("does not read sections when sectionsPath is sectionsAbove, even if the event document has one", () => {
+		const reducer = createSectionsReducer("page-1", "sectionsAbove");
+		const result = reducer(CURRENT_STATE, {
+			id: "page-1",
+			document: { sections: NEW_SECTIONS },
+		});
+		// No `sectionsAbove` key on the event document, so it must fall back
+		// to state rather than silently reading the wrong field.
+		expect(result).toBe(CURRENT_STATE);
+	});
+
+	it("reads sections off the event document when sectionsPath defaults to sections", () => {
+		const reducer = createSectionsReducer("page-1", "sections");
+		const result = reducer(CURRENT_STATE, {
+			id: "page-1",
+			document: { sections: NEW_SECTIONS },
+		});
+		expect(result).toBe(NEW_SECTIONS);
+	});
+
+	it("ignores an event for a different document id regardless of sectionsPath", () => {
+		const reducer = createSectionsReducer("page-1", "sectionsBelow");
+		const result = reducer(CURRENT_STATE, {
+			id: "some-other-document",
+			document: { sectionsBelow: NEW_SECTIONS },
+		});
+		expect(result).toBe(CURRENT_STATE);
+	});
+
+	it("falls back to state when the matching document has no array at the given path", () => {
+		const reducer = createSectionsReducer("page-1", "sectionsBelow");
+		const result = reducer(CURRENT_STATE, {
+			id: "page-1",
+			document: { sectionsBelow: null },
+		});
+		expect(result).toBe(CURRENT_STATE);
 	});
 });

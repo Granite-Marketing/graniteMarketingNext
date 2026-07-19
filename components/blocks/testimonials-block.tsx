@@ -21,7 +21,11 @@ const CLIENT_FIELDS = `{
     location->{ name }
   }`;
 
-const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
+// See components/blocks/hero-block.tsx's `buildLiveQuery` comment: built
+// from `sectionsPath`, never handed to `defineQuery`, so it is outside
+// typegen's static analysis.
+function buildLiveQuery(sectionsPath: string): string {
+	return `*[_id == $id][0].${sectionsPath}[_key == $key][0]{
   eyebrow,
   heading,
   sourceMode,
@@ -29,11 +33,14 @@ const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
   "manualItems": manualTestimonials[]-> ${CLIENT_FIELDS},
   anchorId
 }`;
+}
 
 export type TestimonialsBlockAdapterProps = {
 	value: TestimonialsBlockValue;
 	documentId: string;
 	dataSanity: string;
+	/** See components/page-builder.tsx's `sectionsPath` prop comment. */
+	sectionsPath?: string;
 };
 
 /**
@@ -49,9 +56,10 @@ export function TestimonialsBlockAdapter({
 	value: initial,
 	documentId,
 	dataSanity,
+	sectionsPath = "sections",
 }: TestimonialsBlockAdapterProps) {
 	const value = useLiveSection(
-		LIVE_QUERY,
+		buildLiveQuery(sectionsPath),
 		{ id: documentId, key: initial._key },
 		initial
 	);

@@ -61,3 +61,53 @@ describe("sectionDataAttribute", () => {
 		expect(attr).toContain("abc123");
 	});
 });
+
+// Finding #6 (2026-07-19 code review): the five page-type singletons
+// (blogListing, blogPostTemplate, templateListing, templateDetail,
+// contactPage) store their blocks in `sectionsAbove`/`sectionsBelow`, not
+// `sections`. Before this fix both helpers hardcoded `"sections"`, so every
+// data-sanity attribute on those five routes pointed at a field the
+// document doesn't have — silently breaking click-to-select there while
+// still working on `page` documents. These tests assert the `sectionsPath`
+// argument is actually used, not just accepted.
+describe("sectionsDataAttribute with a non-default sectionsPath", () => {
+	it("targets sectionsAbove, not sections, when passed explicitly", () => {
+		const attr = sectionsDataAttribute(DOC, "sectionsAbove");
+		expect(attr).toContain("sectionsAbove");
+	});
+
+	it("targets sectionsBelow, not sections, when passed explicitly", () => {
+		const attr = sectionsDataAttribute(DOC, "sectionsBelow");
+		expect(attr).toContain("sectionsBelow");
+	});
+
+	it("still defaults to sections when the argument is omitted (page documents unchanged)", () => {
+		const attr = sectionsDataAttribute(DOC);
+		expect(attr).toContain("sections");
+		expect(attr).not.toContain("sectionsAbove");
+		expect(attr).not.toContain("sectionsBelow");
+	});
+});
+
+describe("sectionDataAttribute with a non-default sectionsPath", () => {
+	it("targets one item within sectionsAbove by _key", () => {
+		const attr = sectionDataAttribute(DOC, "abc123", "sectionsAbove");
+		expect(attr).toContain("sectionsAbove");
+		expect(attr).toContain("abc123");
+		expect(attr).not.toContain("sectionsBelow");
+	});
+
+	it("targets one item within sectionsBelow by _key", () => {
+		const attr = sectionDataAttribute(DOC, "abc123", "sectionsBelow");
+		expect(attr).toContain("sectionsBelow");
+		expect(attr).toContain("abc123");
+		expect(attr).not.toContain("sectionsAbove");
+	});
+
+	it("still defaults to sections when the argument is omitted (page documents unchanged)", () => {
+		const attr = sectionDataAttribute(DOC, "abc123");
+		expect(attr).toContain("sections");
+		expect(attr).not.toContain("sectionsAbove");
+		expect(attr).not.toContain("sectionsBelow");
+	});
+});

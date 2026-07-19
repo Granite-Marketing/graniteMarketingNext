@@ -36,9 +36,12 @@ import type { Section } from "@/lib/sanity/lib/page-sections";
 // next full fetch, which is an accepted, documented limit of optimistic
 // reordering rather than optimistic content authoring.
 
+// Keyed by `sectionsPath` (below) rather than a fixed `sections` field, so
+// the same reducer works whether the owning document stores its blocks in
+// `sections` (a `page`) or `sectionsAbove`/`sectionsBelow` (the five
+// page-type singletons — see PageBuilderProps.sectionsPath's comment).
 type OptimisticDocument = {
-	_id: string;
-	sections?: Section[] | null;
+	[sectionsPath: string]: Section[] | null | undefined;
 };
 
 export type PageBuilderProps = {
@@ -48,6 +51,23 @@ export type PageBuilderProps = {
 	/** The owning document's `_type`, e.g. `"page"` or `"legalPage"`. */
 	documentType: string;
 	sections: Section[];
+	/**
+	 * The field name on the owning document that holds this `sections`
+	 * array. Defaults to `"sections"` — the `page` document's field, and the
+	 * only one this ever pointed at before Finding #6 of the 2026-07-19 code
+	 * review. The five page-type singletons (blogListing, blogPostTemplate,
+	 * templateListing, templateDetail, contactPage) instead store
+	 * `sectionsAbove`/`sectionsBelow`; their routes (app/blog/page.tsx,
+	 * app/blog/[slug]/page.tsx, app/templates/page.tsx,
+	 * app/templates/[slug]/page.tsx, app/contact/page.tsx) pass one or the
+	 * other explicitly per `PageBuilder` call. Threaded into both
+	 * data-attribute helpers, the `useOptimistic` reducer below, and every
+	 * block adapter's `LIVE_QUERY` (via `renderSection`'s `ctx.sectionsPath`)
+	 * — all three previously hardcoded `"sections"`, which silently broke
+	 * click-to-select, per-block live preview and optimistic reordering on
+	 * every route except `page`/`legalPage`.
+	 */
+	sectionsPath?: string;
 	/** Context for lib/sanity/lib/resolve-link.ts's anchor-link collapsing
 	 * (`#anchor` vs `/other-slug#anchor`). Omit on documents with no slug of
 	 * their own to render yet (e.g. previewing before first publish). */
@@ -66,6 +86,7 @@ function renderSection(
 	ctx: {
 		documentId: string;
 		dataSanity: string;
+		sectionsPath: string;
 		linkContext?: ResolveLinkContext;
 		clientLogos?: ClientLogo[];
 		siteSettingsCtaDefaults?: SiteSettingsCtaDefaults | null;
@@ -78,6 +99,7 @@ function renderSection(
 					value={section}
 					documentId={ctx.documentId}
 					dataSanity={ctx.dataSanity}
+					sectionsPath={ctx.sectionsPath}
 					linkContext={ctx.linkContext}
 					clientLogos={ctx.clientLogos}
 				/>
@@ -89,6 +111,7 @@ function renderSection(
 					value={section}
 					documentId={ctx.documentId}
 					dataSanity={ctx.dataSanity}
+					sectionsPath={ctx.sectionsPath}
 					linkContext={ctx.linkContext}
 				/>
 			);
@@ -99,6 +122,7 @@ function renderSection(
 					value={section}
 					documentId={ctx.documentId}
 					dataSanity={ctx.dataSanity}
+					sectionsPath={ctx.sectionsPath}
 				/>
 			);
 
@@ -108,6 +132,7 @@ function renderSection(
 					value={section}
 					documentId={ctx.documentId}
 					dataSanity={ctx.dataSanity}
+					sectionsPath={ctx.sectionsPath}
 				/>
 			);
 
@@ -117,6 +142,7 @@ function renderSection(
 					value={section}
 					documentId={ctx.documentId}
 					dataSanity={ctx.dataSanity}
+					sectionsPath={ctx.sectionsPath}
 				/>
 			);
 
@@ -126,6 +152,7 @@ function renderSection(
 					value={section}
 					documentId={ctx.documentId}
 					dataSanity={ctx.dataSanity}
+					sectionsPath={ctx.sectionsPath}
 				/>
 			);
 
@@ -135,6 +162,7 @@ function renderSection(
 					value={section}
 					documentId={ctx.documentId}
 					dataSanity={ctx.dataSanity}
+					sectionsPath={ctx.sectionsPath}
 				/>
 			);
 
@@ -144,6 +172,7 @@ function renderSection(
 					value={section}
 					documentId={ctx.documentId}
 					dataSanity={ctx.dataSanity}
+					sectionsPath={ctx.sectionsPath}
 					linkContext={ctx.linkContext}
 					siteSettingsCtaDefaults={ctx.siteSettingsCtaDefaults}
 				/>
@@ -173,20 +202,40 @@ function renderSection(
 	}
 }
 
+/**
+ * Builds the `useOptimistic` reducer for one `PageBuilder` instance. Pulled
+ * out to a standalone, exported function — rather than left as the inline
+ * closure it was before Finding #6 (2026-07-19 code review) — specifically
+ * so it is unit-testable without a live Presentation comlink connection:
+ * jsdom has none, so `useOptimistic` always stays "pristine" in tests (see
+ * test/components/page-builder.test.tsx's header comment), meaning a
+ * mutation event can never actually reach this reducer through rendering
+ * alone. Calling it directly is the only way to prove it reads
+ * `event.document?.[sectionsPath]` rather than the hardcoded
+ * `event.document?.sections` it used to.
+ */
+export function createSectionsReducer(documentId: string, sectionsPath: string) {
+	return (
+		state: Section[],
+		event: { id: string; document?: OptimisticDocument }
+	): Section[] => {
+		if (event.id !== documentId) return state;
+		return event.document?.[sectionsPath] ?? state;
+	};
+}
+
 export function PageBuilder({
 	documentId,
 	documentType,
 	sections: initialSections,
+	sectionsPath = "sections",
 	currentSlug,
 	clientLogos,
 	siteSettingsCtaDefaults,
 }: PageBuilderProps) {
 	const sections = useOptimistic<Section[], OptimisticDocument>(
 		initialSections,
-		(state, event) => {
-			if (event.id !== documentId) return state;
-			return event.document?.sections ?? state;
-		}
+		createSectionsReducer(documentId, sectionsPath)
 	);
 
 	const doc = { id: documentId, type: documentType };
@@ -195,12 +244,13 @@ export function PageBuilder({
 		: undefined;
 
 	return (
-		<div data-sanity={sectionsDataAttribute(doc)}>
+		<div data-sanity={sectionsDataAttribute(doc, sectionsPath)}>
 			{sections.map((section) => (
 				<Fragment key={section._key}>
 					{renderSection(section, {
 						documentId,
-						dataSanity: sectionDataAttribute(doc, section._key),
+						dataSanity: sectionDataAttribute(doc, section._key, sectionsPath),
+						sectionsPath,
 						linkContext,
 						clientLogos,
 						siteSettingsCtaDefaults,

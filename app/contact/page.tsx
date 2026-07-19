@@ -88,6 +88,7 @@ export default async function ContactPage() {
 								documentId={contactPage._id}
 								documentType={contactPage._type}
 								sections={sectionsAbove}
+								sectionsPath="sectionsAbove"
 								siteSettingsCtaDefaults={ctaDefaults}
 							/>
 						)}
@@ -105,6 +106,7 @@ export default async function ContactPage() {
 								documentId={contactPage._id}
 								documentType={contactPage._type}
 								sections={sectionsBelow}
+								sectionsPath="sectionsBelow"
 								siteSettingsCtaDefaults={ctaDefaults}
 							/>
 						)}

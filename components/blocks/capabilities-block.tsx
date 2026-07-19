@@ -9,7 +9,10 @@ import type { BlockOf } from "@/lib/sanity/lib/page-sections";
 
 type CapabilitiesBlockValue = BlockOf<"capabilitiesBlock">;
 
-const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
+// See hero-block.tsx's `buildLiveQuery` comment: built from `sectionsPath`,
+// never handed to `defineQuery`, so it is outside typegen's static analysis.
+function buildLiveQuery(sectionsPath: string): string {
+	return `*[_id == $id][0].${sectionsPath}[_key == $key][0]{
   eyebrow,
   heading,
   body,
@@ -20,11 +23,14 @@ const LIVE_QUERY = `*[_id == $id][0].sections[_key == $key][0]{
   },
   anchorId
 }`;
+}
 
 export type CapabilitiesBlockAdapterProps = {
 	value: CapabilitiesBlockValue;
 	documentId: string;
 	dataSanity: string;
+	/** See components/page-builder.tsx's `sectionsPath` prop comment. */
+	sectionsPath?: string;
 	linkContext?: ResolveLinkContext;
 };
 
@@ -32,10 +38,11 @@ export function CapabilitiesBlockAdapter({
 	value: initial,
 	documentId,
 	dataSanity,
+	sectionsPath = "sections",
 	linkContext,
 }: CapabilitiesBlockAdapterProps) {
 	const value = useLiveSection(
-		LIVE_QUERY,
+		buildLiveQuery(sectionsPath),
 		{ id: documentId, key: initial._key },
 		initial
 	);
