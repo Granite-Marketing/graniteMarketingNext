@@ -904,6 +904,24 @@ export const PAGE_CTA_DEFAULTS_QUERY = defineQuery(`
     }
   `);
 
+export const PAGE_SLUGS_QUERY = defineQuery(`
+    *[_type == "page"].slug.current
+  `);
+
+export async function getPageSlugs() {
+	const slugs = await fetchQuery<string[]>(
+		PAGE_SLUGS_QUERY,
+		{},
+		// Static params must never include draft-only pages — sharper here
+		// than the blog/template/case-study slug fetchers above, since this
+		// catch-all sits at the site root and competes with every real route
+		// rather than one namespaced under /blog or /templates (U14 of the
+		// Sanity page builder plan).
+		{ forcePublished: true }
+	);
+	return slugs;
+}
+
 export async function getPage(slug: string) {
 	return fetchQuery(PAGE_QUERY, { slug });
 }
