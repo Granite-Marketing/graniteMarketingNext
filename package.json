@@ -24,6 +24,7 @@
     "seed:pages": "npx tsx --env-file=.env.local scripts/seed-pages.ts",
     "seed:pages:publish": "npx tsx --env-file=.env.local scripts/seed-pages.ts --publish",
     "seed:page-types": "npx tsx --env-file=.env.local scripts/seed-page-types.ts",
+    "seed:site-settings": "npx tsx --env-file=.env.local scripts/seed-site-settings.ts",
     "typegen": "sanity schema extract && sanity typegen generate"
   },
   "dependencies": {
