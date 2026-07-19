@@ -20,7 +20,8 @@
     "migrate:blog-posts": "npx tsx scripts/migrate-blog-posts.ts",
     "migrate:tools": "npx tsx scripts/migrate-tools.ts",
     "migrate:ndjson": "npx tsx scripts/migrate-from-ndjson.ts",
-    "migrate:all": "npx tsx scripts/migrate-all.ts"
+    "migrate:all": "npx tsx scripts/migrate-all.ts",
+    "typegen": "sanity schema extract && sanity typegen generate"
   },
   "dependencies": {
     "@calcom/embed-react": "^1.5.3",

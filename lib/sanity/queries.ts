@@ -1,3 +1,4 @@
+import { defineQuery } from "next-sanity";
 import { client } from "./client";
 import { fetchQuery } from "./lib/fetch";
 import { adaptCaseStudyToCard } from "./lib/adapters";
@@ -6,9 +7,14 @@ import { adaptCaseStudyToCard } from "./lib/adapters";
 // BLOG POSTS
 // =============================================================================
 
-export async function getBlogPosts() {
-	return fetchQuery(
-		`
+// U5 of the Sanity page builder plan: every query string below is wrapped in
+// `defineQuery` and assigned to a uniquely named top-level const. Both
+// failure modes are silent — an inline `client.fetch(groq\`...\`)` is
+// skipped by typegen entirely, and a variable name reused in another file
+// silently overwrites this one's generated type — so names are namespaced
+// per query rather than reused across functions.
+
+export const BLOG_POSTS_QUERY = defineQuery(`
     *[_type == "blogPost"] | order(publishedAt desc) {
       _id,
       title,
@@ -27,18 +33,13 @@ export async function getBlogPosts() {
         image
       }
     }
-  `,
-		{}
-	);
+  `);
+
+export async function getBlogPosts() {
+	return fetchQuery(BLOG_POSTS_QUERY, {});
 }
 
-export async function getBlogPost(slug?: string) {
-	if (!slug) {
-		return null;
-	}
-
-	return fetchQuery(
-		`
+export const BLOG_POST_QUERY = defineQuery(`
     *[_type == "blogPost" && slug.current == $slug][0] {
       _id,
       title,
@@ -74,16 +75,23 @@ export async function getBlogPost(slug?: string) {
         youtubeUrl
       }
     }
-  `,
-		{ slug }
-	);
+  `);
+
+export async function getBlogPost(slug?: string) {
+	if (!slug) {
+		return null;
+	}
+
+	return fetchQuery(BLOG_POST_QUERY, { slug });
 }
+
+export const BLOG_POST_SLUGS_QUERY = defineQuery(`
+    *[_type == "blogPost"].slug.current
+  `);
 
 export async function getBlogPostSlugs() {
 	const slugs = await fetchQuery<string[]>(
-		`
-    *[_type == "blogPost"].slug.current
-  `,
+		BLOG_POST_SLUGS_QUERY,
 		{},
 		// Static params must never include draft-only posts.
 		{ forcePublished: true }
@@ -91,9 +99,7 @@ export async function getBlogPostSlugs() {
 	return slugs.map((slug) => ({ slug }));
 }
 
-export async function getFeaturedBlogPosts(limit = 3) {
-	return fetchQuery(
-		`
+export const FEATURED_BLOG_POSTS_QUERY = defineQuery(`
     *[_type == "blogPost" && featured == true] | order(publishedAt desc) [0...$limit] {
       _id,
       title,
@@ -105,14 +111,13 @@ export async function getFeaturedBlogPosts(limit = 3) {
         alt
       }
     }
-  `,
-		{ limit }
-	);
+  `);
+
+export async function getFeaturedBlogPosts(limit = 3) {
+	return fetchQuery(FEATURED_BLOG_POSTS_QUERY, { limit });
 }
 
-export async function getBlogPostsByCategory(categorySlug: string) {
-	return fetchQuery(
-		`
+export const BLOG_POSTS_BY_CATEGORY_QUERY = defineQuery(`
     *[_type == "blogPost" && $categorySlug in categories[]->slug.current] | order(publishedAt desc) {
       _id,
       title,
@@ -129,18 +134,17 @@ export async function getBlogPostsByCategory(categorySlug: string) {
         slug
       }
     }
-  `,
-		{ categorySlug }
-	);
+  `);
+
+export async function getBlogPostsByCategory(categorySlug: string) {
+	return fetchQuery(BLOG_POSTS_BY_CATEGORY_QUERY, { categorySlug });
 }
 
 // =============================================================================
 // WORKFLOW TEMPLATES
 // =============================================================================
 
-export async function getWorkflowTemplates() {
-	return fetchQuery(
-		`
+export const WORKFLOW_TEMPLATES_QUERY = defineQuery(`
     *[_type == "workflowTemplate"] | order(publishedAt desc) {
       _id,
       title,
@@ -169,18 +173,13 @@ export async function getWorkflowTemplates() {
         image
       }
     }
-  `,
-		{}
-	);
+  `);
+
+export async function getWorkflowTemplates() {
+	return fetchQuery(WORKFLOW_TEMPLATES_QUERY, {});
 }
 
-export async function getWorkflowTemplate(slug?: string) {
-	if (!slug) {
-		return null;
-	}
-
-	return fetchQuery(
-		`
+export const WORKFLOW_TEMPLATE_QUERY = defineQuery(`
     *[_type == "workflowTemplate" && slug.current == $slug][0] {
       _id,
       title,
@@ -223,16 +222,23 @@ export async function getWorkflowTemplate(slug?: string) {
         metaDescription
       }
     }
-  `,
-		{ slug }
-	);
+  `);
+
+export async function getWorkflowTemplate(slug?: string) {
+	if (!slug) {
+		return null;
+	}
+
+	return fetchQuery(WORKFLOW_TEMPLATE_QUERY, { slug });
 }
+
+export const WORKFLOW_TEMPLATE_SLUGS_QUERY = defineQuery(`
+    *[_type == "workflowTemplate"].slug.current
+  `);
 
 export async function getWorkflowTemplateSlugs() {
 	const slugs = await fetchQuery<string[]>(
-		`
-    *[_type == "workflowTemplate"].slug.current
-  `,
+		WORKFLOW_TEMPLATE_SLUGS_QUERY,
 		{},
 		// Static params must never include draft-only templates.
 		{ forcePublished: true }
@@ -244,9 +250,7 @@ export async function getWorkflowTemplateSlugs() {
 // CASE STUDIES
 // =============================================================================
 
-export async function getCaseStudies() {
-	return fetchQuery(
-		`
+export const CASE_STUDIES_QUERY = defineQuery(`
     *[_type == "caseStudy"] | order(sortOrder asc, _createdAt desc) {
       _id,
       title,
@@ -282,14 +286,13 @@ export async function getCaseStudies() {
         description
       }
     }
-  `,
-		{}
-	);
+  `);
+
+export async function getCaseStudies() {
+	return fetchQuery(CASE_STUDIES_QUERY, {});
 }
 
-export async function getCaseStudy(slug: string) {
-	return fetchQuery(
-		`
+export const CASE_STUDY_QUERY = defineQuery(`
     *[_type == "caseStudy" && slug.current == $slug][0] {
       _id,
       title,
@@ -358,16 +361,19 @@ export async function getCaseStudy(slug: string) {
         metaDescription
       }
     }
-  `,
-		{ slug }
-	);
+  `);
+
+export async function getCaseStudy(slug: string) {
+	return fetchQuery(CASE_STUDY_QUERY, { slug });
 }
+
+export const CASE_STUDY_SLUGS_QUERY = defineQuery(`
+    *[_type == "caseStudy"] | order(sortOrder asc, _createdAt desc).slug.current
+  `);
 
 export async function getCaseStudySlugs() {
 	const slugs = await fetchQuery<string[]>(
-		`
-    *[_type == "caseStudy"] | order(sortOrder asc, _createdAt desc).slug.current
-  `,
+		CASE_STUDY_SLUGS_QUERY,
 		{},
 		// Static params must never include draft-only case studies.
 		{ forcePublished: true }
@@ -379,41 +385,37 @@ export async function getCaseStudySlugs() {
 // CATEGORIES
 // =============================================================================
 
-export async function getCategories() {
-	return fetchQuery(
-		`
+export const CATEGORIES_QUERY = defineQuery(`
     *[_type == "category"] | order(name asc) {
       _id,
       name,
       slug,
       description
     }
-  `,
-		{}
-	);
+  `);
+
+export async function getCategories() {
+	return fetchQuery(CATEGORIES_QUERY, {});
 }
 
-export async function getCategory(slug: string) {
-	return fetchQuery(
-		`
+export const CATEGORY_QUERY = defineQuery(`
     *[_type == "category" && slug.current == $slug][0] {
       _id,
       name,
       slug,
       description
     }
-  `,
-		{ slug }
-	);
+  `);
+
+export async function getCategory(slug: string) {
+	return fetchQuery(CATEGORY_QUERY, { slug });
 }
 
 // =============================================================================
 // CLIENTS (TESTIMONIALS)
 // =============================================================================
 
-export async function getClients() {
-	return fetchQuery(
-		`
+export const CLIENTS_QUERY = defineQuery(`
     *[_type == "client"] | order(dateStarted desc) {
       _id,
       name,
@@ -435,14 +437,13 @@ export async function getClients() {
         slug
       }
     }
-  `,
-		{}
-	);
+  `);
+
+export async function getClients() {
+	return fetchQuery(CLIENTS_QUERY, {});
 }
 
-export async function getClient(slug: string) {
-	return fetchQuery(
-		`
+export const CLIENT_QUERY = defineQuery(`
     *[_type == "client" && slug.current == $slug][0] {
       _id,
       name,
@@ -465,20 +466,26 @@ export async function getClient(slug: string) {
         slug
       }
     }
-  `,
-		{ slug }
-	);
+  `);
+
+export async function getClient(slug: string) {
+	return fetchQuery(CLIENT_QUERY, { slug });
 }
 
 // =============================================================================
 // FAQs
 // =============================================================================
 
-export async function getFAQs(category?: string) {
-	const categoryFilter = category ? " && category == $category" : "";
-
-	const query = `
-    *[_type == "faq"${categoryFilter}] | order(order asc) {
+// The original implementation built the query string with JS interpolation
+// (`*[_type == "faq"${categoryFilter}]`), conditionally including the
+// category clause. Typegen statically parses the AST of a `defineQuery(...)`
+// call and cannot resolve a runtime-interpolated segment — it needs one
+// static GROQ string. Rewritten as a single query that always accepts
+// `$category` and treats an undefined/null value as "no filter" via GROQ's
+// own `defined()`, which is behaviourally equivalent to the old branch and
+// keeps the query typeable.
+export const FAQS_QUERY = defineQuery(`
+    *[_type == "faq" && (!defined($category) || category == $category)] | order(order asc) {
       _id,
       question,
       slug,
@@ -486,14 +493,13 @@ export async function getFAQs(category?: string) {
       order,
       category
     }
-  `;
+  `);
 
-	return fetchQuery(query, category ? { category } : {});
+export async function getFAQs(category?: string) {
+	return fetchQuery(FAQS_QUERY, { category: category ?? null });
 }
 
-export async function getFAQ(slug: string) {
-	return fetchQuery(
-		`
+export const FAQ_QUERY = defineQuery(`
     *[_type == "faq" && slug.current == $slug][0] {
       _id,
       question,
@@ -501,18 +507,17 @@ export async function getFAQ(slug: string) {
       answer,
       category
     }
-  `,
-		{ slug }
-	);
+  `);
+
+export async function getFAQ(slug: string) {
+	return fetchQuery(FAQ_QUERY, { slug });
 }
 
 // =============================================================================
 // LOCATIONS
 // =============================================================================
 
-export async function getLocations() {
-	return fetchQuery(
-		`
+export const LOCATIONS_QUERY = defineQuery(`
     *[_type == "location"] | order(name asc) {
       _id,
       name,
@@ -520,18 +525,17 @@ export async function getLocations() {
       country,
       region
     }
-  `,
-		{}
-	);
+  `);
+
+export async function getLocations() {
+	return fetchQuery(LOCATIONS_QUERY, {});
 }
 
 // =============================================================================
 // LOGO LIST
 // =============================================================================
 
-export async function getLogoList() {
-	return fetchQuery(
-		`
+export const LOGO_LIST_QUERY = defineQuery(`
     *[_type == "logoList"] | order(sortOrder asc) {
       _id,
       clientName,
@@ -544,14 +548,13 @@ export async function getLogoList() {
       website,
       featured
     }
-  `,
-		{}
-	);
+  `);
+
+export async function getLogoList() {
+	return fetchQuery(LOGO_LIST_QUERY, {});
 }
 
-export async function getFeaturedLogos(limit = 10) {
-	return fetchQuery(
-		`
+export const FEATURED_LOGOS_QUERY = defineQuery(`
     *[_type == "logoList" && featured == true] | order(sortOrder asc) [0...$limit] {
       _id,
       clientName,
@@ -562,18 +565,17 @@ export async function getFeaturedLogos(limit = 10) {
       },
       website
     }
-  `,
-		{ limit }
-	);
+  `);
+
+export async function getFeaturedLogos(limit = 10) {
+	return fetchQuery(FEATURED_LOGOS_QUERY, { limit });
 }
 
 // =============================================================================
 // TOOLS
 // =============================================================================
 
-export async function getTools() {
-	return fetchQuery(
-		`
+export const TOOLS_QUERY = defineQuery(`
     *[_type == "tool"] | order(name asc) {
       _id,
       name,
@@ -586,18 +588,17 @@ export async function getTools() {
       },
       website
     }
-  `,
-		{}
-	);
+  `);
+
+export async function getTools() {
+	return fetchQuery(TOOLS_QUERY, {});
 }
 
 // =============================================================================
 // AUTHORS
 // =============================================================================
 
-export async function getAuthors() {
-	return fetchQuery(
-		`
+export const AUTHORS_QUERY = defineQuery(`
     *[_type == "author"] | order(name asc) {
       _id,
       name,
@@ -607,14 +608,13 @@ export async function getAuthors() {
       role,
       social
     }
-  `,
-		{}
-	);
+  `);
+
+export async function getAuthors() {
+	return fetchQuery(AUTHORS_QUERY, {});
 }
 
-export async function getAuthor(slug: string) {
-	return fetchQuery(
-		`
+export const AUTHOR_QUERY = defineQuery(`
     *[_type == "author" && slug.current == $slug][0] {
       _id,
       name,
@@ -624,18 +624,17 @@ export async function getAuthor(slug: string) {
       role,
       social
     }
-  `,
-		{ slug }
-	);
+  `);
+
+export async function getAuthor(slug: string) {
+	return fetchQuery(AUTHOR_QUERY, { slug });
 }
 
 // =============================================================================
 // COMPOSED HELPERS FOR MARKETING PAGES
 // =============================================================================
 
-export async function getHomepageCaseStudies(limit = 24) {
-	const docs: any[] = await fetchQuery(
-		`
+export const HOMEPAGE_CASE_STUDIES_QUERY = defineQuery(`
     *[_type == "caseStudy" && showOnHome == true]
       | order(sortOrder asc, _createdAt desc) [0...$limit]{
       _id,
@@ -671,9 +670,10 @@ export async function getHomepageCaseStudies(limit = 24) {
         description
       }
     }
-  `,
-		{ limit }
-	);
+  `);
+
+export async function getHomepageCaseStudies(limit = 24) {
+	const docs: any[] = await fetchQuery(HOMEPAGE_CASE_STUDIES_QUERY, { limit });
 
 	return docs.map((doc) => adaptCaseStudyToCard(doc));
 }
