@@ -22,14 +22,58 @@ import { LIVE_LINK_PROJECTION } from "../link-projection";
 //
 // Read from source rather than imported, because 1 and 2 are not exported
 // and importing queries.ts pulls in `server-only`.
+//
+// SOURCES used to hold the ENTIRE file content, and the assertions below
+// used to `.toContain()` against it. That made every assertion true if the
+// field name appeared ANYWHERE in the file — including in an unrelated
+// query, a comment, or a type. Verified failure mode: `anchorId` occurs
+// three times in queries.ts outside PAGE_BUILDER_LINK_FIELDS, so deleting
+// it from the projection left the whole-file version of this test green.
+// `extractProjection` below pulls out just the `const NAME = \`{ ... }\`;`
+// template literal body so the assertions are scoped to the projection
+// itself, not the file it lives in.
+function extractProjection(
+	source: string,
+	constName: string,
+	fileLabel: string
+): string {
+	const pattern = new RegExp(`const ${constName}\\s*=\\s*\`([\\s\\S]*?)\`;`);
+	const match = source.match(pattern);
+	if (!match) {
+		// Fail loudly rather than falling back to "" — an empty string would
+		// make every `.toContain()` below vacuously true, which is the exact
+		// blindness this file exists to catch, just relocated.
+		throw new Error(
+			`Could not find "const ${constName} = \`...\`;" in ${fileLabel}. ` +
+				"The constant was likely renamed or restructured — update the " +
+				"extraction regex in link-projection.test.ts rather than letting " +
+				"this silently match nothing."
+		);
+	}
+	const block = match[1].trim();
+	if (!block.startsWith("{") || !block.endsWith("}") || block.length < 20) {
+		throw new Error(
+			`Extracted "${constName}" from ${fileLabel} doesn't look like a GROQ ` +
+				`projection block (got ${JSON.stringify(block.slice(0, 60))}...). ` +
+				"Refusing to run field assertions against it."
+		);
+	}
+	return block;
+}
+
 const SOURCES: Record<string, string> = {
-	"siteSettings.ts LINK_PROJECTION": readFileSync(
-		"lib/sanity/studio-schemas/documents/siteSettings.ts",
-		"utf8"
+	"siteSettings.ts LINK_PROJECTION": extractProjection(
+		readFileSync(
+			"lib/sanity/studio-schemas/documents/siteSettings.ts",
+			"utf8"
+		),
+		"LINK_PROJECTION",
+		"siteSettings.ts"
 	),
-	"queries.ts PAGE_BUILDER_LINK_FIELDS": readFileSync(
-		"lib/sanity/queries.ts",
-		"utf8"
+	"queries.ts PAGE_BUILDER_LINK_FIELDS": extractProjection(
+		readFileSync("lib/sanity/queries.ts", "utf8"),
+		"PAGE_BUILDER_LINK_FIELDS",
+		"queries.ts"
 	),
 };
 
