@@ -44,6 +44,31 @@ function parentOf(context: ValidationContext): LinkParent {
 	return context.parent as LinkParent;
 }
 
+const ABSOLUTE_HREF_SCHEMES = ["http:", "https:", "mailto:", "tel:"];
+
+/**
+ * Accepts an absolute URL on an allowed scheme, or a site-relative path.
+ *
+ * Exported and tested directly rather than inlined, following the same
+ * convention as `validatePageSlug` and `validateFeaturedGridTiling` — the
+ * accept/reject boundary is the behaviour worth pinning.
+ */
+export function isValidHref(value: string): boolean {
+	const trimmed = value.trim();
+	if (!trimmed) return false;
+
+	// Site-relative: "/contact", "/blog?tag=x". A protocol-relative "//host"
+	// is deliberately rejected — it is almost always a mistake here, and it
+	// silently inherits the page's scheme.
+	if (trimmed.startsWith("/")) return !trimmed.startsWith("//");
+
+	try {
+		return ABSOLUTE_HREF_SCHEMES.includes(new URL(trimmed).protocol);
+	} catch {
+		return false;
+	}
+}
+
 export const link = defineType({
 	name: "link",
 	title: "Link",
@@ -115,13 +140,32 @@ export const link = defineType({
 		defineField({
 			name: "href",
 			title: "URL",
-			type: "url",
+			description:
+				"An absolute URL (https://…, mailto:, tel:) or a path on this site (/contact).",
+			// Deliberately `string`, not `url`. Sanity's `url` type applies its
+			// own URI check *in addition to* whatever `validation` you supply,
+			// and that built-in check knows nothing about which variant is
+			// active. The result was a link failing to publish because of a
+			// stale value in a hidden field belonging to a variant the editor
+			// had switched away from — an error pointing at a field they could
+			// not see, holding a value they never typed.
+			//
+			// The built-in check also rejects relative paths, so "/contact"
+			// was invalid despite being a perfectly good link.
+			//
+			// Owning the format check here fixes both: it can skip entirely
+			// when the variant is inactive, and it can accept site-relative
+			// paths.
+			type: "string",
 			hidden: ({ parent }) => !isExternal(parent as LinkParent),
 			validation: (Rule) =>
 				Rule.custom((value, context) => {
 					const parent = parentOf(context);
 					if (!isExternal(parent)) return true;
-					return value ? true : "Required when Link Type is External URL";
+					if (!value) return "Required when Link Type is External URL";
+					return isValidHref(value)
+						? true
+						: "Enter an absolute URL (https://…, mailto:, tel:) or a path starting with /";
 				}),
 		}),
 		defineField({
