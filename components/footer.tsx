@@ -1,8 +1,52 @@
 import Link from "next/link";
 import Image from "next/image";
 import { BrandMark, resolveBrandMarkLogo } from "./brand-mark";
-import { complianceLinks, footerColumns } from "./data";
+import { complianceLinks, footerColumns as hardcodedFooterColumns } from "./data";
 import { getSiteSettings } from "@/lib/sanity/queries";
+import { CalButton } from "./cal-button";
+import { resolveLabeledLinks, type ResolvedLabeledLink } from "./nav";
+
+/** One resolved footer column, ready to render — heading plus the same
+ * resolved-link shape nav.tsx uses for navLinks/headerCta. */
+type ResolvedFooterColumn = {
+	heading: string;
+	links: ResolvedLabeledLink[];
+};
+
+/**
+ * One resolved footer link, either kind. Mirrors nav-client.tsx's `NavLink`
+ * — a `calBooking` link renders via CalButton, never as an `<a>`, same
+ * reasoning (lib/sanity/lib/resolve-link.ts's `ResolvedLink` union). Kept as
+ * its own small component here (not imported from nav-client.tsx) because
+ * that file is "use client" and Footer has no interactivity of its own to
+ * justify the boundary.
+ */
+function FooterLink({
+	link,
+	className,
+}: {
+	link: ResolvedLabeledLink;
+	className?: string;
+}) {
+	if (link.kind === "calBooking") {
+		return (
+			<CalButton calLink={link.calLink} className={className}>
+				{link.label}
+			</CalButton>
+		);
+	}
+
+	return (
+		<Link
+			href={link.href}
+			target={link.target}
+			rel={link.rel}
+			className={className}
+		>
+			{link.label}
+		</Link>
+	);
+}
 
 // Server component — the fetch below is the single round trip Footer needs
 // for the logo (getSiteSettings projects the whole siteSettings singleton,
@@ -12,6 +56,33 @@ import { getSiteSettings } from "@/lib/sanity/queries";
 export async function Footer() {
 	const siteSettings = await getSiteSettings();
 	const logo = resolveBrandMarkLogo(siteSettings);
+
+	// Per-collection fallback, same rule as nav.tsx's navLinks/headerCta:
+	// footerColumns is its own independent field on siteSettings, so it
+	// falls back to components/data.ts on its own rather than being tied to
+	// whether navLinks/headerCta are configured. A column is kept only if
+	// it has a heading; its links are resolved (and dangling ones dropped)
+	// the same way nav.tsx resolves navLinks.
+	const footerColumns: ResolvedFooterColumn[] =
+		siteSettings?.footerColumns && siteSettings.footerColumns.length > 0
+			? siteSettings.footerColumns
+					.filter(
+						(column): column is NonNullable<typeof column> & {
+							heading: string;
+						} => !!column?.heading
+					)
+					.map((column) => ({
+						heading: column.heading,
+						links: resolveLabeledLinks(column.links),
+					}))
+			: hardcodedFooterColumns.map((column) => ({
+					heading: column.heading,
+					links: column.links.map((link) => ({
+						kind: "navigate" as const,
+						label: link.label,
+						href: link.href,
+					})),
+				}));
 
 	return (
 		<footer className="border-t border-relay-line">
@@ -36,12 +107,10 @@ export async function Footer() {
 							<ul className="flex flex-col gap-0.5">
 								{column.links.map((link) => (
 									<li key={link.label}>
-										<Link
-											href={link.href}
+										<FooterLink
+											link={link}
 											className="inline-block py-1.5 text-sm text-relay-body transition-colors hover:text-relay-cyan"
-										>
-											{link.label}
-										</Link>
+										/>
 									</li>
 								))}
 							</ul>

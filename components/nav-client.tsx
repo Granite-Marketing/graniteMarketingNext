@@ -4,15 +4,112 @@ import { useState } from "react";
 import Link from "next/link";
 import { BrandMark, type BrandMarkLogo } from "./brand-mark";
 import { CalButton } from "./cal-button";
-import { navLinks } from "./data";
+import { cn } from "@/lib/utils";
+import type { ResolvedLabeledLink } from "./nav";
+
+// Mirrors CalButton's own class list (components/cal-button.tsx) — needed
+// here because a `navigate`-kind headerCta (an editor pointing the header
+// CTA at a page instead of the booking modal) has to render as a `<Link>`
+// that still looks like the button CalButton draws for the `calBooking`
+// case. Duplicated rather than exported from CalButton: that file isn't
+// part of this unit's ownership (nav.tsx/nav-client.tsx/footer.tsx only),
+// and its className already composes a caller override via `cn` the same
+// way this does.
+const CTA_BASE_CLASSES =
+	"cursor-pointer rounded bg-relay-cyan font-mono font-semibold text-relay-bg transition-all hover:bg-relay-bright hover:shadow-[0_0_28px_rgba(63,198,220,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-relay-cyan";
+const CTA_SIZE_CLASSES = {
+	default: "px-4.5 py-2.5 text-xs",
+	lg: "px-6 py-3.5 text-[13px]",
+} as const;
+
+/**
+ * One resolved nav item, either kind. `kind: "calBooking"` renders via
+ * CalButton — never as an `<a>` — exactly the distinction
+ * lib/sanity/lib/resolve-link.ts's `ResolvedLink` union exists to force at
+ * compile time (a `calBooking` value has no `href` to destructure by
+ * mistake).
+ */
+function NavLink({
+	link,
+	className,
+	onClick,
+}: {
+	link: ResolvedLabeledLink;
+	className?: string;
+	onClick?: () => void;
+}) {
+	if (link.kind === "calBooking") {
+		return (
+			<CalButton calLink={link.calLink} className={className}>
+				{link.label}
+			</CalButton>
+		);
+	}
+
+	return (
+		<Link
+			href={link.href}
+			onClick={onClick}
+			target={link.target}
+			rel={link.rel}
+			className={className}
+		>
+			{link.label}
+		</Link>
+	);
+}
+
+/** The header CTA slot when siteSettings HAS one configured — see the
+ * fallback branch inline below for the byte-identical-when-unset case. */
+function HeaderCta({
+	cta,
+	size = "default",
+	className,
+}: {
+	cta: ResolvedLabeledLink;
+	size?: "default" | "lg";
+	className?: string;
+}) {
+	if (cta.kind === "calBooking") {
+		return (
+			<CalButton calLink={cta.calLink} size={size} className={className}>
+				{cta.label}
+			</CalButton>
+		);
+	}
+
+	return (
+		<Link
+			href={cta.href}
+			target={cta.target}
+			rel={cta.rel}
+			className={cn(CTA_BASE_CLASSES, CTA_SIZE_CLASSES[size], className)}
+		>
+			{cta.label}
+		</Link>
+	);
+}
 
 /** Everything nav.tsx used to be, unchanged, minus the logo now arriving as
  * a prop instead of BrandMark rendering its default (no-logo) state. Split
  * out of nav.tsx (which stays the server component that fetches
  * siteSettings) because the mobile-menu open/close state needs `useState`,
  * and a "use client" component cannot itself be the async function that
- * awaits a Sanity fetch. */
-export function NavClient({ logo }: { logo: BrandMarkLogo | null }) {
+ * awaits a Sanity fetch.
+ *
+ * `navLinks`/`headerCta` arrive already resolved (nav.tsx picks between
+ * siteSettings and components/data.ts and calls resolveLink) — this
+ * component renders plain data, never a function or an unresolved link
+ * object, and never fetches on its own. */
+export function NavClient({
+	logo,
+	navLinks,
+	headerCta,
+}: {
+	logo: BrandMarkLogo | null;
+	navLinks: ResolvedLabeledLink[];
+	headerCta: ResolvedLabeledLink | null;
+}) {
 	const [open, setOpen] = useState(false);
 
 	return (
@@ -30,19 +127,24 @@ export function NavClient({ logo }: { logo: BrandMarkLogo | null }) {
 					<ul className="ml-auto hidden items-center gap-7 md:flex">
 						{navLinks.map((link) => (
 							<li key={link.label}>
-								<Link
-									href={link.href}
+								<NavLink
+									link={link}
 									className="font-mono text-[13px] text-relay-faint transition-colors hover:text-relay-cyan"
-								>
-									{link.label}
-								</Link>
+								/>
 							</li>
 						))}
 					</ul>
 
-					<CalButton className="hidden md:inline-flex">
-						book an intro call
-					</CalButton>
+					{headerCta ? (
+						<HeaderCta cta={headerCta} className="hidden md:inline-flex" />
+					) : (
+						// Byte-identical to today's markup when siteSettings has no
+						// headerCta — no calLink prop, so CalButton falls back to its
+						// own default CAL_LINK, exactly as before this unit.
+						<CalButton className="hidden md:inline-flex">
+							book an intro call
+						</CalButton>
+					)}
 
 					<button
 						type="button"
@@ -74,19 +176,23 @@ export function NavClient({ logo }: { logo: BrandMarkLogo | null }) {
 					<ul>
 						{navLinks.map((link) => (
 							<li key={link.label} className="border-b border-relay-line">
-								<Link
-									href={link.href}
+								<NavLink
+									link={link}
 									onClick={() => setOpen(false)}
 									className="block py-3.5 font-mono text-sm text-relay-faint transition-colors hover:text-relay-cyan"
-								>
-									{link.label}
-								</Link>
+								/>
 							</li>
 						))}
 					</ul>
-					<CalButton size="lg" className="mt-5 w-full">
-						Book an intro call
-					</CalButton>
+					{headerCta ? (
+						<HeaderCta cta={headerCta} size="lg" className="mt-5 w-full" />
+					) : (
+						// Byte-identical to today's markup when siteSettings has no
+						// headerCta — same fallback rule as the desktop button above.
+						<CalButton size="lg" className="mt-5 w-full">
+							Book an intro call
+						</CalButton>
+					)}
 				</div>
 			</nav>
 		</header>
