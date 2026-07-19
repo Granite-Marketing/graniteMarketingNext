@@ -807,6 +807,107 @@ routes. Anonymous browsing shows no stega. Presentation reorder updates the prev
 
 ---
 
+---
+
+## Phase 6 — Page types (agreed 2026-07-19, not yet built)
+
+Added after the homepage cutover landed. Ordering was corrected during
+discussion: **nav goes last**, because adding new document types changes what the
+`link` union can target, so wiring nav first means wiring it twice.
+
+### Model, and what was deliberately rejected
+
+Two versions of hierarchy were considered:
+
+| | Decision |
+|---|---|
+| **A — hierarchical desk presentation** | **Adopted.** Posts nest under Blog Listing in the Studio. Pure structure code: no schema change, no URL change, no migration |
+| **B — hierarchical URLs** (`/parent/child`) | **Rejected.** Needs a `parent` reference, a computed path chain, uniqueness across a tree rather than one field, a `/[...slug]` catch-all, and cascade updates when a parent slug changes |
+
+B was rejected on risk more than cost. A client dragging a page under the wrong
+parent breaks a working URL with no error — the page just moves. That footgun is
+permanent, where build cost is paid once. Blog and templates are already
+hierarchical *by route*; modelling it again in documents changes no URL.
+
+A useful consequence: "only certain pages may be root-level" stops being a rule to
+enforce and becomes structurally true. With separate types and flat slugs there is
+no `parent` field to set wrongly.
+
+### The fixed-content-with-slots model
+
+Detail and listing pages are **not** free compositions. An editor must not be able
+to remove the thing the page exists to show.
+
+```
+[ sections above ]   ← composable
+[ the post body  ]   ← fixed, non-removable
+[ sections below ]   ← composable
+```
+
+Editable: title, SEO, hero copy and CTAs, and blocks before/after the fixed
+region. Not editable: the fixed region itself.
+
+### Types — singletons, not collections
+
+There is exactly one Blog Listing. Making these singletons rather than creatable
+lists removes the bloat objection (one desk line each, no list view) and removes a
+failure mode: nobody can create a second Blog Listing and wonder why it never
+appears. It also means **no `pageType` switcher** — nobody opens a page and changes
+what kind of page it is.
+
+| Type | Role |
+|---|---|
+| `blogListing` | chrome around `/blog`'s grid |
+| `blogPostTemplate` | sections around **every** post body — one template, many records |
+| `templateListing` | chrome around `/templates` |
+| `templateDetail` | sections around every template body |
+| `contactPage` | `/contact`, with the form as a block; form logic stays in code |
+
+### Desk shape
+
+```
+Site Settings
+─────────────
+Home                 ← opens whichever page siteSettings.homePage references
+Blog Listing · Blog Post Template
+Template Listing · Template Detail
+Contact
+Pages                ← creatable list, ad-hoc marketing pages
+Legal Pages          ← creatable list
+─────────────
+Blog Posts · Workflow Templates · Case Studies
+Clients · FAQs · Tools · Logos
+─────────────
+Authors · Categories · Locations
+```
+
+Homepage stays a `siteSettings` reference rather than its own type, so any page can
+be promoted. The desk entry is a shortcut to whichever one it points at — two
+mechanisms for "which page is home" would be worse than one.
+
+### U19 — Page type singletons
+Five types above, each with the slots model and a pinned desk entry. Structure
+needs `newDocumentOptions` and `document.actions` filtering per type, following the
+`siteSettings` precedent in `lib/sanity/structure.ts`.
+
+### U20 — Hierarchical desk tree
+Posts nested under Blog Listing, templates under Template Listing. Presentation
+only — getting it wrong costs a re-render, not a URL.
+
+### U21 — Contact page
+`/contact` becomes a document so nav can link to it. Currently it is a bespoke
+route, which is why the link union cannot target it and the CTA had to use an
+external URL.
+
+### U22 — Nav and footer from Site Settings
+Last. Every type now exists to link to.
+
+**Derive the reserved-slug blocklist rather than hand-maintaining it.** It lives in
+`documents/page.ts` and must grow with every new route and type. A hand-kept list
+of "slugs that would collide with something real" is exactly what drifts silently.
+
+---
+
 ## Scope boundaries
 
 **In scope:** everything in the 18 units above.
