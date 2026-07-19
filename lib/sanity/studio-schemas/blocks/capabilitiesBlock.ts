@@ -36,6 +36,7 @@ function labeledLinkFields(): FieldDefinition[] {
 
 export type CapabilityItem = {
 	featured?: boolean;
+	title?: string;
 };
 
 // The layout robustness guard (C4 of the plan). Exported and tested directly
@@ -48,17 +49,29 @@ export type CapabilityItem = {
 // rules), so the empty case is handled explicitly rather than throwing.
 /**
  * The grid is 12 columns: a featured card spans 6, a normal card spans 3
- * (see components/capabilities.tsx). Cards therefore have to tile whole rows,
- * or the last row is ragged.
+ * (see components/capabilities.tsx). CSS grid places cards in row order, and
+ * a card that does not fit in the columns left in its row drops to the next
+ * row — leaving a gap rather than reflowing. So the layout is order
+ * dependent, not just a matter of the aggregate featured/normal counts.
  *
- * `6f + 3n` must be a multiple of 12, which reduces to `2f + n ≡ 0 (mod 4)`.
- * The live homepage ships 2 featured + 4 normal — `6+6`, then `3+3+3+3`, two
- * clean rows.
+ * This walks the cards in order, tracking columns used in the current row
+ * (mod 12). A featured card can only start when at least 6 columns remain;
+ * since every card is 3 or 6 wide, the only way to have too little room is
+ * exactly 3 columns left (`used === 9`) when a featured card comes up — a
+ * normal card (3 wide) always fits whatever multiple-of-3 gap remains. The
+ * final `used` must land back on 0, or the last row is ragged.
  *
- * An earlier version of this rule required *exactly one* featured item. That
- * was wrong in a way worth recording: 1 featured + 5 normal is 21 columns and
- * leaves a ragged row, so the rule would have rejected the real design and
- * enforced a broken one. The constraint is tiling, not a magic count.
+ * An earlier version of this rule checked only the aggregate counts
+ * (`2f + n ≡ 0 mod 4`). That missed order entirely: 1 featured + 6 normal
+ * ordered normal, normal, normal, featured, normal, normal, normal passes
+ * the aggregate check (2×1 + 6 = 8) but the featured card lands at column 9,
+ * wraps, and leaves a 3-column gap. The same counts with the featured card
+ * first tile cleanly, so the fix simulates placement instead of counting.
+ *
+ * An even earlier version of this rule required *exactly one* featured item.
+ * That was wrong in a way worth recording: 1 featured + 5 normal, featured
+ * first, tiles cleanly (6+3+3, then 3+3+3), so that rule would have rejected
+ * a real, working layout. The constraint is tiling in order, not a count.
  */
 export function validateFeaturedGridTiling(
 	items: CapabilityItem[] | undefined
@@ -66,12 +79,28 @@ export function validateFeaturedGridTiling(
 	const list = items ?? [];
 	if (list.length === 0) return true;
 
-	const featured = list.filter((item) => item?.featured).length;
-	const normal = list.length - featured;
+	const featuredCount = list.filter((item) => item?.featured).length;
+	const normalCount = list.length - featuredCount;
 
-	if ((2 * featured + normal) % 4 === 0) return true;
+	let used = 0;
+	for (let index = 0; index < list.length; index++) {
+		const item = list[index];
+		const isFeatured = Boolean(item?.featured);
+		const span = isFeatured ? 6 : 3;
 
-	return `Capability cards must fill whole rows of the 12-column grid. A featured card spans 6 columns and a normal card spans 3, so (2 × featured) + normal must be divisible by 4 — currently ${featured} featured and ${normal} normal. Try 2 featured + 4 normal, or 0 featured + 4 normal.`;
+		if (isFeatured && used === 9) {
+			const named = item?.title ? ` ("${item.title}")` : "";
+			return `Card ${index + 1}${named} is featured (double width), but only 3 columns are left in its row, so it drops to the next row and leaves a gap. Move it to start a new row, swap it with a normal card, or turn it into a normal card.`;
+		}
+
+		used = (used + span) % 12;
+	}
+
+	if (used !== 0) {
+		return `Capability cards must fill whole rows of the 12-column grid in the order they're listed. A featured card spans 6 columns and a normal card spans 3, and this order leaves the last row unfinished. Currently ${featuredCount} featured and ${normalCount} normal. Try 2 featured + 4 normal, or 0 featured + 4 normal, and check that each row is filled before the next one starts.`;
+	}
+
+	return true;
 }
 
 export const capabilitiesBlock = defineType({

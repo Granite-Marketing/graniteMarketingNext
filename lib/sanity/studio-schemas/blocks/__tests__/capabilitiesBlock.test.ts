@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	capabilitiesBlock,
 	validateFeaturedGridTiling,
+	type CapabilityItem,
 } from "../capabilitiesBlock";
 
 describe("studio-schemas/blocks/capabilitiesBlock", () => {
@@ -140,5 +141,56 @@ describe("studio-schemas/blocks/capabilitiesBlock — validateFeaturedGridTiling
 		const result = validateFeaturedGridTiling([...featured(1), ...normal(5)]);
 		expect(result as string).toContain("1 featured");
 		expect(result as string).toContain("5 normal");
+	});
+
+	// The confirmed counterexample from code review: aggregate count is fine
+	// (2×1 + 6 = 8, divisible by 4) but the featured card lands at column 9
+	// with only 3 columns left in its row, wraps, and leaves a gap.
+	it("rejects 1 featured + 6 normal ordered n,n,n,f,n,n,n, even though the aggregate count passes", () => {
+		const items: CapabilityItem[] = [
+			{ featured: false },
+			{ featured: false },
+			{ featured: false },
+			{ featured: true },
+			{ featured: false },
+			{ featured: false },
+			{ featured: false },
+		];
+		const result = validateFeaturedGridTiling(items);
+		expect(result).not.toBe(true);
+	});
+
+	// Same seven cards, same counts, but the featured card starts its own
+	// row instead of landing mid-row. Proves the fix rejects on order, not
+	// just on reflex, for this count.
+	it("accepts the same 1 featured + 6 normal cards when the featured card starts the row", () => {
+		const items: CapabilityItem[] = [
+			{ featured: true },
+			{ featured: false },
+			{ featured: false },
+			{ featured: false },
+			{ featured: false },
+			{ featured: false },
+			{ featured: false },
+		];
+		expect(validateFeaturedGridTiling(items)).toBe(true);
+	});
+
+	it("rejects a configuration that ends mid row — 3 normal cards, 9 of 12 columns used", () => {
+		const result = validateFeaturedGridTiling(normal(3));
+		expect(result).not.toBe(true);
+	});
+
+	it("names the offending card by position when a featured card wraps mid-row", () => {
+		const items: CapabilityItem[] = [
+			{ featured: false, title: "Ops automation" },
+			{ featured: false, title: "Content systems" },
+			{ featured: false, title: "Market intelligence" },
+			{ featured: true, title: "CRM & marketing automation" },
+		];
+		const result = validateFeaturedGridTiling(items);
+		expect(result).not.toBe(true);
+		expect(result as string).toContain("4");
+		expect(result as string).toContain("CRM & marketing automation");
 	});
 });
