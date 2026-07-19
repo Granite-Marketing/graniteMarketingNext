@@ -8,7 +8,7 @@ import { PlugIcon } from "@sanity/icons";
 
 export const tool = defineType({
 	name: "tool",
-	title: "🧩 Tool / Integration",
+	title: "Tool / Integration",
 	type: "document",
 	icon: PlugIcon,
 	fields: [

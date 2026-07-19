@@ -8,7 +8,7 @@ import { UsersIcon } from "@sanity/icons";
 
 export const client = defineType({
 	name: "client",
-	title: "👤 Client",
+	title: "Client",
 	type: "document",
 	icon: UsersIcon,
 	fields: [
@@ -38,7 +38,7 @@ export const client = defineType({
 		}),
 		defineField({
 			name: "headshot",
-			title: "👤 Client Headshot",
+			title: "Client Headshot",
 			type: "image",
 			options: {
 				hotspot: true,

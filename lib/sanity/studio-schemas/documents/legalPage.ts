@@ -54,7 +54,7 @@ export function validateLegalPageSlug(
 
 export const legalPage = defineType({
 	name: "legalPage",
-	title: "📜 Legal Page",
+	title: "Legal Page",
 	type: "document",
 	icon: LockIcon,
 	fields: [

@@ -2,6 +2,7 @@ import { defineType } from "sanity";
 import { CogIcon } from "@sanity/icons";
 import { SINGLETON_TYPES } from "../../singletons";
 import { slotFields } from "../objects/pageTypeSlots";
+import { routeField } from "../../studio-components/route-field";
 
 // granite-convention-exception: test-discipline
 // reason: no standalone templateDetail.test.ts — see blogListing.ts's
@@ -29,10 +30,13 @@ export const TEMPLATE_DETAIL_QUERY = `*[_id == "${TEMPLATE_DETAIL_TYPE}"][0]{
 
 export const templateDetail = defineType({
 	name: TEMPLATE_DETAIL_TYPE,
-	title: "⚙️ Template Detail",
+	title: "Template Detail",
 	type: "document",
 	icon: CogIcon,
-	fields: [...slotFields()],
+	// PART 1 — read-only, shows this applies to every /templates/… template.
+	// See studio-components/route-field.tsx for why it can't be edited and
+	// lib/sanity/routes.ts for the single map it reads.
+	fields: [routeField("templateDetail"), ...slotFields()],
 	preview: {
 		// An empty `select` because there is no field worth reading: these
 		// singletons carry no title. It is NOT what stops the pane reading

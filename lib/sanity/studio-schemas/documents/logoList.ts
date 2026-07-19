@@ -8,7 +8,7 @@ import { ImageIcon } from "@sanity/icons";
 
 export const logoList = defineType({
 	name: "logoList",
-	title: "🌅 Logo List",
+	title: "Logo List",
 	type: "document",
 	icon: ImageIcon,
 	fields: [

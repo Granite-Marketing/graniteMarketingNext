@@ -8,7 +8,7 @@ import { TagIcon } from "@sanity/icons";
 
 export const category = defineType({
 	name: "category",
-	title: "🗂️ Category",
+	title: "Category",
 	type: "document",
 	icon: TagIcon,
 	fields: [

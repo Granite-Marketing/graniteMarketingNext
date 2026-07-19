@@ -4,7 +4,9 @@ import type {
 	NewDocumentOptionsContext,
 	TemplateItem,
 } from "sanity";
+import type { ComponentType } from "react";
 import type { ListItemBuilder, StructureResolver } from "sanity/structure";
+import { CogIcon, ComposeIcon, EnvelopeIcon, PackageIcon } from "@sanity/icons";
 import {
 	SINGLETON_TYPE_LIST,
 	isSingletonType,
@@ -72,15 +74,25 @@ const NESTED_RECORD_TYPES = ["blogPost", "workflowTemplate"];
 // It is deliberately the contextual name ("Blog Post Detail"), not the row
 // label ("Detail"): the header is also what the browser tab and search
 // results show, where the surrounding tree isn't there to supply the topic.
+//
+// `icon` replaces what used to be an emoji hand-typed onto the front of
+// `title` (PART 2 of the 2026-07-19 emoji-removal unit). An emoji living
+// inside the title STRING leaks into search results, breadcrumbs, the
+// browser tab title and reference pickers, and renders inconsistently
+// across platforms — `ListItemBuilder.icon()` is the mechanism Sanity ships
+// for exactly this, rendered once by the desk chrome rather than baked into
+// text everywhere that text is read.
 function pinnedSingletonListItem(
 	S: Parameters<StructureResolver>[0],
 	type: SingletonType,
 	title: string,
-	documentTitle: string
+	documentTitle: string,
+	icon: ComponentType
 ): ListItemBuilder {
 	return S.listItem()
 		.title(title)
 		.id(type)
+		.icon(icon)
 		.child(
 			S.document()
 				.schemaType(type)
@@ -109,10 +121,20 @@ function pinnedSingletonListItem(
 // from inside this section goes through the ordinary create flow and lands
 // with the right `_type`, exactly as it would from a top-level list. Only
 // where the entry point lives changed.
+//
+// `icon` (the section's own) replaces the emoji that used to prefix `title`
+// ("📝 Blogs", "⚡ Templates" — see pinnedSingletonListItem's comment for
+// why). Every nested singleton entry hardcodes CogIcon rather than taking
+// an icon per entry: "the gear marks a page-settings document; the records
+// below it carry no gear" (see the call site below) was already the rule
+// when a literal ⚙️ did this job by hand, and Listing/Detail never need to
+// look different from each other — only different from the plain records
+// nested alongside them.
 function pageSection(
 	S: Parameters<StructureResolver>[0],
 	sectionId: SingletonType,
 	title: string,
+	icon: ComponentType,
 	singletonEntries: readonly {
 		type: SingletonType;
 		title: string;
@@ -124,6 +146,7 @@ function pageSection(
 	return S.listItem()
 		.title(title)
 		.id(sectionId)
+		.icon(icon)
 		.child(
 			S.list()
 				.title(title)
@@ -132,6 +155,7 @@ function pageSection(
 						S.listItem()
 							.title(entry.title)
 							.id(`${entry.type}-document`)
+							.icon(CogIcon)
 							.child(
 								S.document()
 									.schemaType(entry.type)
@@ -167,7 +191,13 @@ export const structure: StructureResolver = (S) => {
 	return S.list()
 		.title("Content")
 		.items([
-			pinnedSingletonListItem(S, "siteSettings", "Site Settings", "Site Settings"),
+			pinnedSingletonListItem(
+				S,
+				"siteSettings",
+				"Site Settings",
+				"Site Settings",
+				CogIcon
+			),
 			S.divider(),
 
 			// The fixed-route page types, grouped above the creatable page
@@ -186,9 +216,13 @@ export const structure: StructureResolver = (S) => {
 			// and the records. Two rows instead of five, and nothing
 			// blog-shaped sits outside "Blogs".
 			//
-			// Emoji prefixes match the convention the record types already use
-			// (📊 Case Study, 👤 Client, …) so these rows don't read as a
-			// different class of thing sitting above them.
+			// PART 2 of the 2026-07-19 emoji-removal unit: these rows used to
+			// carry an emoji prefix baked into the title string (matching the
+			// convention the record types used — 📊 Case Study, 👤 Client, …).
+			// That mechanism is gone everywhere now, replaced by
+			// `ListItemBuilder.icon()` — a real icon component rendered by the
+			// desk chrome rather than a character living inside text that gets
+			// read by search results, breadcrumbs and the browser tab.
 			// Entries inside a section are named for the CONCEPT, not the topic:
 			// "Blogs > Listing" reads better than "Blogs > Blog Listing", and
 			// the pair Listing/Detail is the vocabulary editors are taught
@@ -196,9 +230,10 @@ export const structure: StructureResolver = (S) => {
 			// would also have been quietly wrong — the detail page is not the
 			// posts, it is the frame around each one.
 			//
-			// The gear marks a page-settings document; the records below it
-			// carry no gear. That is the second thing the desk teaches: gear
-			// means how a page is built, plain means your content.
+			// The gear (CogIcon) marks a page-settings document; the records
+			// below it carry no gear. That is the second thing the desk
+			// teaches: gear means how a page is built, plain means your
+			// content.
 			//
 			// Each document's OWN title stays contextual ("Blog Post Detail",
 			// see its preview.prepare) — a bare "Detail" is fine nested under
@@ -207,16 +242,17 @@ export const structure: StructureResolver = (S) => {
 			pageSection(
 				S,
 				"blogListing",
-				"📝 Blogs",
+				"Blogs",
+				ComposeIcon,
 				[
 					{
 						type: "blogListing",
-						title: "⚙️ Listing",
+						title: "Listing",
 						documentTitle: "Blog Listing",
 					},
 					{
 						type: "blogPostTemplate",
-						title: "⚙️ Detail",
+						title: "Detail",
 						documentTitle: "Blog Post Detail",
 					},
 				],
@@ -226,23 +262,30 @@ export const structure: StructureResolver = (S) => {
 			pageSection(
 				S,
 				"templateListing",
-				"⚡ Templates",
+				"Templates",
+				PackageIcon,
 				[
 					{
 						type: "templateListing",
-						title: "⚙️ Listing",
+						title: "Listing",
 						documentTitle: "Template Listing",
 					},
 					{
 						type: "templateDetail",
-						title: "⚙️ Detail",
+						title: "Detail",
 						documentTitle: "Template Detail",
 					},
 				],
 				"workflowTemplate",
 				"Workflow Templates"
 			),
-			pinnedSingletonListItem(S, "contactPage", "✉️ Contact", "Contact"),
+			pinnedSingletonListItem(
+				S,
+				"contactPage",
+				"Contact",
+				"Contact",
+				EnvelopeIcon
+			),
 			S.divider(),
 			...listFor(PAGE_TYPES),
 			S.divider(),

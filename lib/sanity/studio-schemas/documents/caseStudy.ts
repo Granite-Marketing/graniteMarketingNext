@@ -8,7 +8,7 @@ import { CaseIcon } from "@sanity/icons";
 
 export const caseStudy = defineType({
 	name: "caseStudy",
-	title: "📊 Case Study",
+	title: "Case Study",
 	type: "document",
 	icon: CaseIcon,
 	fields: [

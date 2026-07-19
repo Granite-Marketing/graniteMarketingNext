@@ -2,6 +2,7 @@ import { defineType, defineField } from "sanity";
 import { CogIcon } from "@sanity/icons";
 import { SINGLETON_TYPES } from "../../singletons";
 import { slotFields, heroFields } from "../objects/pageTypeSlots";
+import { routeField } from "../../studio-components/route-field";
 
 // granite-convention-exception: test-discipline
 // reason: no standalone templateListing.test.ts — see blogListing.ts's
@@ -36,10 +37,14 @@ export const TEMPLATE_LISTING_QUERY = `*[_id == "${TEMPLATE_LISTING_TYPE}"][0]{
 
 export const templateListing = defineType({
 	name: TEMPLATE_LISTING_TYPE,
-	title: "⚙️ Template Listing",
+	title: "Template Listing",
 	type: "document",
 	icon: CogIcon,
 	fields: [
+		// PART 1 — read-only, shows the fixed /templates route this document
+		// configures. See studio-components/route-field.tsx for why it can't
+		// be edited and lib/sanity/routes.ts for the single map it reads.
+		routeField("templateListing"),
 		defineField({
 			name: "seo",
 			title: "SEO",

@@ -8,7 +8,7 @@ import { PackageIcon } from "@sanity/icons";
 
 export const workflowTemplate = defineType({
 	name: "workflowTemplate",
-	title: "⚙️ Workflow Template",
+	title: "Workflow Template",
 	type: "document",
 	icon: PackageIcon,
 	fields: [

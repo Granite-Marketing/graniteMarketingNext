@@ -8,7 +8,7 @@ import { EarthGlobeIcon } from "@sanity/icons";
 
 export const location = defineType({
 	name: "location",
-	title: "🌍 Location",
+	title: "Location",
 	type: "document",
 	icon: EarthGlobeIcon,
 	fields: [

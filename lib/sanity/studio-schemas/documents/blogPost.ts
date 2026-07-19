@@ -8,7 +8,7 @@ import { ComposeIcon } from "@sanity/icons";
 
 export const blogPost = defineType({
 	name: "blogPost",
-	title: "📝 Blog Post",
+	title: "Blog Post",
 	type: "document",
 	icon: ComposeIcon,
 	fields: [

@@ -8,7 +8,7 @@ import { UserIcon } from "@sanity/icons";
 
 export const author = defineType({
 	name: "author",
-	title: "👤 Author",
+	title: "Author",
 	type: "document",
 	icon: UserIcon,
 	fields: [

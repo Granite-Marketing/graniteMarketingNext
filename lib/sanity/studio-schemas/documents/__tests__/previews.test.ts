@@ -213,6 +213,88 @@ const SINGLETONS: Array<{
 	},
 ];
 
+// PART 2 of the emoji-removal unit (2026-07-19). Every document type now
+// has a real `icon` from @sanity/icons (see the MAPPED_TYPES/SINGLETONS
+// icon assertions above and below) — the emoji hand-typed into `title:`
+// strings across documents/*.ts were doing that job before, badly: they
+// live INSIDE the title string, so they leak into search results,
+// breadcrumbs, the browser tab title and reference pickers, and render
+// inconsistently across platforms/fonts. This block asserts their absence.
+//
+// Driven from the actual schema objects, not a hardcoded list of "known
+// offenders" — a title walker recurses through every schema's fields (and
+// nested fields, array `of` members, `options.list` entries, block
+// `styles`/`marks.decorators`/`marks.annotations`, everything) collecting
+// every string found under a `title` key, so a newly introduced emoji in
+// ANY title anywhere in a document schema fails this test, not just the
+// eighteen offenders present when this test was written.
+const EVERY_DOCUMENT_SCHEMA: Array<{ label: string; schema: unknown }> = [
+	{ label: "page", schema: page },
+	{ label: "legalPage", schema: legalPage },
+	{ label: "blogPost", schema: blogPost },
+	{ label: "workflowTemplate", schema: workflowTemplate },
+	{ label: "caseStudy", schema: caseStudy },
+	{ label: "client", schema: client },
+	{ label: "author", schema: author },
+	{ label: "faq", schema: faq },
+	{ label: "tool", schema: tool },
+	{ label: "logoList", schema: logoList },
+	{ label: "category", schema: category },
+	{ label: "workflowCategory", schema: workflowCategory },
+	{ label: "location", schema: location },
+	{ label: "blogListing", schema: blogListing },
+	{ label: "blogPostTemplate", schema: blogPostTemplate },
+	{ label: "templateListing", schema: templateListing },
+	{ label: "templateDetail", schema: templateDetail },
+	{ label: "contactPage", schema: contactPage },
+	{ label: "siteSettings", schema: siteSettings },
+];
+
+// `\p{Extended_Pictographic}` is the standard way to match "is this
+// character an emoji" in JS — it covers gear (⚙), envelope (✉), the FAQ
+// question-mark ornament (❔) and every pictograph in the eighteen offenders
+// this test replaces, without hand-listing Unicode ranges.
+const EMOJI_PATTERN = /\p{Extended_Pictographic}/u;
+
+function collectTitles(
+	node: unknown,
+	acc: string[] = [],
+	seen: Set<unknown> = new Set()
+): string[] {
+	if (node === null || typeof node !== "object") return acc;
+	if (seen.has(node)) return acc;
+	seen.add(node);
+
+	if (Array.isArray(node)) {
+		for (const item of node) collectTitles(item, acc, seen);
+		return acc;
+	}
+
+	for (const [key, value] of Object.entries(node as Record<string, unknown>)) {
+		if (key === "title" && typeof value === "string") {
+			acc.push(value);
+			continue;
+		}
+		// Functions (validation builders, `preview.prepare`, the route
+		// field's `components.input` factory) aren't plain data and can't be
+		// walked as objects.
+		if (typeof value === "function") continue;
+		if (value && typeof value === "object") collectTitles(value, acc, seen);
+	}
+
+	return acc;
+}
+
+describe("studio-schemas/documents — no emoji or leading '?' in any title (PART 2)", () => {
+	it.each(EVERY_DOCUMENT_SCHEMA)("$label", ({ schema }) => {
+		const titles = collectTitles(schema);
+		const offenders = titles.filter(
+			(title) => EMOJI_PATTERN.test(title) || title.startsWith("?")
+		);
+		expect(offenders).toEqual([]);
+	});
+});
+
 describe("studio-schemas/documents — Presentation panel legibility (icon + subtitle)", () => {
 	describe("every mapped type exposes a defined icon", () => {
 		it.each(MAPPED_TYPES)("$label", ({ schema }) => {

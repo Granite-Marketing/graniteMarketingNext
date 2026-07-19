@@ -8,7 +8,7 @@ import { TagsIcon } from "@sanity/icons";
 
 export const workflowCategory = defineType({
 	name: "workflowCategory",
-	title: "🗂️ Workflow Category",
+	title: "Workflow Category",
 	type: "document",
 	icon: TagsIcon,
 	fields: [

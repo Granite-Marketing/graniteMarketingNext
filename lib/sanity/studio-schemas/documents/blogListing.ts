@@ -2,6 +2,7 @@ import { defineType, defineField } from "sanity";
 import { CogIcon } from "@sanity/icons";
 import { SINGLETON_TYPES } from "../../singletons";
 import { slotFields, heroFields } from "../objects/pageTypeSlots";
+import { routeField } from "../../studio-components/route-field";
 
 // granite-convention-exception: test-discipline
 // reason: no standalone blogListing.test.ts — all five page-type singletons
@@ -45,10 +46,14 @@ export const BLOG_LISTING_QUERY = `*[_id == "${BLOG_LISTING_TYPE}"][0]{
 
 export const blogListing = defineType({
 	name: BLOG_LISTING_TYPE,
-	title: "⚙️ Blog Listing",
+	title: "Blog Listing",
 	type: "document",
 	icon: CogIcon,
 	fields: [
+		// PART 1 — read-only, shows the fixed /blog route this document
+		// configures. See studio-components/route-field.tsx for why it can't
+		// be edited and lib/sanity/routes.ts for the single map it reads.
+		routeField("blogListing"),
 		defineField({
 			name: "seo",
 			title: "SEO",

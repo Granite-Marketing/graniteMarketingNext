@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DocumentActionComponent } from "sanity";
+import { CogIcon, ComposeIcon, EnvelopeIcon, PackageIcon } from "@sanity/icons";
 import {
 	structure,
 	filterSingletonDocumentActions,
@@ -54,7 +55,12 @@ function createDocumentBuilderStub() {
 }
 
 function createListItemStub(id: string) {
-	const state: { title?: string; id: string; child?: unknown } = { id };
+	const state: {
+		title?: string;
+		id: string;
+		child?: unknown;
+		icon?: unknown;
+	} = { id };
 	const item = {
 		title(t: string) {
 			state.title = t;
@@ -68,9 +74,19 @@ function createListItemStub(id: string) {
 			state.child = c;
 			return item;
 		},
+		// Real API, confirmed at sanity/lib/structure.d.ts:4456 —
+		// `icon(icon: React.ComponentType | React.ReactNode):
+		// ListItemBuilder`. Added for PART 2b of the emoji-removal unit
+		// (2026-07-19): desk rows now carry a real icon instead of an emoji
+		// prefix in their title string.
+		icon(newIcon: unknown) {
+			state.icon = newIcon;
+			return item;
+		},
 		getId: () => state.id,
 		getTitle: () => state.title,
 		getChild: () => state.child,
+		getIcon: () => state.icon,
 	};
 	return item;
 }
@@ -528,6 +544,83 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 		// ...and not twice, despite `page` appearing in both the group list
 		// and the auto-generated passthrough.
 		expect(ids.filter((id) => id === "page")).toHaveLength(1);
+	});
+
+	// PART 2b of the emoji-removal unit (2026-07-19) — "📝 Blogs", "⚡
+	// Templates", "✉️ Contact" and the nested "⚙️ Listing" / "⚙️ Detail"
+	// entries lose their emoji prefix and gain a real `ListItemBuilder.icon()`
+	// call instead. Titles are asserted as the exact plain words (not
+	// `toContain`, unlike the topic-naming tests above) specifically because
+	// "no emoji leaked back in" is the point of this block; a `toContain`
+	// check would pass on "📝 Blogs" just as happily as on "Blogs".
+	describe("desk rows carry a real icon instead of an emoji-prefixed title", () => {
+		it("Site Settings uses CogIcon and a plain title", () => {
+			const { S, getList } = createStubS([]);
+			structure(S as never, {} as never);
+
+			const siteSettingsItem = (
+				getList().items as ReturnType<typeof createListItemStub>[]
+			)[0];
+
+			expect(siteSettingsItem.getTitle()).toBe("Site Settings");
+			expect(siteSettingsItem.getIcon()).toBe(CogIcon);
+		});
+
+		it("Contact uses EnvelopeIcon and a plain title", () => {
+			const { S, getList } = createStubS([]);
+			structure(S as never, {} as never);
+
+			const contactItem = (
+				getList().items as ReturnType<typeof createListItemStub>[]
+			).find((item) => item.getId?.() === "contactPage")!;
+
+			expect(contactItem.getTitle()).toBe("Contact");
+			expect(contactItem.getIcon()).toBe(EnvelopeIcon);
+		});
+
+		it.each([
+			["blogListing", "Blogs", ComposeIcon],
+			["templateListing", "Templates", PackageIcon],
+		])("%s section uses %s's icon and a plain title", (type, title, icon) => {
+			const { S, getList } = createStubS([]);
+			structure(S as never, {} as never);
+
+			const sectionItem = (
+				getList().items as ReturnType<typeof createListItemStub>[]
+			).find((item) => item.getId?.() === type)!;
+
+			expect(sectionItem.getTitle()).toBe(title);
+			expect(sectionItem.getIcon()).toBe(icon);
+		});
+
+		it.each(["blogListing", "templateListing"])(
+			"%s's nested Listing and Detail entries both use CogIcon and plain titles",
+			(type) => {
+				const { S, getList } = createStubS([]);
+				structure(S as never, {} as never);
+
+				const sectionItem = (
+					getList().items as ReturnType<typeof createListItemStub>[]
+				).find((item) => item.getId?.() === type)!;
+				const childItems = (
+					sectionItem.getChild() as {
+						getItems: () => ReturnType<typeof createListItemStub>[];
+					}
+				).getItems();
+
+				const listingEntry = childItems.find(
+					(item) => item.getTitle?.() === "Listing"
+				)!;
+				const detailEntry = childItems.find(
+					(item) => item.getTitle?.() === "Detail"
+				)!;
+
+				expect(listingEntry).toBeDefined();
+				expect(listingEntry.getIcon()).toBe(CogIcon);
+				expect(detailEntry).toBeDefined();
+				expect(detailEntry.getIcon()).toBe(CogIcon);
+			}
+		);
 	});
 });
 

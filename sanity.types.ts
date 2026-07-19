@@ -13,6 +13,97 @@
  */
 
 // Source: schema.json
+export type ContactPage = {
+  _id: string;
+  _type: "contactPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  route?: string;
+  seo?: Seo;
+  tag?: string;
+  heading?: string;
+  subtitle?: string;
+  sectionsAbove?: PageBuilder;
+  sectionsBelow?: PageBuilder;
+};
+
+export type PageBuilder = Array<{
+  _key: string;
+} & HeroBlock | {
+  _key: string;
+} & CapabilitiesBlock | {
+  _key: string;
+} & ToolsStripBlock | {
+  _key: string;
+} & ProcessBlock | {
+  _key: string;
+} & ResultsBlock | {
+  _key: string;
+} & TestimonialsBlock | {
+  _key: string;
+} & FaqBlock | {
+  _key: string;
+} & CtaBlock>;
+
+export type Seo = {
+  _type: "seo";
+  metaTitle?: string;
+  metaDescription?: string;
+};
+
+export type TemplateDetail = {
+  _id: string;
+  _type: "templateDetail";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  route?: string;
+  sectionsAbove?: PageBuilder;
+  sectionsBelow?: PageBuilder;
+};
+
+export type TemplateListing = {
+  _id: string;
+  _type: "templateListing";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  route?: string;
+  seo?: Seo;
+  tag?: string;
+  heading?: string;
+  subtitle?: string;
+  sectionsAbove?: PageBuilder;
+  sectionsBelow?: PageBuilder;
+};
+
+export type BlogPostTemplate = {
+  _id: string;
+  _type: "blogPostTemplate";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  route?: string;
+  sectionsAbove?: PageBuilder;
+  sectionsBelow?: PageBuilder;
+};
+
+export type BlogListing = {
+  _id: string;
+  _type: "blogListing";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  route?: string;
+  seo?: Seo;
+  tag?: string;
+  heading?: string;
+  subtitle?: string;
+  sectionsAbove?: PageBuilder;
+  sectionsBelow?: PageBuilder;
+};
+
 export type SiteSettings = {
   _id: string;
   _type: "siteSettings";
@@ -33,6 +124,12 @@ export type SiteSettings = {
     _type: "image";
   };
   logoLink?: Link;
+  homePage?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "page";
+  };
   navLinks?: Array<{
     label?: string;
     link?: Link;
@@ -65,7 +162,7 @@ export type SiteSettings = {
 
 export type Link = {
   _type: "link";
-  linkType?: "internal" | "anchor" | "external";
+  linkType?: "internal" | "anchor" | "external" | "calBooking";
   internalRef?: {
     _ref: string;
     _type: "reference";
@@ -96,6 +193,7 @@ export type Link = {
   anchorId?: string;
   href?: string;
   openInNewTab?: boolean;
+  calLink?: string;
 };
 
 export type SanityImageCrop = {
@@ -221,12 +319,6 @@ export type CaseStudy = {
   };
   showOnHome?: boolean;
   seo?: Seo;
-};
-
-export type Seo = {
-  _type: "seo";
-  metaTitle?: string;
-  metaDescription?: string;
 };
 
 export type Slug = {
@@ -550,24 +642,6 @@ export type Category = {
   slug?: Slug;
   description?: string;
 };
-
-export type PageBuilder = Array<{
-  _key: string;
-} & HeroBlock | {
-  _key: string;
-} & CapabilitiesBlock | {
-  _key: string;
-} & ToolsStripBlock | {
-  _key: string;
-} & ProcessBlock | {
-  _key: string;
-} & ResultsBlock | {
-  _key: string;
-} & TestimonialsBlock | {
-  _key: string;
-} & FaqBlock | {
-  _key: string;
-} & CtaBlock>;
 
 export type LegalPage = {
   _id: string;
@@ -933,7 +1007,7 @@ export type Geopoint = {
   alt?: number;
 };
 
-export type AllSanitySchemaTypes = SiteSettings | Link | SanityImageCrop | SanityImageHotspot | CaseStudy | Seo | Slug | Tool | LogoList | Faq | Client | CtaBlock | FaqBlock | TestimonialsBlock | ResultsBlock | ProcessBlock | ToolsStripBlock | CapabilitiesBlock | HeroBlock | WorkflowCategory | Location | Category | PageBuilder | LegalPage | WorkflowTemplate | BlogPost | Author | Page | Code | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
+export type AllSanitySchemaTypes = ContactPage | PageBuilder | Seo | TemplateDetail | TemplateListing | BlogPostTemplate | BlogListing | SiteSettings | Link | SanityImageCrop | SanityImageHotspot | CaseStudy | Slug | Tool | LogoList | Faq | Client | CtaBlock | FaqBlock | TestimonialsBlock | ResultsBlock | ProcessBlock | ToolsStripBlock | CapabilitiesBlock | HeroBlock | WorkflowCategory | Location | Category | LegalPage | WorkflowTemplate | BlogPost | Author | Page | Code | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageMetadata | SanityFileAsset | SanityAssetSourceData | SanityImageAsset | Geopoint;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./lib/sanity/queries.ts
 // Variable: BLOG_POSTS_QUERY
@@ -1903,7 +1977,7 @@ export type PAGE_QUERYResult = {
     link: {
       label: string | null;
       link: {
-        linkType: "anchor" | "external" | "internal" | null;
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
         internalRef: {
           _type: "blogPost";
           _id: string;
@@ -1940,7 +2014,7 @@ export type PAGE_QUERYResult = {
     ctaButton: {
       label: string | null;
       link: {
-        linkType: "anchor" | "external" | "internal" | null;
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
         internalRef: {
           _type: "blogPost";
           _id: string;
@@ -1972,7 +2046,7 @@ export type PAGE_QUERYResult = {
     secondaryCta: {
       label: string | null;
       link: {
-        linkType: "anchor" | "external" | "internal" | null;
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
         internalRef: {
           _type: "blogPost";
           _id: string;
@@ -2070,7 +2144,7 @@ export type PAGE_QUERYResult = {
     secondaryCta: {
       label: string | null;
       link: {
-        linkType: "anchor" | "external" | "internal" | null;
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
         internalRef: {
           _type: "blogPost";
           _id: string;
@@ -2353,7 +2427,7 @@ export type PAGE_CTA_DEFAULTS_QUERYResult = {
   ctaButton: {
     label: string | null;
     link: {
-      linkType: "anchor" | "external" | "internal" | null;
+      linkType: "anchor" | "calBooking" | "external" | "internal" | null;
       internalRef: {
         _type: "blogPost";
         _id: string;
@@ -2383,6 +2457,12 @@ export type PAGE_CTA_DEFAULTS_QUERYResult = {
   } | null;
   ctaFootnote: string | null;
 } | null;
+// Variable: PAGE_SLUGS_QUERY
+// Query: *[_type == "page"].slug.current
+export type PAGE_SLUGS_QUERYResult = Array<string | null>;
+// Variable: HOME_PAGE_SLUG_QUERY
+// Query: *[_id == "siteSettings"][0].homePage->slug.current
+export type HOME_PAGE_SLUG_QUERYResult = string | null;
 
 // Query TypeMap
 import "@sanity/client";
@@ -2414,5 +2494,7 @@ declare module "@sanity/client" {
     "\n    *[_type == \"caseStudy\" && showOnHome == true]\n      | order(sortOrder asc, _createdAt desc) [0...$limit]{\n      _id,\n      title,\n      slug,\n      client->{\n        _id,\n        name,\n        company\n      },\n      industry->{\n        _id,\n        name,\n        slug,\n        country,\n        region\n      },\n      excerpt,\n      featuredImage{\n        asset,\n        alt\n      },\n      loomUrl,\n      techStack[]->{\n        _id,\n        name,\n        slug,\n        integrationType\n      },\n      results[]{\n        metric,\n        value,\n        description\n      }\n    }\n  ": HOMEPAGE_CASE_STUDIES_QUERYResult;
     "\n    *[_type == \"page\" && slug.current == $slug][0] {\n      _id,\n      _type,\n      title,\n      slug,\n      seo {\n        metaTitle,\n        metaDescription\n      },\n      sections[] {\n        _key,\n        _type,\n        anchorId,\n\n        _type == \"heroBlock\" => {\n          eyebrow,\n          heading,\n          body,\n          primaryCtaLabel,\n          secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n          showTrustedBy\n        },\n\n        _type == \"capabilitiesBlock\" => {\n          eyebrow,\n          heading,\n          body,\n          items[]{\n            _key,\n            tag,\n            title,\n            description,\n            featured,\n            snippet\n          },\n          link {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n        },\n\n        _type == \"toolsStripBlock\" => {\n          eyebrow,\n          heading,\n          intro,\n          sourceMode,\n          \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n            _id,\n            name,\n            logo{ asset, alt }\n          },\n          \"manualItems\": manualTools[]->{\n            _id,\n            name,\n            logo{ asset, alt }\n          }\n        },\n\n        _type == \"processBlock\" => {\n          eyebrow,\n          heading,\n          body,\n          steps[]{\n            _key,\n            stepLabel,\n            title,\n            description,\n            duration\n          },\n          footnote\n        },\n\n        _type == \"resultsBlock\" => {\n          eyebrow,\n          heading,\n          stats[]{\n            _key,\n            value,\n            suffix,\n            label\n          },\n          sourceMode,\n          \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n            | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n          \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n        },\n\n        _type == \"testimonialsBlock\" => {\n          eyebrow,\n          heading,\n          sourceMode,\n          \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n          \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n        },\n\n        _type == \"faqBlock\" => {\n          eyebrow,\n          heading,\n          intro,\n          sourceMode,\n          autoCategory,\n          \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n          \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n        },\n\n        _type == \"ctaBlock\" => {\n          ctaHeading,\n          ctaSubtitle,\n          ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n          ctaFootnote,\n          secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  }\n        }\n      }\n    }\n  ": PAGE_QUERYResult;
     "\n    *[_id == \"siteSettings\"][0] {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{ _type, _id, slug },\n    anchorPage->{ _type, _id, slug },\n    anchorId,\n    href,\n    openInNewTab\n  }\n  },\n      ctaFootnote\n    }\n  ": PAGE_CTA_DEFAULTS_QUERYResult;
+    "\n    *[_type == \"page\"].slug.current\n  ": PAGE_SLUGS_QUERYResult;
+    "\n    *[_id == \"siteSettings\"][0].homePage->slug.current\n  ": HOME_PAGE_SLUG_QUERYResult;
   }
 }

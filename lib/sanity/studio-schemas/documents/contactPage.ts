@@ -2,6 +2,7 @@ import { defineType, defineField } from "sanity";
 import { CogIcon } from "@sanity/icons";
 import { SINGLETON_TYPES } from "../../singletons";
 import { slotFields, heroFields } from "../objects/pageTypeSlots";
+import { routeField } from "../../studio-components/route-field";
 
 // granite-convention-exception: test-discipline
 // reason: no standalone contactPage.test.ts — see blogListing.ts's
@@ -42,10 +43,14 @@ export const CONTACT_PAGE_QUERY = `*[_id == "${CONTACT_PAGE_TYPE}"][0]{
 
 export const contactPage = defineType({
 	name: CONTACT_PAGE_TYPE,
-	title: "✉️ Contact",
+	title: "Contact",
 	type: "document",
 	icon: CogIcon,
 	fields: [
+		// PART 1 — read-only, shows the fixed /contact route this document
+		// configures. See studio-components/route-field.tsx for why it can't
+		// be edited and lib/sanity/routes.ts for the single map it reads.
+		routeField("contactPage"),
 		defineField({
 			name: "seo",
 			title: "SEO",

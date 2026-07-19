@@ -8,7 +8,7 @@ import { HelpCircleIcon } from "@sanity/icons";
 
 export const faq = defineType({
 	name: "faq",
-	title: "❔FAQ",
+	title: "FAQ",
 	type: "document",
 	icon: HelpCircleIcon,
 	fields: [
