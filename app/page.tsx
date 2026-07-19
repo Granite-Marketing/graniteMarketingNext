@@ -21,9 +21,6 @@ import {
 	adaptClientTestimonial,
 	adaptFAQItem,
 } from "@/lib/sanity/lib/adapters";
-import type { PageQueryResult } from "@/lib/sanity/lib/page-sections";
-import type { ClientLogo } from "@/components/hero";
-import type { SiteSettingsCtaDefaults } from "@/lib/sanity/lib/resolve-cta";
 import type { Metadata } from "next";
 import { siteConfig, defaultMetadata } from "@/lib/seo";
 import { stegaClean } from "next-sanity";
@@ -62,9 +59,7 @@ export async function generateMetadata(): Promise<Metadata> {
 	// harmless in rendered copy, but must never reach <title> or meta tags.
 	// Mirrors app/[slug]/page.tsx, app/blog/[slug]/page.tsx and
 	// app/templates/[slug]/page.tsx exactly.
-	const page = stegaClean(
-		await getPage(homePageSlug)
-	) as PageQueryResult | null;
+	const page = stegaClean(await getPage(homePageSlug));
 
 	if (!page) {
 		return {};
@@ -132,8 +127,8 @@ export default async function Home() {
 
 	if (homePageSlug) {
 		const [page, ctaDefaults, clientLogos] = await Promise.all([
-			getPage(homePageSlug) as Promise<PageQueryResult | null>,
-			getPageCtaDefaults() as Promise<SiteSettingsCtaDefaults | null>,
+			getPage(homePageSlug),
+			getPageCtaDefaults(),
 			getFeaturedLogos(10),
 		]);
 
@@ -152,7 +147,7 @@ export default async function Home() {
 							documentType={page._type}
 							sections={page.sections ?? []}
 							currentSlug={homePageSlug}
-							clientLogos={clientLogos as unknown as ClientLogo[]}
+							clientLogos={clientLogos}
 							siteSettingsCtaDefaults={ctaDefaults}
 						/>
 					</main>

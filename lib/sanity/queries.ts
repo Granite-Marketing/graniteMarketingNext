@@ -3,7 +3,32 @@ import { client } from "./client";
 import { fetchQuery } from "./lib/fetch";
 import { adaptCaseStudyToCard } from "./lib/adapters";
 import type { Section } from "./lib/page-sections";
-import type { SITE_SETTINGS_QUERYResult } from "@/sanity.types";
+import type {
+	SITE_SETTINGS_QUERYResult,
+	BLOG_POSTS_QUERYResult,
+	BLOG_POST_QUERYResult,
+	FEATURED_BLOG_POSTS_QUERYResult,
+	BLOG_POSTS_BY_CATEGORY_QUERYResult,
+	WORKFLOW_TEMPLATES_QUERYResult,
+	WORKFLOW_TEMPLATE_QUERYResult,
+	CASE_STUDIES_QUERYResult,
+	CASE_STUDY_QUERYResult,
+	CATEGORIES_QUERYResult,
+	CATEGORY_QUERYResult,
+	CLIENTS_QUERYResult,
+	CLIENT_QUERYResult,
+	FAQS_QUERYResult,
+	FAQ_QUERYResult,
+	LOCATIONS_QUERYResult,
+	LOGO_LIST_QUERYResult,
+	FEATURED_LOGOS_QUERYResult,
+	TOOLS_QUERYResult,
+	AUTHORS_QUERYResult,
+	AUTHOR_QUERYResult,
+	HOMEPAGE_CASE_STUDIES_QUERYResult,
+	PAGE_QUERYResult,
+	PAGE_CTA_DEFAULTS_QUERYResult,
+} from "@/sanity.types";
 
 // =============================================================================
 // BLOG POSTS
@@ -38,7 +63,7 @@ export const BLOG_POSTS_QUERY = defineQuery(`
   `);
 
 export async function getBlogPosts() {
-	return fetchQuery(BLOG_POSTS_QUERY, {});
+	return fetchQuery<BLOG_POSTS_QUERYResult>(BLOG_POSTS_QUERY, {});
 }
 
 export const BLOG_POST_QUERY = defineQuery(`
@@ -84,7 +109,7 @@ export async function getBlogPost(slug?: string) {
 		return null;
 	}
 
-	return fetchQuery(BLOG_POST_QUERY, { slug });
+	return fetchQuery<BLOG_POST_QUERYResult>(BLOG_POST_QUERY, { slug });
 }
 
 export const BLOG_POST_SLUGS_QUERY = defineQuery(`
@@ -116,7 +141,9 @@ export const FEATURED_BLOG_POSTS_QUERY = defineQuery(`
   `);
 
 export async function getFeaturedBlogPosts(limit = 3) {
-	return fetchQuery(FEATURED_BLOG_POSTS_QUERY, { limit });
+	return fetchQuery<FEATURED_BLOG_POSTS_QUERYResult>(FEATURED_BLOG_POSTS_QUERY, {
+		limit,
+	});
 }
 
 export const BLOG_POSTS_BY_CATEGORY_QUERY = defineQuery(`
@@ -139,7 +166,10 @@ export const BLOG_POSTS_BY_CATEGORY_QUERY = defineQuery(`
   `);
 
 export async function getBlogPostsByCategory(categorySlug: string) {
-	return fetchQuery(BLOG_POSTS_BY_CATEGORY_QUERY, { categorySlug });
+	return fetchQuery<BLOG_POSTS_BY_CATEGORY_QUERYResult>(
+		BLOG_POSTS_BY_CATEGORY_QUERY,
+		{ categorySlug }
+	);
 }
 
 // =============================================================================
@@ -178,7 +208,7 @@ export const WORKFLOW_TEMPLATES_QUERY = defineQuery(`
   `);
 
 export async function getWorkflowTemplates() {
-	return fetchQuery(WORKFLOW_TEMPLATES_QUERY, {});
+	return fetchQuery<WORKFLOW_TEMPLATES_QUERYResult>(WORKFLOW_TEMPLATES_QUERY, {});
 }
 
 export const WORKFLOW_TEMPLATE_QUERY = defineQuery(`
@@ -231,7 +261,9 @@ export async function getWorkflowTemplate(slug?: string) {
 		return null;
 	}
 
-	return fetchQuery(WORKFLOW_TEMPLATE_QUERY, { slug });
+	return fetchQuery<WORKFLOW_TEMPLATE_QUERYResult>(WORKFLOW_TEMPLATE_QUERY, {
+		slug,
+	});
 }
 
 export const WORKFLOW_TEMPLATE_SLUGS_QUERY = defineQuery(`
@@ -291,7 +323,7 @@ export const CASE_STUDIES_QUERY = defineQuery(`
   `);
 
 export async function getCaseStudies() {
-	return fetchQuery(CASE_STUDIES_QUERY, {});
+	return fetchQuery<CASE_STUDIES_QUERYResult>(CASE_STUDIES_QUERY, {});
 }
 
 export const CASE_STUDY_QUERY = defineQuery(`
@@ -366,7 +398,7 @@ export const CASE_STUDY_QUERY = defineQuery(`
   `);
 
 export async function getCaseStudy(slug: string) {
-	return fetchQuery(CASE_STUDY_QUERY, { slug });
+	return fetchQuery<CASE_STUDY_QUERYResult>(CASE_STUDY_QUERY, { slug });
 }
 
 export const CASE_STUDY_SLUGS_QUERY = defineQuery(`
@@ -397,7 +429,7 @@ export const CATEGORIES_QUERY = defineQuery(`
   `);
 
 export async function getCategories() {
-	return fetchQuery(CATEGORIES_QUERY, {});
+	return fetchQuery<CATEGORIES_QUERYResult>(CATEGORIES_QUERY, {});
 }
 
 export const CATEGORY_QUERY = defineQuery(`
@@ -410,7 +442,7 @@ export const CATEGORY_QUERY = defineQuery(`
   `);
 
 export async function getCategory(slug: string) {
-	return fetchQuery(CATEGORY_QUERY, { slug });
+	return fetchQuery<CATEGORY_QUERYResult>(CATEGORY_QUERY, { slug });
 }
 
 // =============================================================================
@@ -442,7 +474,7 @@ export const CLIENTS_QUERY = defineQuery(`
   `);
 
 export async function getClients() {
-	return fetchQuery(CLIENTS_QUERY, {});
+	return fetchQuery<CLIENTS_QUERYResult>(CLIENTS_QUERY, {});
 }
 
 export const CLIENT_QUERY = defineQuery(`
@@ -471,7 +503,7 @@ export const CLIENT_QUERY = defineQuery(`
   `);
 
 export async function getClient(slug: string) {
-	return fetchQuery(CLIENT_QUERY, { slug });
+	return fetchQuery<CLIENT_QUERYResult>(CLIENT_QUERY, { slug });
 }
 
 // =============================================================================
@@ -498,7 +530,9 @@ export const FAQS_QUERY = defineQuery(`
   `);
 
 export async function getFAQs(category?: string) {
-	return fetchQuery(FAQS_QUERY, { category: category ?? null });
+	return fetchQuery<FAQS_QUERYResult>(FAQS_QUERY, {
+		category: category ?? null,
+	});
 }
 
 export const FAQ_QUERY = defineQuery(`
@@ -512,7 +546,7 @@ export const FAQ_QUERY = defineQuery(`
   `);
 
 export async function getFAQ(slug: string) {
-	return fetchQuery(FAQ_QUERY, { slug });
+	return fetchQuery<FAQ_QUERYResult>(FAQ_QUERY, { slug });
 }
 
 // =============================================================================
@@ -530,7 +564,7 @@ export const LOCATIONS_QUERY = defineQuery(`
   `);
 
 export async function getLocations() {
-	return fetchQuery(LOCATIONS_QUERY, {});
+	return fetchQuery<LOCATIONS_QUERYResult>(LOCATIONS_QUERY, {});
 }
 
 // =============================================================================
@@ -553,7 +587,7 @@ export const LOGO_LIST_QUERY = defineQuery(`
   `);
 
 export async function getLogoList() {
-	return fetchQuery(LOGO_LIST_QUERY, {});
+	return fetchQuery<LOGO_LIST_QUERYResult>(LOGO_LIST_QUERY, {});
 }
 
 export const FEATURED_LOGOS_QUERY = defineQuery(`
@@ -569,8 +603,32 @@ export const FEATURED_LOGOS_QUERY = defineQuery(`
     }
   `);
 
+// `clientName` is required in the Studio (logoList.ts's `Rule.required()`),
+// but that is a publish-time validation, not a type guarantee — typegen
+// correctly types the projected field as `string | null`, since a document
+// created before that rule existed, or written directly via the API,
+// bypasses it. Both `clientName` and `logo.alt` feed next/image's `alt`
+// prop (components/hero.tsx: `client.logo.alt || client.clientName`), which
+// must never receive `null`. Resolving the nullability once here — rather
+// than trusting every consumer to coalesce it, or papering over it with an
+// `as unknown as ClientLogo[]` cast at each call site — is what actually
+// closes the gap: a client document with neither `clientName` nor
+// `logo.alt` set now falls back to a real string instead of reaching
+// <Image alt={null}>.
 export async function getFeaturedLogos(limit = 10) {
-	return fetchQuery(FEATURED_LOGOS_QUERY, { limit });
+	const logos = await fetchQuery<FEATURED_LOGOS_QUERYResult>(
+		FEATURED_LOGOS_QUERY,
+		{ limit }
+	);
+
+	return logos.map((logo) => ({
+		_id: logo._id,
+		clientName: logo.clientName ?? "Client logo",
+		logo: logo.logo
+			? { asset: logo.logo.asset, alt: logo.logo.alt ?? undefined }
+			: null,
+		website: logo.website ?? undefined,
+	}));
 }
 
 // =============================================================================
@@ -593,7 +651,7 @@ export const TOOLS_QUERY = defineQuery(`
   `);
 
 export async function getTools() {
-	return fetchQuery(TOOLS_QUERY, {});
+	return fetchQuery<TOOLS_QUERYResult>(TOOLS_QUERY, {});
 }
 
 // =============================================================================
@@ -613,7 +671,7 @@ export const AUTHORS_QUERY = defineQuery(`
   `);
 
 export async function getAuthors() {
-	return fetchQuery(AUTHORS_QUERY, {});
+	return fetchQuery<AUTHORS_QUERYResult>(AUTHORS_QUERY, {});
 }
 
 export const AUTHOR_QUERY = defineQuery(`
@@ -629,7 +687,7 @@ export const AUTHOR_QUERY = defineQuery(`
   `);
 
 export async function getAuthor(slug: string) {
-	return fetchQuery(AUTHOR_QUERY, { slug });
+	return fetchQuery<AUTHOR_QUERYResult>(AUTHOR_QUERY, { slug });
 }
 
 // =============================================================================
@@ -675,7 +733,10 @@ export const HOMEPAGE_CASE_STUDIES_QUERY = defineQuery(`
   `);
 
 export async function getHomepageCaseStudies(limit = 24) {
-	const docs: any[] = await fetchQuery(HOMEPAGE_CASE_STUDIES_QUERY, { limit });
+	const docs = await fetchQuery<HOMEPAGE_CASE_STUDIES_QUERYResult>(
+		HOMEPAGE_CASE_STUDIES_QUERY,
+		{ limit }
+	);
 
 	return docs.map((doc) => adaptCaseStudyToCard(doc));
 }
@@ -974,11 +1035,11 @@ export async function getHomePageSlug() {
 }
 
 export async function getPage(slug: string) {
-	return fetchQuery(PAGE_QUERY, { slug });
+	return fetchQuery<PAGE_QUERYResult>(PAGE_QUERY, { slug });
 }
 
 export async function getPageCtaDefaults() {
-	return fetchQuery(PAGE_CTA_DEFAULTS_QUERY, {});
+	return fetchQuery<PAGE_CTA_DEFAULTS_QUERYResult>(PAGE_CTA_DEFAULTS_QUERY, {});
 }
 
 // =============================================================================

@@ -10,9 +10,6 @@ import {
 	getHomePageSlug,
 } from "@/lib/sanity/queries";
 import { RESERVED_PAGE_SLUGS } from "@/lib/sanity/studio-schemas/documents/page";
-import type { PageQueryResult } from "@/lib/sanity/lib/page-sections";
-import type { ClientLogo } from "@/components/hero";
-import type { SiteSettingsCtaDefaults } from "@/lib/sanity/lib/resolve-cta";
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/seo";
 import { stegaClean } from "next-sanity";
@@ -73,7 +70,7 @@ export async function generateMetadata({
 	// They are harmless in rendered copy but would corrupt <title>, meta tags
 	// and canonical URLs — where they reach search engines. Mirrors the
 	// blog/[slug] and templates/[slug] routes exactly.
-	const page = stegaClean(await getPage(slug)) as PageQueryResult | null;
+	const page = stegaClean(await getPage(slug));
 
 	if (!page) {
 		return {
@@ -137,8 +134,8 @@ export default async function CatchAllPage({
 	}
 
 	const [page, ctaDefaults, clientLogos] = await Promise.all([
-		getPage(slug) as Promise<PageQueryResult | null>,
-		getPageCtaDefaults() as Promise<SiteSettingsCtaDefaults | null>,
+		getPage(slug),
+		getPageCtaDefaults(),
 		getFeaturedLogos(10),
 	]);
 
@@ -155,7 +152,7 @@ export default async function CatchAllPage({
 					documentType={page._type}
 					sections={page.sections ?? []}
 					currentSlug={slug}
-					clientLogos={clientLogos as unknown as ClientLogo[]}
+					clientLogos={clientLogos}
 					siteSettingsCtaDefaults={ctaDefaults}
 				/>
 			</main>
