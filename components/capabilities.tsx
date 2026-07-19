@@ -1,33 +1,61 @@
-import { capabilities } from "./data";
+import { sectionIdProps } from "@/lib/utils/section-id";
+import { capabilities as defaultCapabilities, type Capability } from "./data";
 
-export function RelayCapabilities() {
+type CapabilityFooterLink = { label: string; href: string } | null;
+
+type RelayCapabilitiesProps = {
+	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
+	 * falls back to the original hardcoded copy so existing callers (the
+	 * still-unmigrated homepage) render byte-identically when omitted. */
+	eyebrow?: string;
+	heading?: string;
+	body?: string;
+	items?: (Capability & { _key?: string })[];
+	link?: CapabilityFooterLink;
+	/** `undefined`/`null` both omit the attribute — see the block adapter's
+	 * anchorId handling for why a section with no anchor must render no
+	 * `id` at all rather than `id=""`. */
+	id?: string | null;
+	/** The U13 item-level `data-sanity` attribute for this section. */
+	dataSanity?: string;
+};
+
+export function RelayCapabilities({
+	eyebrow = "// capabilities",
+	heading = "Built for the work you're tired of doing.",
+	body = "Six systems, each scoped to a job your team currently does by hand. Start with one. They're designed to be wired together.",
+	items = defaultCapabilities,
+	link = { label: "Map your first automation →", href: "#contact" },
+	id,
+	dataSanity,
+}: RelayCapabilitiesProps) {
 	return (
 		<section
-			id="services"
+			{...sectionIdProps(id, "services")}
+			{...(dataSanity ? { "data-sanity": dataSanity } : {})}
 			aria-labelledby="capabilities-heading"
 			className="scroll-mt-16 border-t border-relay-line"
 		>
 			<div className="mx-auto container px-6 py-24">
 				<header className="max-w-2xl">
 					<p className="mb-4 font-mono text-[13px] text-relay-cyan">
-						{"// capabilities"}
+						{eyebrow}
 					</p>
 					<h2
 						id="capabilities-heading"
 						className="text-balance text-3xl font-semibold tracking-tight text-relay-ink sm:text-4xl"
 					>
-						Built for the work you&apos;re tired of doing.
+						{heading}
 					</h2>
 					<p className="mt-4 max-w-xl text-pretty text-relay-faint">
-						Six systems, each scoped to a job your team currently does by
-						hand. Start with one. They&apos;re designed to be wired together.
+						{body}
 					</p>
 				</header>
 
 				<ul className="mt-13 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-12">
-					{capabilities.map((cap) => (
+					{items.map((cap) => (
 						<li
-							key={cap.tag}
+							key={cap._key ?? cap.tag}
 							className={
 								cap.featured
 									? "sm:col-span-2 lg:col-span-6"
@@ -64,14 +92,16 @@ export function RelayCapabilities() {
 					))}
 				</ul>
 
-				<p className="mt-11">
-					<a
-						href="#contact"
-						className="border-b border-relay-cyan/30 pb-1 font-mono text-[13px] text-relay-cyan transition-colors hover:border-relay-cyan"
-					>
-						Map your first automation →
-					</a>
-				</p>
+				{link && (
+					<p className="mt-11">
+						<a
+							href={link.href}
+							className="border-b border-relay-cyan/30 pb-1 font-mono text-[13px] text-relay-cyan transition-colors hover:border-relay-cyan"
+						>
+							{link.label}
+						</a>
+					</p>
+				)}
 			</div>
 		</section>
 	);

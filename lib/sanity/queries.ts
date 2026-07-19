@@ -693,3 +693,221 @@ export async function getHomeContent() {
 		caseStudies,
 	};
 }
+
+// =============================================================================
+// PAGE BUILDER (U13 of the Sanity page builder plan)
+// =============================================================================
+
+// Shared by every labelled-link field projected below (ctaButton,
+// secondaryCta, the capabilities footer link, hero's secondary CTA) —
+// dereferences `internalRef`/`anchorPage` with exactly the shape
+// lib/sanity/lib/resolve-link.ts's `LinkValue` needs to discriminate on.
+// Mirrors siteSettings.ts's own (non-exported) `LINK_PROJECTION` field for
+// field, since resolve-link.ts is the single resolver both must feed.
+const PAGE_BUILDER_LINK_FIELDS = `{
+    linkType,
+    internalRef->{ _type, _id, slug },
+    anchorPage->{ _type, _id, slug },
+    anchorId,
+    href,
+    openInNewTab
+  }`;
+
+const PAGE_BUILDER_LABELED_LINK_FIELDS = `{
+    label,
+    link ${PAGE_BUILDER_LINK_FIELDS}
+  }`;
+
+// The case-study projection duplicates CASE_STUDIES_QUERY's shape exactly
+// (client/industry/techStack dereferenced, results as {metric,value}) since
+// both `autoItems` and `manualItems` below feed the same
+// `adaptCaseStudyToCard` adapter results.tsx already renders through.
+const PAGE_BUILDER_CASE_STUDY_FIELDS = `{
+    _id,
+    title,
+    slug,
+    client->{ _id, name, company },
+    industry->{ _id, name, slug, country, region },
+    excerpt,
+    featuredImage{ asset, alt },
+    loomUrl,
+    techStack[]->{ _id, name, slug, integrationType },
+    results[]{ metric, value, description }
+  }`;
+
+const PAGE_BUILDER_CLIENT_FIELDS = `{
+    _id,
+    name,
+    authorName,
+    company,
+    role,
+    testimonial,
+    headshot{ asset, alt },
+    companyLogo{ asset, alt },
+    location->{ name }
+  }`;
+
+const PAGE_BUILDER_FAQ_FIELDS = `{
+    _id,
+    question,
+    slug,
+    answer,
+    order,
+    category
+  }`;
+
+// U13's `sections[]` projection: `_key` on every element (KTD5 — data
+// attribute paths target `_key`, never index, so an item silently pointing
+// at the wrong section the moment an editor reorders is a query bug, not a
+// renderer bug), then one `_type == "…" => {...}` branch per block (U12).
+//
+// Data blocks (toolsStripBlock, resultsBlock, testimonialsBlock, faqBlock)
+// project BOTH `autoItems` and `manualItems` unconditionally rather than
+// branching on `sourceMode` in GROQ — lib/sanity/lib/resolve-data-block.ts
+// is the single place that picks between them, and it already handles an
+// unset/unrecognised `sourceMode` by treating it as `"auto"`. faqBlock's
+// `autoItems` is fetched unfiltered (every FAQ, not just `autoCategory`'s
+// match) and filtered client-side in the block adapter instead of in GROQ:
+// GROQ's `^` parent-scope operator inside a `*[...]` subquery does not
+// reliably reach a sibling field on the *object being constructed* the way
+// it reaches an enclosing *document* scope, so filtering here would be
+// resting typegen-verified behaviour on an unverified GROQ scoping rule.
+export const PAGE_QUERY = defineQuery(`
+    *[_type == "page" && slug.current == $slug][0] {
+      _id,
+      _type,
+      title,
+      slug,
+      seo {
+        metaTitle,
+        metaDescription
+      },
+      sections[] {
+        _key,
+        _type,
+        anchorId,
+
+        _type == "heroBlock" => {
+          eyebrow,
+          heading,
+          body,
+          primaryCtaLabel,
+          secondaryCta ${PAGE_BUILDER_LABELED_LINK_FIELDS},
+          showTrustedBy
+        },
+
+        _type == "capabilitiesBlock" => {
+          eyebrow,
+          heading,
+          body,
+          items[]{
+            _key,
+            tag,
+            title,
+            description,
+            featured,
+            snippet
+          },
+          link ${PAGE_BUILDER_LABELED_LINK_FIELDS}
+        },
+
+        _type == "toolsStripBlock" => {
+          eyebrow,
+          heading,
+          intro,
+          sourceMode,
+          "autoItems": *[_type == "tool"] | order(name asc) {
+            _id,
+            name,
+            logo{ asset, alt }
+          },
+          "manualItems": manualTools[]->{
+            _id,
+            name,
+            logo{ asset, alt }
+          }
+        },
+
+        _type == "processBlock" => {
+          eyebrow,
+          heading,
+          body,
+          steps[]{
+            _key,
+            stepLabel,
+            title,
+            description,
+            duration
+          },
+          footnote
+        },
+
+        _type == "resultsBlock" => {
+          eyebrow,
+          heading,
+          stats[]{
+            _key,
+            value,
+            suffix,
+            label
+          },
+          sourceMode,
+          "autoItems": *[_type == "caseStudy" && showOnHome == true]
+            | order(sortOrder asc, _createdAt desc) ${PAGE_BUILDER_CASE_STUDY_FIELDS},
+          "manualItems": manualCaseStudies[]-> ${PAGE_BUILDER_CASE_STUDY_FIELDS}
+        },
+
+        _type == "testimonialsBlock" => {
+          eyebrow,
+          heading,
+          sourceMode,
+          "autoItems": *[_type == "client"] | order(dateStarted desc) ${PAGE_BUILDER_CLIENT_FIELDS},
+          "manualItems": manualTestimonials[]-> ${PAGE_BUILDER_CLIENT_FIELDS}
+        },
+
+        _type == "faqBlock" => {
+          eyebrow,
+          heading,
+          intro,
+          sourceMode,
+          autoCategory,
+          "autoItems": *[_type == "faq"] | order(order asc) ${PAGE_BUILDER_FAQ_FIELDS},
+          "manualItems": manualFaqs[]-> ${PAGE_BUILDER_FAQ_FIELDS}
+        },
+
+        _type == "ctaBlock" => {
+          ctaHeading,
+          ctaSubtitle,
+          ctaButton ${PAGE_BUILDER_LABELED_LINK_FIELDS},
+          ctaFootnote,
+          secondaryCta ${PAGE_BUILDER_LABELED_LINK_FIELDS}
+        }
+      }
+    }
+  `);
+
+/**
+ * siteSettings' Global CTA defaults, fetched alongside `PAGE_QUERY` rather
+ * than folded into it — U9's `SITE_SETTINGS_QUERY` already owns this
+ * projection (nav/footer/CTA in one document), and U15 wires the singleton
+ * into `fetchQuery`'s chokepoint properly. This one is scoped to just the
+ * four fields lib/sanity/lib/resolve-cta.ts's `SiteSettingsCtaDefaults`
+ * needs, so a `ctaBlock` with no overrides has something to fall back to
+ * ahead of U15 landing.
+ */
+export const PAGE_CTA_DEFAULTS_QUERY = defineQuery(`
+    *[_id == "siteSettings"][0] {
+      ctaHeading,
+      ctaSubtitle,
+      ctaButton ${PAGE_BUILDER_LABELED_LINK_FIELDS},
+      ctaFootnote
+    }
+  `);
+
+export async function getPage(slug: string) {
+	return fetchQuery(PAGE_QUERY, { slug });
+}
+
+export async function getPageCtaDefaults() {
+	return fetchQuery(PAGE_CTA_DEFAULTS_QUERY, {});
+}

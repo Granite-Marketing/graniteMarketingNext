@@ -1,18 +1,39 @@
+import { sectionIdProps } from "@/lib/utils/section-id";
 import Link from "next/link";
 import { CalButton } from "./cal-button";
+
+type SecondaryCta = { label: string; href: string } | null;
 
 type RelayCTAProps = {
 	heading?: string;
 	subtitle?: string;
+	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
+	 * falls back to the original hardcoded copy so existing callers render
+	 * byte-identically when omitted. */
+	primaryCtaLabel?: string;
+	secondaryCta?: SecondaryCta;
+	footnote?: string;
+	/** `undefined`/`null` both omit the attribute — see the block adapter's
+	 * anchorId handling for why a section with no anchor must render no
+	 * `id` at all rather than `id=""`. */
+	id?: string | null;
+	/** The U13 item-level `data-sanity` attribute for this section. */
+	dataSanity?: string;
 };
 
 export function RelayCTA({
 	heading = "Stop doing work a workflow could do.",
 	subtitle = "Thirty minutes, no slides. We map one of your real workflows live on the call. You keep the map either way.",
+	primaryCtaLabel = "Book an intro call",
+	secondaryCta = { label: "or send us a message", href: "/contact" },
+	footnote = "avg. response time: same day · first build live in ~3 weeks",
+	id,
+	dataSanity,
 }: RelayCTAProps) {
 	return (
 		<section
-			id="contact"
+			{...sectionIdProps(id, "contact")}
+			{...(dataSanity ? { "data-sanity": dataSanity } : {})}
 			aria-labelledby="cta-heading"
 			className="scroll-mt-16 border-t border-relay-line"
 		>
@@ -45,17 +66,21 @@ export function RelayCTA({
 							{subtitle}
 						</p>
 						<div className="mt-9 flex flex-wrap items-center justify-center gap-5">
-							<CalButton size="lg">Book an intro call</CalButton>
-							<Link
-								href="/contact"
-								className="rounded border border-relay-line px-5 py-3 font-mono text-[13px] text-relay-faint transition-colors hover:border-relay-cyan hover:text-relay-ink"
-							>
-								or send us a message
-							</Link>
+							<CalButton size="lg">{primaryCtaLabel}</CalButton>
+							{secondaryCta && (
+								<Link
+									href={secondaryCta.href}
+									className="rounded border border-relay-line px-5 py-3 font-mono text-[13px] text-relay-faint transition-colors hover:border-relay-cyan hover:text-relay-ink"
+								>
+									{secondaryCta.label}
+								</Link>
+							)}
 						</div>
-						<p className="mt-8 font-mono text-[11px] text-relay-faint">
-							avg. response time: same day · first build live in ~3 weeks
-						</p>
+						{footnote && (
+							<p className="mt-8 font-mono text-[11px] text-relay-faint">
+								{footnote}
+							</p>
+						)}
 					</div>
 				</div>
 			</div>

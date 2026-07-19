@@ -1,52 +1,84 @@
+import { sectionIdProps } from "@/lib/utils/section-id";
 import Link from "next/link";
 import Image from "next/image";
 import { CalButton } from "./cal-button";
 import { WorkflowDiagram } from "./workflow-diagram";
 import { urlFor } from "@/lib/sanity/client";
 
-type ClientLogo = {
+export type ClientLogo = {
 	_id: string;
 	clientName: string;
 	logo: { asset: any; alt?: string } | null;
 	website?: string;
 };
 
+type SecondaryCta = { label: string; href: string } | null;
+
 type RelayHeroProps = {
 	clientLogos?: ClientLogo[];
+	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
+	 * falls back to the original hardcoded copy so existing callers (the
+	 * still-unmigrated homepage) render byte-identically when omitted. */
+	eyebrow?: string;
+	heading?: string;
+	body?: string;
+	primaryCtaLabel?: string;
+	secondaryCta?: SecondaryCta;
+	showTrustedBy?: boolean;
+	/** `undefined` (unset) omits the attribute; `null` also omits it — see
+	 * the block adapter's anchorId handling for why a section with no
+	 * anchor must render no `id` at all rather than `id=""`. */
+	id?: string | null;
+	/** The U13 item-level `data-sanity` attribute for this section. */
+	dataSanity?: string;
 };
 
-export function RelayHero({ clientLogos = [] }: RelayHeroProps) {
+export function RelayHero({
+	clientLogos = [],
+	eyebrow = "// workflow automation, done for you",
+	heading = "We connect your tools into workflows that run themselves.",
+	body = "Custom AI automations wired into the stack you already run. They keep your CRM clean, turn market noise into a morning digest, draft on-brand content and bring the real judgement calls to a person.",
+	primaryCtaLabel = "Book an intro call",
+	secondaryCta = { label: "See what we build ↓", href: "/#services" },
+	showTrustedBy = true,
+	id,
+	dataSanity,
+}: RelayHeroProps) {
 	return (
-		<section aria-labelledby="hero-heading" className="overflow-hidden">
+		<section
+			{...sectionIdProps(id)}
+			{...(dataSanity ? { "data-sanity": dataSanity } : {})}
+			aria-labelledby="hero-heading"
+			className="overflow-hidden"
+		>
 			<div className="mx-auto grid container items-center gap-14 px-6 pb-20 pt-36 lg:grid-cols-[1.05fr_0.95fr] lg:pt-40">
 				<div className="animate-relay-rise" style={{ animationDelay: "0.1s" }}>
 					<p className="mb-5 font-mono text-[13px] text-relay-cyan">
-						{"// workflow automation, done for you"}
+						{eyebrow}
 					</p>
 					<h1
 						id="hero-heading"
 						className="text-balance text-4xl font-semibold leading-[1.06] tracking-tight text-relay-ink sm:text-5xl lg:text-[3.4rem]"
 					>
-						We connect your tools into workflows that run themselves.
+						{heading}
 					</h1>
 					<p className="mt-6 max-w-xl text-pretty text-[17px] leading-relaxed text-relay-body">
-						Custom AI automations wired into the stack you already run. They
-						keep your CRM clean, turn market noise into a morning digest,
-						draft on-brand content and bring the real judgement calls to a
-						person.
+						{body}
 					</p>
 
 					<div className="mt-9 flex flex-wrap items-center gap-5">
-						<CalButton size="lg">Book an intro call</CalButton>
-						<Link
-							href="/#services"
-							className="rounded border border-relay-line px-5 py-3 font-mono text-[13px] text-relay-faint transition-colors hover:border-relay-cyan hover:text-relay-ink"
-						>
-							See what we build ↓
-						</Link>
+						<CalButton size="lg">{primaryCtaLabel}</CalButton>
+						{secondaryCta && (
+							<Link
+								href={secondaryCta.href}
+								className="rounded border border-relay-line px-5 py-3 font-mono text-[13px] text-relay-faint transition-colors hover:border-relay-cyan hover:text-relay-ink"
+							>
+								{secondaryCta.label}
+							</Link>
+						)}
 					</div>
 
-					{clientLogos.length > 0 && (
+					{showTrustedBy && clientLogos.length > 0 && (
 						<div className="mt-12 flex flex-wrap items-center gap-6">
 							<span className="font-mono text-[11px] uppercase tracking-[0.16em] text-relay-faint">
 								Trusted by

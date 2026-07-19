@@ -1,3 +1,4 @@
+import { sectionIdProps } from "@/lib/utils/section-id";
 import {
 	Accordion,
 	AccordionContent,
@@ -9,29 +10,48 @@ import { PortableTextRenderer } from "@/lib/sanity/components/PortableTextRender
 
 type RelayFAQProps = {
 	faqs: FAQItem[];
+	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
+	 * falls back to the original hardcoded copy so existing callers render
+	 * byte-identically when omitted. */
+	eyebrow?: string;
+	heading?: string;
+	intro?: string;
+	/** `undefined`/`null` both omit the attribute — see the block adapter's
+	 * anchorId handling for why a section with no anchor must render no
+	 * `id` at all rather than `id=""`. */
+	id?: string | null;
+	/** The U13 item-level `data-sanity` attribute for this section. */
+	dataSanity?: string;
 };
 
-export function RelayFAQ({ faqs }: RelayFAQProps) {
+export function RelayFAQ({
+	faqs,
+	eyebrow = "// faq",
+	heading = "FAQs.",
+	intro = "The ones every team asks on the intro call, answered before you book it.",
+	id,
+	dataSanity,
+}: RelayFAQProps) {
 	return (
 		<section
-			id="faq"
+			{...sectionIdProps(id, "faq")}
+			{...(dataSanity ? { "data-sanity": dataSanity } : {})}
 			aria-labelledby="faq-heading"
 			className="scroll-mt-16 border-t border-relay-line"
 		>
 			<div className="mx-auto grid container gap-12 px-6 py-24 lg:grid-cols-[4fr_1fr_7fr] lg:gap-0">
 				<header className="lg:sticky lg:top-28 lg:self-start">
 					<p className="mb-4 font-mono text-[13px] text-relay-cyan">
-						{"// faq"}
+						{eyebrow}
 					</p>
 					<h2
 						id="faq-heading"
 						className="text-3xl font-semibold tracking-tight text-relay-ink sm:text-4xl"
 					>
-						FAQs.
+						{heading}
 					</h2>
 					<p className="mt-4 max-w-sm text-pretty text-relay-faint">
-						The ones every team asks on the intro call, answered before you
-						book it.
+						{intro}
 					</p>
 				</header>
 

@@ -1,9 +1,21 @@
+import { sectionIdProps } from "@/lib/utils/section-id";
 import Image from "next/image";
 import type { TestimonialItem } from "@/lib/sanity/lib/adapters";
 import { PortableTextRenderer } from "@/lib/sanity/components/PortableTextRenderer";
 
 type RelayTestimonialsProps = {
 	testimonials: TestimonialItem[];
+	/** Optional Sanity-driven overrides (U13 of the page builder plan) — each
+	 * falls back to the original hardcoded copy so existing callers render
+	 * byte-identically when omitted. */
+	eyebrow?: string;
+	heading?: string;
+	/** `undefined`/`null` both omit the attribute — see the block adapter's
+	 * anchorId handling for why a section with no anchor must render no
+	 * `id` at all rather than `id=""`. */
+	id?: string | null;
+	/** The U13 item-level `data-sanity` attribute for this section. */
+	dataSanity?: string;
 };
 
 function initials(name: string) {
@@ -15,23 +27,30 @@ function initials(name: string) {
 		.toUpperCase();
 }
 
-export function RelayTestimonials({ testimonials }: RelayTestimonialsProps) {
+export function RelayTestimonials({
+	testimonials,
+	eyebrow = "// what clients say",
+	heading = "In their words, not ours.",
+	id,
+	dataSanity,
+}: RelayTestimonialsProps) {
 	return (
 		<section
-			id="testimonials"
+			{...sectionIdProps(id, "testimonials")}
+			{...(dataSanity ? { "data-sanity": dataSanity } : {})}
 			aria-labelledby="testimonials-heading"
 			className="scroll-mt-16 border-t border-relay-line"
 		>
 			<div className="mx-auto container px-6 py-24">
 				<header className="max-w-2xl">
 					<p className="mb-4 font-mono text-[13px] text-relay-cyan">
-						{"// what clients say"}
+						{eyebrow}
 					</p>
 					<h2
 						id="testimonials-heading"
 						className="text-balance text-3xl font-semibold tracking-tight text-relay-ink sm:text-4xl"
 					>
-						In their words, not ours.
+						{heading}
 					</h2>
 				</header>
 
