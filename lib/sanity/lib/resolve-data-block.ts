@@ -12,6 +12,8 @@
 // editor's ordering. This function only *selects* between `autoItems` and
 // `manualItems`; it must never re-sort, re-query or otherwise touch order.
 
+import { stegaClean } from "@sanity/client/stega";
+
 export type SourceMode = "auto" | "manual";
 
 export type DataBlockSource<T> = {
@@ -44,7 +46,16 @@ function compact<T>(
  *   state (the block's empty state), not an error condition.
  */
 export function resolveDataBlockItems<T>(source: DataBlockSource<T>): T[] {
-	if (source.sourceMode === "manual") {
+	// `sourceMode` is a list-enum string authored in the Studio, so in Draft
+	// Mode it arrives stega-encoded (KTD4 — see resolve-link.ts's header
+	// comment for the general rule). Only the discriminator is cleaned here,
+	// never `autoItems`/`manualItems`: those flow onward to be RENDERED, and
+	// cleaning them would strip the invisible overlays that make click-to-edit
+	// work. Do not switch this to a single `stegaClean(source)` call like
+	// resolve-link.ts does — that pattern is correct there because a
+	// `ResolvedLink` is consumed as plain navigation data, not rendered
+	// content.
+	if (stegaClean(source.sourceMode) === "manual") {
 		return compact(source.manualItems);
 	}
 	return compact(source.autoItems);
