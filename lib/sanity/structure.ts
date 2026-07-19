@@ -4,18 +4,24 @@ import type {
 	NewDocumentOptionsContext,
 	TemplateItem,
 } from "sanity";
-import type { StructureResolver } from "sanity/structure";
-import { SITE_SETTINGS_ID, SITE_SETTINGS_TYPE } from "./studio-schemas/documents/siteSettings";
+import type { ListItemBuilder, StructureResolver } from "sanity/structure";
+import {
+	SINGLETON_TYPE_LIST,
+	isSingletonType,
+	singletonDocumentId,
+	type SingletonType,
+} from "./singletons";
 
-// The Studio's desk structure (U9 of the Sanity page builder plan) — the
-// first structure customisation in this repo; `structureTool()` was
-// previously called bare. Its whole job here is mechanism (1) and (2) of the
-// siteSettings singleton pin (see siteSettings.ts's header comment for all
-// three). Mechanism (3) — stripping `duplicate`/`delete` and the "+" menu
-// entry — lives below and is wired on `document`, not on this structure, in
-// sanity.config.ts. There is no `singleton: true` schema option and
-// `__experimental_actions` was removed in sanity 4.x; neither is reached for
-// here.
+// The Studio's desk structure (U9 of the Sanity page builder plan, singleton
+// enforcement generalised in U19a) — the first structure customisation in
+// this repo; `structureTool()` was previously called bare. Its whole job
+// here is mechanism (1) and (2) of the singleton pin (see
+// lib/sanity/singletons.ts's header comment for why the registry lives
+// there, and for all three mechanisms). Mechanism (3) — stripping
+// `duplicate`/`delete` and the "+" menu entry — lives below and is wired on
+// `document`, not on this structure, in sanity.config.ts. There is no
+// `singleton: true` schema option and `__experimental_actions` was removed
+// in sanity 4.x; neither is reached for here.
 
 // Desk ordering is explicit rather than auto-generated. The generated list
 // sorts by registration order, which buried `page` among the taxonomy types
@@ -30,15 +36,38 @@ const EDITORIAL_TYPES = ["blogPost", "workflowTemplate", "caseStudy"];
 const RECORD_TYPES = ["client", "faq", "logoList", "tool"];
 const TAXONOMY_TYPES = ["author", "category", "location", "workflowCategory"];
 
-// Mechanism (1) — pin the desk list item's child to the fixed document id,
-// so opening "Site Settings" always edits the same document regardless of
-// what (if anything) exists in the dataset yet.
+// Mechanism (1) — pin a singleton's desk list item to the fixed document
+// id, so opening it always edits the same document regardless of what (if
+// anything) exists in the dataset yet. A small helper rather than one-off
+// chains because every singleton needs the identical three-call shape;
+// `singletonDocumentId` guarantees the id matches the type per
+// singletons.ts's header comment.
+//
+// Only siteSettings gets a desk entry today. The other five registered
+// singleton types (blogListing, blogPostTemplate, templateListing,
+// templateDetail, contactPage) don't have schemas yet — pinning a schema
+// type that isn't registered throws at runtime — so this helper exists to
+// be reused once those schemas land, not because it's called five times
+// here.
+function pinnedSingletonListItem(
+	S: Parameters<StructureResolver>[0],
+	type: SingletonType,
+	title: string
+): ListItemBuilder {
+	return S.listItem()
+		.title(title)
+		.id(type)
+		.child(S.document().schemaType(type).documentId(singletonDocumentId(type)));
+}
+
 export const structure: StructureResolver = (S) => {
-	// Mechanism (2) — siteSettings is excluded here as well as pinned above.
-	// Without this it would ALSO appear as an ordinary (uncapped) document
-	// list, defeating the pin.
+	// Mechanism (2) — every registered singleton type is excluded here, not
+	// only the ones with a desk entry above. Without this any of them would
+	// ALSO appear as an ordinary (uncapped) document list the moment its
+	// schema is registered, defeating the pin before anyone remembers to add
+	// the exclusion.
 	const grouped = new Set([
-		SITE_SETTINGS_TYPE,
+		...SINGLETON_TYPE_LIST,
 		...PAGE_TYPES,
 		...EDITORIAL_TYPES,
 		...RECORD_TYPES,
@@ -51,14 +80,7 @@ export const structure: StructureResolver = (S) => {
 	return S.list()
 		.title("Content")
 		.items([
-			S.listItem()
-				.title("Site Settings")
-				.id(SITE_SETTINGS_TYPE)
-				.child(
-					S.document()
-						.schemaType(SITE_SETTINGS_TYPE)
-						.documentId(SITE_SETTINGS_ID)
-				),
+			pinnedSingletonListItem(S, "siteSettings", "Site Settings"),
 			S.divider(),
 			...listFor(PAGE_TYPES),
 			S.divider(),
@@ -76,42 +98,43 @@ export const structure: StructureResolver = (S) => {
 		]);
 };
 
-const HIDDEN_SITE_SETTINGS_ACTIONS = new Set(["duplicate", "delete"]);
+const HIDDEN_SINGLETON_ACTIONS = new Set(["duplicate", "delete"]);
 
 /**
- * Mechanism (3a) — strip `duplicate` and `delete` from the singleton's
- * action menu. A duplicate would produce a second siteSettings-shaped
- * document (orphaned, since the desk pin only ever opens the fixed id) and a
- * delete would leave the pinned id unable to render a form. Every other
- * default action (publish, discard changes, unpublish, restore) is left
- * alone. Every other document type passes through completely untouched.
+ * Mechanism (3a) — strip `duplicate` and `delete` from every registered
+ * singleton's action menu, not only siteSettings. A duplicate would produce
+ * a second singleton-shaped document (orphaned, since the desk pin only
+ * ever opens the fixed id) and a delete would leave the pinned id unable to
+ * render a form. Every other default action (publish, discard changes,
+ * unpublish, restore) is left alone. Every non-singleton document type
+ * passes through completely untouched.
  *
  * Wired on `document.actions` in sanity.config.ts, NOT on the structure tool
  * — `document.actions` is unrelated to `structureTool()`'s own `structure`
  * or (deprecated) `defaultDocumentNode` options.
  */
-export function filterSiteSettingsDocumentActions(
+export function filterSingletonDocumentActions(
 	prev: DocumentActionComponent[],
 	context: DocumentActionsContext
 ): DocumentActionComponent[] {
-	if (context.schemaType !== SITE_SETTINGS_TYPE) return prev;
+	if (!isSingletonType(context.schemaType)) return prev;
 	return prev.filter(
-		(action) => !HIDDEN_SITE_SETTINGS_ACTIONS.has(action.action ?? "")
+		(action) => !HIDDEN_SINGLETON_ACTIONS.has(action.action ?? "")
 	);
 }
 
 /**
- * Mechanism (3b) — remove siteSettings from the global "+" / new-document
- * menu. The desk pin (mechanism 1) is the only entry point that should ever
- * open it; a second document created via the "+" menu would not be the
- * pinned one and would be invisible to every reader that queries
- * `_id == "siteSettings"`.
+ * Mechanism (3b) — remove every registered singleton type from the global
+ * "+" / new-document menu. The desk pin (mechanism 1) is the only entry
+ * point that should ever open one of these documents; a second document
+ * created via the "+" menu would not be the pinned one and would be
+ * invisible to every reader that queries `_id == "<type>"`.
  *
  * Wired on `document.newDocumentOptions` in sanity.config.ts.
  */
-export function filterSiteSettingsFromNewDocumentMenu(
+export function filterSingletonsFromNewDocumentMenu(
 	prev: TemplateItem[],
 	_context: NewDocumentOptionsContext
 ): TemplateItem[] {
-	return prev.filter((item) => item.templateId !== SITE_SETTINGS_TYPE);
+	return prev.filter((item) => !isSingletonType(item.templateId));
 }

@@ -2,16 +2,24 @@ import { describe, expect, it } from "vitest";
 import type { DocumentActionComponent } from "sanity";
 import {
 	structure,
-	filterSiteSettingsDocumentActions,
-	filterSiteSettingsFromNewDocumentMenu,
+	filterSingletonDocumentActions,
+	filterSingletonsFromNewDocumentMenu,
 } from "../structure";
+import { SINGLETON_TYPE_LIST } from "../singletons";
 
-// structure.ts carries mechanisms (1) and (2) of the siteSettings singleton
-// pin, plus the two document-level resolvers wired on `document.actions` /
-// `document.newDocumentOptions` in sanity.config.ts for mechanism (3). See
-// siteSettings.ts's header comment for the full three-mechanism rundown —
-// there is no `singleton: true` option and no `__experimental_actions` in
-// sanity@4.21.1.
+// structure.ts carries mechanisms (1) and (2) of the singleton pin — see
+// lib/sanity/singletons.ts's header comment for why the registry lives
+// there rather than in a schema file — plus the two document-level
+// resolvers wired on `document.actions` / `document.newDocumentOptions` in
+// sanity.config.ts for mechanism (3). There is no `singleton: true` option
+// and no `__experimental_actions` in sanity@4.21.1.
+//
+// Only siteSettings has a desk entry today — the other five registered
+// singleton types (blogListing, blogPostTemplate, templateListing,
+// templateDetail, contactPage) don't have schemas yet, so pinning them
+// would throw at runtime. The filter functions below are still exercised
+// against every registered type, because they operate on type name alone
+// and don't require a desk entry to exist.
 //
 // `structure` is exercised against a minimal recorder stub of the desk
 // StructureBuilder API (`S`), the same stubbing approach
@@ -122,6 +130,25 @@ describe("lib/sanity/structure — mechanisms (1) and (2)", () => {
 		expect(ids.filter((id) => id === "siteSettings")).toEqual([]);
 	});
 
+	// The other five registered singleton types don't have desk entries yet
+	// (their schemas don't exist), but the exclusion list is registry-driven
+	// — SINGLETON_TYPE_LIST, not a hand-picked set — so if one of them ever
+	// showed up in the auto-generated passthrough it would still be caught.
+	it("mechanism (2): excludes every registered singleton type from the generic list, not only siteSettings", () => {
+		const { S, getList } = createStubS(
+			SINGLETON_TYPE_LIST.map((type) => createListItemStub(type))
+		);
+
+		structure(S as never, {} as never);
+
+		const items = getList().items as ReturnType<typeof createListItemStub>[];
+		const ids = items.slice(1).map((item) => item.getId?.());
+
+		for (const type of SINGLETON_TYPE_LIST) {
+			expect(ids).not.toContain(type);
+		}
+	});
+
 	it("places a divider between the pinned item and the grouped lists", () => {
 		const { S, getList } = createStubS([]);
 
@@ -190,7 +217,7 @@ function createFakeAction(action: string): DocumentActionComponent {
 	return component as unknown as DocumentActionComponent;
 }
 
-describe("filterSiteSettingsDocumentActions — mechanism (3a)", () => {
+describe("filterSingletonDocumentActions — mechanism (3a)", () => {
 	const allActions = [
 		createFakeAction("publish"),
 		createFakeAction("discardChanges"),
@@ -201,7 +228,7 @@ describe("filterSiteSettingsDocumentActions — mechanism (3a)", () => {
 	];
 
 	it("strips duplicate and delete when editing the siteSettings document", () => {
-		const result = filterSiteSettingsDocumentActions(allActions, {
+		const result = filterSingletonDocumentActions(allActions, {
 			schemaType: "siteSettings",
 		} as never);
 
@@ -213,8 +240,25 @@ describe("filterSiteSettingsDocumentActions — mechanism (3a)", () => {
 		]);
 	});
 
+	// The filter is generalised — it strips duplicate/delete for ANY
+	// registered singleton, not just siteSettings. "blogListing" doesn't
+	// have a schema yet, but this function tests type-name logic only, not
+	// the schema itself.
+	it("strips duplicate and delete for a non-siteSettings singleton type (blogListing)", () => {
+		const result = filterSingletonDocumentActions(allActions, {
+			schemaType: "blogListing",
+		} as never);
+
+		expect(result.map((a) => a.action)).toEqual([
+			"publish",
+			"discardChanges",
+			"unpublish",
+			"restore",
+		]);
+	});
+
 	it("leaves every other document type's actions completely untouched", () => {
-		const result = filterSiteSettingsDocumentActions(allActions, {
+		const result = filterSingletonDocumentActions(allActions, {
 			schemaType: "page",
 		} as never);
 
@@ -224,7 +268,7 @@ describe("filterSiteSettingsDocumentActions — mechanism (3a)", () => {
 	});
 });
 
-describe("filterSiteSettingsFromNewDocumentMenu — mechanism (3b)", () => {
+describe("filterSingletonsFromNewDocumentMenu — mechanism (3b)", () => {
 	it("removes siteSettings from the '+' menu's template items", () => {
 		const templates = [
 			{ templateId: "page" },
@@ -232,7 +276,7 @@ describe("filterSiteSettingsFromNewDocumentMenu — mechanism (3b)", () => {
 			{ templateId: "blogPost" },
 		];
 
-		const result = filterSiteSettingsFromNewDocumentMenu(
+		const result = filterSingletonsFromNewDocumentMenu(
 			templates as never,
 			{} as never
 		);
@@ -240,10 +284,28 @@ describe("filterSiteSettingsFromNewDocumentMenu — mechanism (3b)", () => {
 		expect(result.map((t) => t.templateId)).toEqual(["page", "blogPost"]);
 	});
 
-	it("is a no-op when siteSettings isn't present", () => {
+	// Every registered singleton is a "+"-menu entry point that must never
+	// exist — not only siteSettings. The desk pin (mechanism 1) is the only
+	// entry point that should ever open one of these documents.
+	it("removes every registered singleton type from the '+' menu, not only siteSettings", () => {
+		const templates = [
+			{ templateId: "page" },
+			...SINGLETON_TYPE_LIST.map((type) => ({ templateId: type })),
+			{ templateId: "blogPost" },
+		];
+
+		const result = filterSingletonsFromNewDocumentMenu(
+			templates as never,
+			{} as never
+		);
+
+		expect(result.map((t) => t.templateId)).toEqual(["page", "blogPost"]);
+	});
+
+	it("is a no-op when no singleton type is present", () => {
 		const templates = [{ templateId: "page" }, { templateId: "blogPost" }];
 
-		const result = filterSiteSettingsFromNewDocumentMenu(
+		const result = filterSingletonsFromNewDocumentMenu(
 			templates as never,
 			{} as never
 		);
