@@ -2610,6 +2610,345 @@ export type PAGE_SLUGS_QUERYResult = Array<string | null>;
 // Variable: HOME_PAGE_SLUG_QUERY
 // Query: *[_id == "siteSettings"][0].homePage->slug.current
 export type HOME_PAGE_SLUG_QUERYResult = string | null;
+// Variable: SITE_SETTINGS_QUERY
+// Query: *[_id == "siteSettings"][0] {      logo{ asset, altText, hotspot, crop },      logoLink {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  },      navLinks[] {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      headerCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      footerColumns[]{        heading,        links[] {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }      },      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      ctaFootnote,      siteTitle,      siteDescription,      ogImage{ asset, altText, hotspot, crop },      favicon{ asset, hotspot, crop }    }
+export type SITE_SETTINGS_QUERYResult = {
+  logo: null;
+  logoLink: null;
+  navLinks: null;
+  headerCta: null;
+  footerColumns: null;
+  ctaHeading: null;
+  ctaSubtitle: null;
+  ctaButton: null;
+  ctaFootnote: null;
+  siteTitle: null;
+  siteDescription: null;
+  ogImage: null;
+  favicon: null;
+} | {
+  logo: {
+    asset: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    } | null;
+    altText: null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+  logoLink: null;
+  navLinks: null;
+  headerCta: null;
+  footerColumns: null;
+  ctaHeading: null;
+  ctaSubtitle: null;
+  ctaButton: null;
+  ctaFootnote: null;
+  siteTitle: null;
+  siteDescription: null;
+  ogImage: null;
+  favicon: null;
+} | {
+  logo: {
+    asset: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    } | null;
+    altText: string | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+  logoLink: {
+    linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+    internalRef: {
+      _type: "blogListing";
+      _id: string;
+      slug: null;
+      isHomePage: boolean | false;
+    } | {
+      _type: "blogPost";
+      _id: string;
+      slug: Slug | null;
+      isHomePage: boolean | false;
+    } | {
+      _type: "contactPage";
+      _id: string;
+      slug: null;
+      isHomePage: boolean | false;
+    } | {
+      _type: "legalPage";
+      _id: string;
+      slug: Slug | null;
+      isHomePage: boolean | false;
+    } | {
+      _type: "page";
+      _id: string;
+      slug: Slug | null;
+      isHomePage: boolean | false;
+    } | {
+      _type: "templateListing";
+      _id: string;
+      slug: null;
+      isHomePage: boolean | false;
+    } | {
+      _type: "workflowTemplate";
+      _id: string;
+      slug: Slug | null;
+      isHomePage: boolean | false;
+    } | null;
+    anchorPage: {
+      _type: "page";
+      _id: string;
+      slug: Slug | null;
+      isHomePage: boolean | false;
+    } | null;
+    anchorId: string | null;
+    href: string | null;
+    openInNewTab: boolean | null;
+    calLink: string | null;
+  } | null;
+  navLinks: Array<{
+    label: string | null;
+    link: {
+      linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+      internalRef: {
+        _type: "blogListing";
+        _id: string;
+        slug: null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "blogPost";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "contactPage";
+        _id: string;
+        slug: null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "legalPage";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "page";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "templateListing";
+        _id: string;
+        slug: null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "workflowTemplate";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | null;
+      anchorPage: {
+        _type: "page";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | null;
+      anchorId: string | null;
+      href: string | null;
+      openInNewTab: boolean | null;
+      calLink: string | null;
+    } | null;
+  }> | null;
+  headerCta: {
+    label: string | null;
+    link: {
+      linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+      internalRef: {
+        _type: "blogListing";
+        _id: string;
+        slug: null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "blogPost";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "contactPage";
+        _id: string;
+        slug: null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "legalPage";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "page";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "templateListing";
+        _id: string;
+        slug: null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "workflowTemplate";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | null;
+      anchorPage: {
+        _type: "page";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | null;
+      anchorId: string | null;
+      href: string | null;
+      openInNewTab: boolean | null;
+      calLink: string | null;
+    } | null;
+  } | null;
+  footerColumns: Array<{
+    heading: string | null;
+    links: Array<{
+      label: string | null;
+      link: {
+        linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+        internalRef: {
+          _type: "blogListing";
+          _id: string;
+          slug: null;
+          isHomePage: boolean | false;
+        } | {
+          _type: "blogPost";
+          _id: string;
+          slug: Slug | null;
+          isHomePage: boolean | false;
+        } | {
+          _type: "contactPage";
+          _id: string;
+          slug: null;
+          isHomePage: boolean | false;
+        } | {
+          _type: "legalPage";
+          _id: string;
+          slug: Slug | null;
+          isHomePage: boolean | false;
+        } | {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+          isHomePage: boolean | false;
+        } | {
+          _type: "templateListing";
+          _id: string;
+          slug: null;
+          isHomePage: boolean | false;
+        } | {
+          _type: "workflowTemplate";
+          _id: string;
+          slug: Slug | null;
+          isHomePage: boolean | false;
+        } | null;
+        anchorPage: {
+          _type: "page";
+          _id: string;
+          slug: Slug | null;
+          isHomePage: boolean | false;
+        } | null;
+        anchorId: string | null;
+        href: string | null;
+        openInNewTab: boolean | null;
+        calLink: string | null;
+      } | null;
+    }> | null;
+  }> | null;
+  ctaHeading: string | null;
+  ctaSubtitle: string | null;
+  ctaButton: {
+    label: string | null;
+    link: {
+      linkType: "anchor" | "calBooking" | "external" | "internal" | null;
+      internalRef: {
+        _type: "blogListing";
+        _id: string;
+        slug: null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "blogPost";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "contactPage";
+        _id: string;
+        slug: null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "legalPage";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "page";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "templateListing";
+        _id: string;
+        slug: null;
+        isHomePage: boolean | false;
+      } | {
+        _type: "workflowTemplate";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | null;
+      anchorPage: {
+        _type: "page";
+        _id: string;
+        slug: Slug | null;
+        isHomePage: boolean | false;
+      } | null;
+      anchorId: string | null;
+      href: string | null;
+      openInNewTab: boolean | null;
+      calLink: string | null;
+    } | null;
+  } | null;
+  ctaFootnote: string | null;
+  siteTitle: string | null;
+  siteDescription: string | null;
+  ogImage: {
+    asset: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    } | null;
+    altText: string | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+  favicon: {
+    asset: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    } | null;
+    hotspot: SanityImageHotspot | null;
+    crop: SanityImageCrop | null;
+  } | null;
+} | null;
 // Variable: BLOG_LISTING_QUERY
 // Query: *[_id == "blogListing"][0]{    _id,    _type,    seo,    tag,    heading,    subtitle,    sectionsAbove[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    }  },    sectionsBelow[] {    _key,    _type,    anchorId,    _type == "heroBlock" => {      eyebrow,      heading,      body,      primaryCtaLabel,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      showTrustedBy    },    _type == "capabilitiesBlock" => {      eyebrow,      heading,      body,      items[]{        _key,        tag,        title,        description,        featured,        snippet      },      link {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    },    _type == "toolsStripBlock" => {      eyebrow,      heading,      intro,      sourceMode,      "autoItems": *[_type == "tool"] | order(name asc) {        _id,        name,        logo{ asset, alt }      },      "manualItems": manualTools[]->{        _id,        name,        logo{ asset, alt }      }    },    _type == "processBlock" => {      eyebrow,      heading,      body,      steps[]{        _key,        stepLabel,        title,        description,        duration      },      footnote    },    _type == "resultsBlock" => {      eyebrow,      heading,      stats[]{        _key,        value,        suffix,        label      },      sourceMode,      "autoItems": *[_type == "caseStudy" && showOnHome == true]        | order(sortOrder asc, _createdAt desc) {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  },      "manualItems": manualCaseStudies[]-> {    _id,    title,    slug,    client->{ _id, name, company },    industry->{ _id, name, slug, country, region },    excerpt,    featuredImage{ asset, alt },    loomUrl,    techStack[]->{ _id, name, slug, integrationType },    results[]{ metric, value, description }  }    },    _type == "testimonialsBlock" => {      eyebrow,      heading,      sourceMode,      "autoItems": *[_type == "client"] | order(dateStarted desc) {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  },      "manualItems": manualTestimonials[]-> {    _id,    name,    authorName,    company,    role,    testimonial,    headshot{ asset, alt },    companyLogo{ asset, alt },    location->{ name }  }    },    _type == "faqBlock" => {      eyebrow,      heading,      intro,      sourceMode,      autoCategory,      "autoItems": *[_type == "faq"] | order(order asc) {    _id,    question,    slug,    answer,    order,    category  },      "manualItems": manualFaqs[]-> {    _id,    question,    slug,    answer,    order,    category  }    },    _type == "ctaBlock" => {      ctaHeading,      ctaSubtitle,      ctaButton {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  },      ctaFootnote,      secondaryCta {    label,    link {    linkType,    internalRef->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorPage->{      _type,      _id,      slug,      "isHomePage": _id == *[_id == "siteSettings"][0].homePage._ref    },    anchorId,    href,    openInNewTab,    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's    // default Cal handle when this is absent, so a per-block override    // appeared to save and then did nothing — no error, just the wrong    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.    calLink  }  }    }  }  }
 export type BLOG_LISTING_QUERYResult = {
@@ -19338,6 +19677,7 @@ declare module "@sanity/client" {
     "\n    *[_id == \"siteSettings\"][0] {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote\n    }\n  ": PAGE_CTA_DEFAULTS_QUERYResult;
     "\n    *[_type == \"page\"].slug.current\n  ": PAGE_SLUGS_QUERYResult;
     "\n    *[_id == \"siteSettings\"][0].homePage->slug.current\n  ": HOME_PAGE_SLUG_QUERYResult;
+    "\n    *[_id == \"siteSettings\"][0] {\n      logo{ asset, altText, hotspot, crop },\n      logoLink {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  },\n      navLinks[] {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      headerCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      footerColumns[]{\n        heading,\n        links[] {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n      },\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote,\n      siteTitle,\n      siteDescription,\n      ogImage{ asset, altText, hotspot, crop },\n      favicon{ asset, hotspot, crop }\n    }\n  ": SITE_SETTINGS_QUERYResult;
     "*[_id == \"blogListing\"][0]{\n    _id,\n    _type,\n    seo,\n    tag,\n    heading,\n    subtitle,\n    sectionsAbove[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    }\n  },\n    sectionsBelow[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    }\n  }\n  }": BLOG_LISTING_QUERYResult;
     "*[_id == \"blogListing\"][0]._id": BLOG_LISTING_PUBLISHED_QUERYResult;
     "*[_id == \"templateListing\"][0]{\n    _id,\n    _type,\n    seo,\n    tag,\n    heading,\n    subtitle,\n    sectionsAbove[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    }\n  },\n    sectionsBelow[] {\n    _key,\n    _type,\n    anchorId,\n\n    _type == \"heroBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      primaryCtaLabel,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      showTrustedBy\n    },\n\n    _type == \"capabilitiesBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      items[]{\n        _key,\n        tag,\n        title,\n        description,\n        featured,\n        snippet\n      },\n      link {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    },\n\n    _type == \"toolsStripBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      \"autoItems\": *[_type == \"tool\"] | order(name asc) {\n        _id,\n        name,\n        logo{ asset, alt }\n      },\n      \"manualItems\": manualTools[]->{\n        _id,\n        name,\n        logo{ asset, alt }\n      }\n    },\n\n    _type == \"processBlock\" => {\n      eyebrow,\n      heading,\n      body,\n      steps[]{\n        _key,\n        stepLabel,\n        title,\n        description,\n        duration\n      },\n      footnote\n    },\n\n    _type == \"resultsBlock\" => {\n      eyebrow,\n      heading,\n      stats[]{\n        _key,\n        value,\n        suffix,\n        label\n      },\n      sourceMode,\n      \"autoItems\": *[_type == \"caseStudy\" && showOnHome == true]\n        | order(sortOrder asc, _createdAt desc) {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  },\n      \"manualItems\": manualCaseStudies[]-> {\n    _id,\n    title,\n    slug,\n    client->{ _id, name, company },\n    industry->{ _id, name, slug, country, region },\n    excerpt,\n    featuredImage{ asset, alt },\n    loomUrl,\n    techStack[]->{ _id, name, slug, integrationType },\n    results[]{ metric, value, description }\n  }\n    },\n\n    _type == \"testimonialsBlock\" => {\n      eyebrow,\n      heading,\n      sourceMode,\n      \"autoItems\": *[_type == \"client\"] | order(dateStarted desc) {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  },\n      \"manualItems\": manualTestimonials[]-> {\n    _id,\n    name,\n    authorName,\n    company,\n    role,\n    testimonial,\n    headshot{ asset, alt },\n    companyLogo{ asset, alt },\n    location->{ name }\n  }\n    },\n\n    _type == \"faqBlock\" => {\n      eyebrow,\n      heading,\n      intro,\n      sourceMode,\n      autoCategory,\n      \"autoItems\": *[_type == \"faq\"] | order(order asc) {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  },\n      \"manualItems\": manualFaqs[]-> {\n    _id,\n    question,\n    slug,\n    answer,\n    order,\n    category\n  }\n    },\n\n    _type == \"ctaBlock\" => {\n      ctaHeading,\n      ctaSubtitle,\n      ctaButton {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  },\n      ctaFootnote,\n      secondaryCta {\n    label,\n    link {\n    linkType,\n    internalRef->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorPage->{\n      _type,\n      _id,\n      slug,\n      \"isHomePage\": _id == *[_id == \"siteSettings\"][0].homePage._ref\n    },\n    anchorId,\n    href,\n    openInNewTab,\n    // Was missing until 2026-07-19. resolve-link.ts falls back to the site's\n    // default Cal handle when this is absent, so a per-block override\n    // appeared to save and then did nothing \u2014 no error, just the wrong\n    // booking link. Caught by lib/sanity/lib/__tests__/link-projection.test.ts.\n    calLink\n  }\n  }\n    }\n  }\n  }": TEMPLATE_LISTING_QUERYResult;

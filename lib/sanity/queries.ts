@@ -3,6 +3,7 @@ import { client } from "./client";
 import { fetchQuery } from "./lib/fetch";
 import { adaptCaseStudyToCard } from "./lib/adapters";
 import type { Section } from "./lib/page-sections";
+import type { SITE_SETTINGS_QUERYResult } from "@/sanity.types";
 
 // =============================================================================
 // BLOG POSTS
@@ -978,6 +979,64 @@ export async function getPage(slug: string) {
 
 export async function getPageCtaDefaults() {
 	return fetchQuery(PAGE_CTA_DEFAULTS_QUERY, {});
+}
+
+// =============================================================================
+// SITE SETTINGS (U9 defines the schema; this is U22's logo wiring, the first
+// consumer of the singleton as a whole)
+// =============================================================================
+
+/**
+ * The site-wide chrome singleton, projected in full — logo, nav links,
+ * header CTA, footer columns, the Global CTA defaults, and the SEO/social
+ * defaults. Nav and Footer currently only read `logo`; the rest is projected
+ * now rather than added field-by-field later so a second unit that needs
+ * `navLinks` or `footerColumns` extends this one query instead of adding a
+ * second round trip to the same document.
+ *
+ * A LITERAL duplicate of siteSettings.ts's own (non-exported)
+ * `SITE_SETTINGS_QUERY` — not an import of it, and not built by calling a
+ * helper. `sanity typegen` only statically analyses a literal template (or a
+ * same-file constant it can inline) passed to `defineQuery`; handing it an
+ * imported constant or a function call makes it emit ZERO queries for this
+ * entire file, SILENTLY — build, tsc and the test suite all keep passing
+ * because they read the already-checked-in sanity.types.ts. That exact
+ * failure has already happened twice in this repo (see
+ * PAGE_TYPE_CHROME_FIELDS's comment above). So the duplication here is
+ * forced, the same way PAGE_BUILDER_LINK_FIELDS above forces a second copy
+ * of siteSettings.ts's LINK_PROJECTION — and
+ * lib/sanity/lib/__tests__/site-settings-projection.test.ts is what stops
+ * the two copies drifting apart.
+ *
+ * Reuses this file's own PAGE_BUILDER_LINK_FIELDS / _LABELED_LINK_FIELDS
+ * constants (declared above, same file — safe for typegen to inline) rather
+ * than declaring a fourth link projection; they already project exactly the
+ * shape resolve-link.ts's `LinkValue` needs, hardcoded "siteSettings" id and
+ * all.
+ */
+export const SITE_SETTINGS_QUERY = defineQuery(`
+    *[_id == "siteSettings"][0] {
+      logo{ asset, altText, hotspot, crop },
+      logoLink ${PAGE_BUILDER_LINK_FIELDS},
+      navLinks[] ${PAGE_BUILDER_LABELED_LINK_FIELDS},
+      headerCta ${PAGE_BUILDER_LABELED_LINK_FIELDS},
+      footerColumns[]{
+        heading,
+        links[] ${PAGE_BUILDER_LABELED_LINK_FIELDS}
+      },
+      ctaHeading,
+      ctaSubtitle,
+      ctaButton ${PAGE_BUILDER_LABELED_LINK_FIELDS},
+      ctaFootnote,
+      siteTitle,
+      siteDescription,
+      ogImage{ asset, altText, hotspot, crop },
+      favicon{ asset, hotspot, crop }
+    }
+  `);
+
+export async function getSiteSettings() {
+	return fetchQuery<SITE_SETTINGS_QUERYResult>(SITE_SETTINGS_QUERY, {});
 }
 
 // =============================================================================

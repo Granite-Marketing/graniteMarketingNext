@@ -1,16 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
-import { BrandMark } from "./brand-mark";
+import { BrandMark, resolveBrandMarkLogo } from "./brand-mark";
 import { complianceLinks, footerColumns } from "./data";
+import { getSiteSettings } from "@/lib/sanity/queries";
 
-export function Footer() {
+// Server component — the fetch below is the single round trip Footer needs
+// for the logo (getSiteSettings projects the whole siteSettings singleton,
+// but only `logo` is consumed here today). Async server components render
+// fine from the many `<Footer />` call sites across app/** with no change
+// needed there.
+export async function Footer() {
+	const siteSettings = await getSiteSettings();
+	const logo = resolveBrandMarkLogo(siteSettings);
+
 	return (
 		<footer className="border-t border-relay-line">
 			<div className="mx-auto container px-6">
 				<div className="grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr]">
 					<div>
 						<Link href="/" className="inline-block">
-							<BrandMark />
+							<BrandMark logo={logo} />
 							<span className="sr-only">Granite Marketing home</span>
 						</Link>
 						<p className="mt-4 max-w-64 text-sm leading-relaxed text-relay-faint">
