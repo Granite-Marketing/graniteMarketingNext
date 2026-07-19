@@ -809,7 +809,7 @@ routes. Anonymous browsing shows no stega. Presentation reorder updates the prev
 
 ---
 
-## Phase 6 — Page types (agreed 2026-07-19, not yet built)
+## Phase 6 — Page types (BUILT 2026-07-19)
 
 Added after the homepage cutover landed. Ordering was corrected during
 discussion: **nav goes last**, because adding new document types changes what the
@@ -885,28 +885,96 @@ Homepage stays a `siteSettings` reference rather than its own type, so any page 
 be promoted. The desk entry is a shortcut to whichever one it points at — two
 mechanisms for "which page is home" would be worse than one.
 
-### U19 — Page type singletons
-Five types above, each with the slots model and a pinned desk entry. Structure
-needs `newDocumentOptions` and `document.actions` filtering per type, following the
-`siteSettings` precedent in `lib/sanity/structure.ts`.
+### U19 — Page type singletons — DONE
+Five singletons on the fixed-content-with-slots model, plus a `lib/sanity/singletons.ts`
+registry that all three pin mechanisms read from. Generalising the pin caught a real bug:
+the type-list exclusion only covered `siteSettings`, so every new singleton would have
+appeared twice in the desk — once pinned, once as an uncapped list, identical-looking.
 
-### U20 — Hierarchical desk tree
-Posts nested under Blog Listing, templates under Template Listing. Presentation
-only — getting it wrong costs a re-render, not a URL.
+Detail routes were wired later in the same phase; until then the two detail templates were
+inert (see "Dead fields" below).
 
-### U21 — Contact page
-`/contact` becomes a document so nav can link to it. Currently it is a bespoke
-route, which is why the link union cannot target it and the CTA had to use an
-external URL.
+### U20 — Topic sections — DONE, shape changed during build
+The plan said "nest posts under Blog Listing". What shipped goes further: one row per
+topic holding that topic's listing settings, detail layout, and records. Three iterations
+with the client, driven entirely by how it read rather than how it worked:
 
-### U22 — Nav and footer from Site Settings
-Last. Every type now exists to link to.
+- reusing one title for section, panel and first row produced "Blog Listing > Blog Listing
+  > Blog Listing", which reads as a rendering bug
+- "Blog Posts Detail" is subtly wrong — the detail page is not the posts
+- flat siblings did not show that Listing/Detail/Records belong together
 
-**Derive the reserved-slug blocklist rather than hand-maintaining it.** It lives in
-`documents/page.ts` and must grow with every new route and type. A hand-kept list
-of "slugs that would collide with something real" is exactly what drifts silently.
+Final shape: section named for the topic, entries named for the concept (`Listing`,
+`Detail`), gear icon marking page-settings documents so the desk teaches the distinction.
+Emoji in titles were replaced with `@sanity/icons` throughout.
+
+### U21 — Listing and contact routes — DONE
+`/blog`, `/templates` and `/contact` render chrome from their singletons behind a
+published-only gate. Verified byte-identical while unpublished.
+
+`/contact` needed a correction: `contactPage` was given hero fields by analogy with the
+listing pages, but `/contact` never had a `ContentHero` — its header lives inside the
+Contact component. The first cut rendered both, putting the heading and subtitle on the
+page twice. The hero fields now override the existing header instead.
+
+### U22 — Nav and footer from Site Settings — DONE
+Per-collection fallback, so a half-filled document cannot half-empty the nav. Links resolve
+through `resolveLink`, so a `calBooking` CTA renders the Cal.com button and a dangling
+reference is skipped rather than rendered as a dead anchor. The Wise compliance strip stays
+hardcoded.
+
+Prerequisites discovered during the build:
+- the `link` union could not target `blogListing`/`templateListing`/`contactPage`. Fixed,
+  with `blogPostTemplate`/`templateDetail` excluded at the type level since they describe
+  chrome around many URLs rather than a page with an href.
+- `routes.ts` mixed real routes with display labels, so anything resolving an href would
+  have produced `/blog/… (applies to every blog post)` as a destination.
+- the homepage resolved to `/home`, putting a permanent redirect behind every nav click.
+  Fixed with an `isHomePage` flag computed in GROQ against `siteSettings.homePage` —
+  which page is the homepage is data, not a constant.
+
+### U11 — Anchor picker — DONE (deferred from Phase 2)
+`anchorId` is now a dropdown of anchors that exist on the referenced page, including
+auto-derived ones, with the text field still editable so a draft or not-yet-created section
+is never a dead end.
+
+### U17 — Overlays default-on — VERIFIED, already correct
+Overlays are on in Draft Mode; the env flag gates only stega.
 
 ---
+
+## Dead fields — the defect pattern of this phase
+
+Four fields were added to schemas, seeded, and shown in the Studio with nothing rendering
+them. An editor fills one in, publishes, and nothing happens, with no error to explain why.
+
+| Field | Why it was inert |
+|---|---|
+| `logo` | header renders an inline SVG wordmark |
+| `siteTitle` / `siteDescription` / `ogImage` / `favicon` | `lib/seo/config.ts` stayed hardcoded |
+| detail template sections | detail routes never read them |
+| `calLink` on block CTAs | absent from the server-side projection |
+
+All four are now wired. The client found the first; the rest came from asking "what else
+did I do this to?". This is the strongest convention candidate to come out of the phase: a
+schema field is not done until something renders it.
+
+---
+
+## Still open
+
+- **Rotate the Sanity write token.** Still live, reachable in history at `4c3dc7f`.
+- **Re-capture the baseline fixtures.** They predate the Relay rename and every cutover
+  since, so `npm run baseline:check` fails against them. Regenerating blesses whatever is
+  current as correct, so it must be done once, deliberately, and never to "fix" a failing
+  check.
+- **Typegen no-diff CI check (U5).** The only mechanism that catches typegen's silent
+  zero-query failure, which shipped undetected once this session.
+- **Nothing pushed.** 43 commits local at time of writing, per the owner's constraint.
+
+Full account of what went wrong and why:
+`docs/solutions/sanity/2026-07-19-page-builder-session-lessons.md` — the input for the
+deferred skill and conventions work.
 
 ## Scope boundaries
 
