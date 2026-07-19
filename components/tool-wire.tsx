@@ -48,6 +48,22 @@ export function ToolWire({ tools }: { tools: WireTool[] }) {
 	// the animation; only the editing surface goes still.
 	const isPresentationTool = useIsPresentationTool();
 
+	// Live edits in Presentation can shrink `tools` (an editor removes a tool
+	// from the block, or `resolveDataBlockItems`'s `compact()` drops a
+	// reference that no longer resolves). `slots` holds indices into `tools`
+	// seeded at mount and otherwise only touched by the rotation swap below,
+	// which itself is frozen inside Presentation — so a shrink can leave
+	// stale indices pointing past the end of the array forever. Reclamp
+	// whenever the pool shrinks below the highest index currently held.
+	useEffect(() => {
+		if (tools.length === 0) return;
+		setSlots((prev) => {
+			const maxIndex = tools.length - 1;
+			if (prev.every((i) => i <= maxIndex)) return prev;
+			return prev.map((i) => Math.min(i, maxIndex));
+		});
+	}, [tools.length]);
+
 	useEffect(() => {
 		if (tools.length <= SLOT_COUNT) return;
 		// `null` means "still resolving". Treating that as false would let one
@@ -101,6 +117,7 @@ export function ToolWire({ tools }: { tools: WireTool[] }) {
 			<ul className="relative flex items-center justify-between gap-6">
 				{slots.map((toolIndex, slot) => {
 					const tool = tools[toolIndex];
+					if (!tool) return null;
 					return (
 						<li
 							key={slot}

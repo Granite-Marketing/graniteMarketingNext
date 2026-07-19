@@ -107,4 +107,60 @@ describe("ToolWire", () => {
 		// homepage's server HTML and break the byte-comparison baseline.
 		expect(screen.getAllByRole("listitem")).toHaveLength(6);
 	});
+
+	// The bug: `slots` is seeded once at mount from the initial `tools.length`
+	// and only otherwise written by the rotation swap, which early-returns
+	// whenever `tools.length <= SLOT_COUNT`. A live edit in Sanity Presentation
+	// that removes a tool document shrinks `tools` via `compact()` in
+	// resolve-data-block.ts, leaving a stale out-of-range index in `slots`.
+	// `tools[toolIndex]` is then `undefined` and `tool.logoUrl` throws.
+	it("does not throw when a live edit shrinks the tools array below the mounted slot indices", () => {
+		useIsPresentationTool.mockReturnValue(false);
+
+		const { rerender } = render(<ToolWire tools={TOOLS} />);
+
+		// Shrink well below SLOT_COUNT (6) so every slot index from the initial
+		// mount is now out of range.
+		const shrunk = TOOLS.slice(0, 2);
+
+		expect(() => {
+			rerender(<ToolWire tools={shrunk} />);
+		}).not.toThrow();
+	});
+
+	it("clamps stale slots to valid tools after a shrink, leaving no blank slot", () => {
+		useIsPresentationTool.mockReturnValue(false);
+
+		const { rerender } = render(<ToolWire tools={TOOLS} />);
+
+		const shrunk = TOOLS.slice(0, 2);
+		rerender(<ToolWire tools={shrunk} />);
+
+		const names = renderedToolNames();
+		// Every rendered slot must show one of the surviving tool names — no
+		// slot should render blank because it still points past the end of
+		// the shrunk array.
+		expect(names.length).toBeGreaterThan(0);
+		for (const name of names) {
+			expect(name.length).toBeGreaterThan(0);
+			expect(shrunk.some((tool) => tool.name === name)).toBe(true);
+		}
+	});
+
+	it("keeps the Presentation freeze intact after a shrink", () => {
+		vi.useFakeTimers();
+		useIsPresentationTool.mockReturnValue(true);
+
+		const { rerender } = render(<ToolWire tools={TOOLS} />);
+
+		const shrunk = TOOLS.slice(0, 2);
+		rerender(<ToolWire tools={shrunk} />);
+		const before = renderedToolNames();
+
+		act(() => {
+			vi.advanceTimersByTime(30_000);
+		});
+
+		expect(renderedToolNames()).toEqual(before);
+	});
 });
