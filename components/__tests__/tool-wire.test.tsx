@@ -64,7 +64,7 @@ describe("ToolWire", () => {
 		expect(renderedToolNames()).toEqual(before);
 	});
 
-	it("rotates tools on the live site", () => {
+	it("rotates tools when the hook reports it is not in Presentation", () => {
 		vi.useFakeTimers();
 		useIsPresentationTool.mockReturnValue(false);
 
@@ -80,12 +80,18 @@ describe("ToolWire", () => {
 		expect(renderedToolNames()).not.toEqual(before);
 	});
 
-	it("stays still until it knows whether it is in Presentation", () => {
+	it("rotates tools when the environment never resolves (the live site)", () => {
 		vi.useFakeTimers();
-		// The hook returns null while resolving. Starting the interval during
-		// that window would produce exactly one swap inside Presentation
-		// before settling — a single flash rather than a continuous one, which
-		// is harder to notice and just as wrong.
+		// This is the case that matters, and the one the suite previously got
+		// backwards. `null` is not a brief resolving window on the public site
+		// — it is permanent. useIsPresentationTool reads a store written only
+		// by <SanityLive />, and app/layout.tsx mounts that behind
+		// `isDraftMode`, so an ordinary visitor never leaves 'checking'.
+		//
+		// The old test mocked `null` and asserted stillness, on the assumption
+		// that null was transient. It passed, and it pinned the bug: the
+		// homepage tool wire was frozen in production for every visitor while
+		// the suite stayed green.
 		useIsPresentationTool.mockReturnValue(null);
 
 		render(<ToolWire tools={TOOLS} />);
@@ -95,7 +101,28 @@ describe("ToolWire", () => {
 			vi.advanceTimersByTime(30_000);
 		});
 
-		expect(renderedToolNames()).toEqual(before);
+		expect(renderedToolNames()).not.toEqual(before);
+	});
+
+	it("stops rotating once the environment resolves to Presentation", () => {
+		vi.useFakeTimers();
+		// The bounded window the fix deliberately accepts: rotation runs while
+		// the comlink handshake is outstanding, then must stop for good once
+		// the hook reports `true`. This is what keeps the Documents panel from
+		// flashing continuously while an editor works.
+		useIsPresentationTool.mockReturnValue(null);
+
+		const { rerender } = render(<ToolWire tools={TOOLS} />);
+
+		useIsPresentationTool.mockReturnValue(true);
+		rerender(<ToolWire tools={TOOLS} />);
+
+		const afterResolve = renderedToolNames();
+		act(() => {
+			vi.advanceTimersByTime(30_000);
+		});
+
+		expect(renderedToolNames()).toEqual(afterResolve);
 	});
 
 	it("renders one node per slot, not one per tool", () => {
