@@ -1,0 +1,20 @@
+# granite-conventions config
+# See ~/.claude/skills/granite-conventions/SKILL.md for the schema.
+
+stack: nextjs
+client: granite
+project: granite-marketing
+mode: enforced          # enforced | legacy
+
+enforcement:
+  session: true         # PostToolUse hook in Claude Code sessions
+  pre_commit: true      # .git/hooks/pre-commit
+  ci: false             # disabled — no .github/workflows/ in this repo, and the
+                        # generated workflow clones a granite repo URL that has no
+                        # remote (granite lives locally under ~/granite/ only).
+                        # Same rationale as sightline. Session + pre-commit enforce
+                        # locally. Revisit if the knowledge base is ever published.
+
+# severity_overrides:
+#   semantic-html: high
+#   ui-shadcn: low

@@ -1,4 +1,4 @@
-import { RelayCTA } from "@/components/relay/cta";
+import { CTA } from "@/components/cta";
 
 interface ContentCtaBannerProps {
 	heading?: string;
@@ -17,5 +17,5 @@ export function ContentCtaBanner({
 	heading = "Ready to automate your workflows",
 	subtitle = "Get practical workflows built for your business. No coding required, just results that matter.",
 }: ContentCtaBannerProps) {
-	return <RelayCTA heading={heading} subtitle={subtitle} />;
+	return <CTA heading={heading} subtitle={subtitle} />;
 }

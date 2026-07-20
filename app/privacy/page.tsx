@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/navigation";
+import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 
 export const metadata = {
@@ -12,7 +12,7 @@ export const dynamic = "force-static";
 export default function PrivacyPage() {
 	return (
 		<>
-			<Navigation />
+			<Nav />
 			<main className="min-h-screen pt-32 pb-16">
 				<div className="container mx-auto px-4">
 					<div className="max-w-4xl mx-auto">

@@ -6,7 +6,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { VisualEditing } from "next-sanity/visual-editing";
 import "./globals.css";
-import { defaultMetadata } from "@/lib/seo/config";
+import { getRootMetadata } from "@/lib/seo/config";
 import { SanityLive } from "@/lib/sanity/live";
 import { DisableDraftMode } from "@/components/disable-draft-mode";
 
@@ -21,7 +21,15 @@ const geistMono = Geist_Mono({
 	display: "swap",
 });
 
-export const metadata: Metadata = defaultMetadata;
+// Sanity-aware: siteSettings' siteTitle/siteDescription/ogImage/favicon
+// (lib/sanity/studio-schemas/documents/siteSettings.ts) each override their
+// own hardcoded default in lib/seo/config.ts independently, falling all the
+// way back to today's literal values whenever a field is unset. See
+// getRootMetadata's own comment for the title/template split and the
+// byte-identical-when-unset guarantee this relies on.
+export async function generateMetadata(): Promise<Metadata> {
+	return getRootMetadata();
+}
 
 export default async function RootLayout({
 	children,

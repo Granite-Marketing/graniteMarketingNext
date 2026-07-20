@@ -1,18 +1,23 @@
-import { Navigation } from "@/components/navigation";
+import { Nav } from "@/components/nav";
 import { TemplatePostHero } from "@/components/template-post-hero";
 import { PostContent } from "@/components/post-content";
 import { ContentCtaBanner } from "@/components/content-cta-banner";
 import { RelatedBlogPosts } from "@/components/related-blog-posts";
 import { RelatedTemplates } from "@/components/related-templates";
 import { Footer } from "@/components/footer";
+import { PageBuilder } from "@/components/page-builder";
 import { notFound } from "next/navigation";
 import {
 	getWorkflowTemplate,
 	getWorkflowTemplateSlugs,
 	getWorkflowTemplates,
+	getTemplateDetailPublished,
+	getTemplateDetail,
+	getPageCtaDefaults,
 } from "@/lib/sanity/queries";
 import { getImageUrl } from "@/lib/sanity/lib/adapters";
 import type { PortableTextBlock } from "@portabletext/types";
+import type { SiteSettingsCtaDefaults } from "@/lib/sanity/lib/resolve-cta";
 import type { Metadata } from "next";
 import { siteConfig } from "@/lib/seo";
 import { stegaClean } from "next-sanity";
@@ -124,7 +129,25 @@ export default async function TemplateDetailPage({
 		notFound();
 	}
 
-	const related = await getWorkflowTemplates();
+	const [related, templateDetailPublished, ctaDefaults] = await Promise.all([
+		getWorkflowTemplates(),
+		getTemplateDetailPublished(),
+		getPageCtaDefaults() as Promise<SiteSettingsCtaDefaults | null>,
+	]);
+
+	// templateDetail (U19b of the Sanity page builder plan, Phase 6) exists
+	// ONLY as a draft right now, and dev/production share one Sanity dataset
+	// (see app/page.tsx's generateMetadata for the full rationale this
+	// mirrors), so this must resolve to no extra sections around any
+	// template until an editor PUBLISHES it — never at deploy time.
+	// getTemplateDetail is only called once the check above has proved a
+	// published document exists, exactly like getTemplateListing following
+	// getTemplateListingPublished in app/templates/page.tsx (U21).
+	const templateDetailDoc = templateDetailPublished
+		? await getTemplateDetail()
+		: null;
+	const sectionsAbove = templateDetailDoc?.sectionsAbove ?? [];
+	const sectionsBelow = templateDetailDoc?.sectionsBelow ?? [];
 
 	const heroPost = {
 		title: template.title,
@@ -154,7 +177,16 @@ export default async function TemplateDetailPage({
 
 	return (
 		<div className="min-h-screen bg-background">
-			<Navigation />
+			<Nav />
+			{sectionsAbove.length > 0 && (
+				<PageBuilder
+					documentId={templateDetailDoc!._id}
+					documentType={templateDetailDoc!._type}
+					sections={sectionsAbove}
+					sectionsPath="sectionsAbove"
+					siteSettingsCtaDefaults={ctaDefaults}
+				/>
+			)}
 			<TemplatePostHero post={heroPost} />
 			<PostContent content={(template.content ?? []) as PortableTextBlock[]} />
 			{template.relatedBlogPosts && template.relatedBlogPosts.length > 0 && (
@@ -162,6 +194,15 @@ export default async function TemplateDetailPage({
 			)}
 			<ContentCtaBanner />
 			<RelatedTemplates templates={related as any[]} currentSlug={template.slug.current} />
+			{sectionsBelow.length > 0 && (
+				<PageBuilder
+					documentId={templateDetailDoc!._id}
+					documentType={templateDetailDoc!._type}
+					sections={sectionsBelow}
+					sectionsPath="sectionsBelow"
+					siteSettingsCtaDefaults={ctaDefaults}
+				/>
+			)}
 			<Footer />
 		</div>
 	);

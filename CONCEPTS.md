@@ -41,6 +41,16 @@ A third-party product the agency integrates with, shown in the tools/integration
 strip. Distinct from Client and Logo List: a Tool is software the agency connects to,
 not a company it has worked for.
 
+### Portable Text
+The block-based representation of rich body content — an ordered list of typed
+blocks rather than a string of markup. Both Blog Posts and Workflow Templates carry
+their body as Portable Text.
+
+Because it is structured rather than a markup string, rendering it means mapping
+each block type to a component, and adding a new kind of content (a code block, an
+embed) means adding both a block type and its renderer. Plain-text operations such
+as word counting must first walk the blocks to extract their text.
+
 ## Preview and publishing
 
 ### Perspective
@@ -68,8 +78,8 @@ field each string came from, so the rendered page can offer click-to-edit.
 Stega is active only in Draft Mode. Because the encoding lives inside the string,
 any code that measures, truncates, deduplicates, or compares a content string will
 misbehave while it is active, and must strip the encoding first. Rendered text,
-rich-text input, and image helpers must *not* strip it — doing so removes the
-click-to-edit targets.
+Portable Text rendering, and image helpers must *not* strip it — doing so removes
+the click-to-edit targets.
 
 ### Presentation tool
 The editing surface pairing the document form with a live preview of the real site,

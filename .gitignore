@@ -52,7 +52,21 @@ data/*.csv
 # granite-automations/
 
 .claude
-scripts
+# Anchored to the repo root: an unanchored "scripts" also matches test/scripts/,
+# which silently untracked the migration-client tests.
+#
+# Contents are ignored rather than the directory itself, because git cannot
+# re-include a file whose parent directory is excluded. Seeding scripts are
+# negated below: they are the durable record of pre-migration content and the
+# reproducibility path for a fresh dataset, so they belong in version control.
+/scripts/*
+!/scripts/seed-*.ts
+# sanityClient.ts is a dependency of the tracked seed scripts, so it has to be
+# tracked too: `next build` typechecks **/*.ts, and a tracked file importing an
+# untracked one fails on any clean clone (it passed locally only because the
+# file was present in the working tree). It carries no secret — the write token
+# comes from process.env.SANITY_TOKEN with no fallback constant.
+!/scripts/sanityClient.ts
 # Never commit env backups/copies
 .env*.bak
 *.bak
