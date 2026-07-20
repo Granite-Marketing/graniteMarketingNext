@@ -66,10 +66,27 @@ export function ToolWire({ tools }: { tools: WireTool[] }) {
 
 	useEffect(() => {
 		if (tools.length <= SLOT_COUNT) return;
-		// `null` means "still resolving". Treating that as false would let one
-		// swap through before it settles — a single flash instead of a
-		// continuous one, which is harder to spot and no more correct.
-		if (isPresentationTool !== false) return;
+		// Freeze ONLY on a definite `true`.
+		//
+		// `null` does not mean "briefly resolving" in this app — it means
+		// "permanently unknown". useIsPresentationTool reads a store that only
+		// <SanityLive /> ever writes, and app/layout.tsx mounts <SanityLive />
+		// behind `isDraftMode`. So for every ordinary visitor the store stays
+		// at its 'checking' default forever and the hook returns `null` for the
+		// life of the page. The previous `!== false` guard therefore froze the
+		// rotation on the public site — the exact opposite of its intent — and
+		// the freeze it was written for still worked, which is why it looked
+		// correct.
+		//
+		// Treating `null` as "animate" reopens a bounded window inside
+		// Presentation: rotation runs until the comlink handshake resolves the
+		// environment, at which point this effect re-runs and the cleanup
+		// clears the interval. That handshake lands in well under a second
+		// (SanityLive falls back to 'live' only after 3s) while the first swap
+		// is at SWAP_EVERY_MS, so in practice no swap reaches the Documents
+		// panel. A single late swap is the worst case, against a public site
+		// with no animation at all as the alternative.
+		if (isPresentationTool === true) return;
 		if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
 		const timeouts: ReturnType<typeof setTimeout>[] = [];
