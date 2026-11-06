@@ -4,6 +4,7 @@ import Image from "next/image";
 import { urlForImage } from "../client";
 import { codeToHtml } from "shiki";
 import { CodeBlock } from "./CodeBlock";
+import { InlineCode } from "./InlineCode";
 
 interface PortableTextRendererProps {
 	value: PortableTextBlock[];
@@ -43,6 +44,7 @@ async function HighlightedCode({
 
 const components: PortableTextComponents = {
 	marks: {
+		code: ({ children }) => <InlineCode>{children}</InlineCode>,
 		link: ({ children, value }) => {
 			const href = (value as any)?.href || "";
 			const isExternal = href.startsWith("http");
