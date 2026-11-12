@@ -850,6 +850,19 @@ export type BlogPost = {
     alt?: string;
     _type: "image";
   };
+  socialImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
   seo?: Seo;
   author?: {
     _ref: string;
@@ -1130,7 +1143,7 @@ export type BLOG_POSTS_QUERYResult = Array<{
   } | null;
 }>;
 // Variable: BLOG_POST_QUERY
-// Query: *[_type == "blogPost" && slug.current == $slug][0] {      _id,      title,      slug,      excerpt,      content,      publishedAt,      "updatedAt": _updatedAt,      featuredImage,      categories[]-> {        _id,        name,        slug      },      author-> {        name,        image,        bio      },      seo {        metaTitle,        metaDescription      },      "relatedTemplates": *[_type == "workflowTemplate" && references(^._id)] {        _id,        title,        slug,        n8nUrl,        youtubeUrl      },      standaloneTemplateLink {        n8nUrl,        youtubeUrl      }    }
+// Query: *[_type == "blogPost" && slug.current == $slug][0] {      _id,      title,      slug,      excerpt,      content,      publishedAt,      "updatedAt": _updatedAt,      featuredImage,      socialImage,      categories[]-> {        _id,        name,        slug      },      author-> {        name,        image,        bio      },      seo {        metaTitle,        metaDescription      },      "relatedTemplates": *[_type == "workflowTemplate" && references(^._id)] {        _id,        title,        slug,        n8nUrl,        youtubeUrl      },      standaloneTemplateLink {        n8nUrl,        youtubeUrl      }    }
 export type BLOG_POST_QUERYResult = {
   _id: string;
   title: string | null;
@@ -1174,6 +1187,19 @@ export type BLOG_POST_QUERYResult = {
   publishedAt: string | null;
   updatedAt: string;
   featuredImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  } | null;
+  socialImage: {
     asset?: {
       _ref: string;
       _type: "reference";
@@ -30612,7 +30638,7 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "\n    *[_type == \"blogPost\"] | order(publishedAt desc) {\n      _id,\n      title,\n      slug,\n      excerpt,\n      content,\n      publishedAt,\n      featuredImage,\n      categories[]-> {\n        _id,\n        name,\n        slug\n      },\n      author-> {\n        name,\n        image\n      }\n    }\n  ": BLOG_POSTS_QUERYResult;
-    "\n    *[_type == \"blogPost\" && slug.current == $slug][0] {\n      _id,\n      title,\n      slug,\n      excerpt,\n      content,\n      publishedAt,\n      \"updatedAt\": _updatedAt,\n      featuredImage,\n      categories[]-> {\n        _id,\n        name,\n        slug\n      },\n      author-> {\n        name,\n        image,\n        bio\n      },\n      seo {\n        metaTitle,\n        metaDescription\n      },\n      \"relatedTemplates\": *[_type == \"workflowTemplate\" && references(^._id)] {\n        _id,\n        title,\n        slug,\n        n8nUrl,\n        youtubeUrl\n      },\n      standaloneTemplateLink {\n        n8nUrl,\n        youtubeUrl\n      }\n    }\n  ": BLOG_POST_QUERYResult;
+    "\n    *[_type == \"blogPost\" && slug.current == $slug][0] {\n      _id,\n      title,\n      slug,\n      excerpt,\n      content,\n      publishedAt,\n      \"updatedAt\": _updatedAt,\n      featuredImage,\n      socialImage,\n      categories[]-> {\n        _id,\n        name,\n        slug\n      },\n      author-> {\n        name,\n        image,\n        bio\n      },\n      seo {\n        metaTitle,\n        metaDescription\n      },\n      \"relatedTemplates\": *[_type == \"workflowTemplate\" && references(^._id)] {\n        _id,\n        title,\n        slug,\n        n8nUrl,\n        youtubeUrl\n      },\n      standaloneTemplateLink {\n        n8nUrl,\n        youtubeUrl\n      }\n    }\n  ": BLOG_POST_QUERYResult;
     "\n    *[_type == \"blogPost\"].slug.current\n  ": BLOG_POST_SLUGS_QUERYResult;
     "\n    *[_type == \"blogPost\" && featured == true] | order(publishedAt desc) [0...$limit] {\n      _id,\n      title,\n      slug,\n      excerpt,\n      publishedAt,\n      featuredImage {\n        asset,\n        alt\n      }\n    }\n  ": FEATURED_BLOG_POSTS_QUERYResult;
     "\n    *[_type == \"blogPost\" && $categorySlug in categories[]->slug.current] | order(publishedAt desc) {\n      _id,\n      title,\n      slug,\n      excerpt,\n      publishedAt,\n      featuredImage {\n        asset,\n        alt\n      },\n      categories[]-> {\n        _id,\n        name,\n        slug\n      }\n    }\n  ": BLOG_POSTS_BY_CATEGORY_QUERYResult;
