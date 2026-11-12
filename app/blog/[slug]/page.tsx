@@ -38,12 +38,12 @@ type SanityBlogPostDetail = {
 	content?: PortableTextBlock[];
 	publishedAt?: string;
 	featuredImage?: unknown;
-	socialImage?: unknown;
 	categories?: { name?: string }[];
 	author?: { name?: string };
 	seo?: {
 		metaTitle?: string;
 		metaDescription?: string;
+		socialImage?: unknown;
 	};
 	relatedTemplates?: {
 		_id: string;
@@ -85,7 +85,7 @@ export async function generateMetadata({
 		post.seo?.metaDescription || post.excerpt || pageMetadata.blog.description;
 
 	const imageUrl =
-		getImageUrl((post.socialImage || post.featuredImage) as any) ||
+		getImageUrl((post.seo?.socialImage || post.featuredImage) as any) ||
 		siteConfig.defaultImage;
 	const canonicalUrl = `${siteConfig.url}/blog/${slug}`;
 

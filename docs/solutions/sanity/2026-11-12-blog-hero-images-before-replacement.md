@@ -30,3 +30,11 @@ client.patch("<document id>").set({ featuredImage: { _type: "image", asset: { _t
 | the-ai-pricing-pivot-is-here-and-it-s-not-going-away | `461296d1-3f71-469a-8d2a-3035ab711322` | `image-d6f0755be8160d09aa6b73cdb1daa9ca6d36a658-1200x896-jpg` | Automation workflow showing local vs cloud system |
 | we-ve-just-launched-our-free-n8n-template-library | `1e399a92-5ad5-4b6b-92e5-369f20b2b9ec` | `image-00b790a5245d11e864222e5c6b444a0b0d1da00d-1200x896-jpg` | (none) |
 | what-apple-v-openai-reveals-about-the-ai-talent-war | `a11a6e40-a33d-40e6-ba83-abf418dbf032` | `image-726fadb292b24905029f53ddbcda81cb89c88dfa-1200x896-jpg` | (none) |
+
+## Later the same day
+
+- `used-thinkpad-claude-code-server` (`blog-used-thinkpad-claude-code-server`) was published with the
+  new hero already set (`image-d360015d598903d719daa31e021c7fa7d827c618-1600x1000-png`, the same file
+  as `hero.png`), so its hero was not replaced. Only its social share image was added.
+- The social share image moved from a top-level `socialImage` field into `seo.socialImage`, so it sits
+  with Meta Title and Meta Description in Studio.
