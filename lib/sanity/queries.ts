@@ -76,7 +76,6 @@ export const BLOG_POST_QUERY = defineQuery(`
       publishedAt,
       "updatedAt": _updatedAt,
       featuredImage,
-      socialImage,
       categories[]-> {
         _id,
         name,
@@ -89,7 +88,8 @@ export const BLOG_POST_QUERY = defineQuery(`
       },
       seo {
         metaTitle,
-        metaDescription
+        metaDescription,
+        socialImage
       },
       "relatedTemplates": *[_type == "workflowTemplate" && references(^._id)] {
         _id,

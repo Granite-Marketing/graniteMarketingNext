@@ -1,5 +1,6 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
 import { ComposeIcon } from "@sanity/icons";
+import { seoFields } from "../objects/seo";
 
 // granite-convention-exception: test-discipline
 // reason: pure extraction from the former studio-schemas/index.ts (U4 of the
@@ -44,23 +45,26 @@ export const blogPost = defineType({
 			],
 		}),
 		defineField({
-			name: "socialImage",
-			title: "Social Share Image",
-			type: "image",
-			description:
-				"1200x630 image for link previews on LinkedIn, Slack and similar. Never shown on the site. Leave empty to use the featured image.",
-			fields: [
-				defineField({
-					name: "alt",
-					type: "string",
-					title: "Alternative Text",
-				}),
-			],
-		}),
-		defineField({
 			name: "seo",
 			title: "SEO",
-			type: "seo",
+			type: "object",
+			fields: [
+				...seoFields,
+				defineField({
+					name: "socialImage",
+					title: "Social Share Image",
+					type: "image",
+					description:
+						"1200x630 image for link previews on LinkedIn, Slack and similar. Never shown on the site. Leave empty to use the featured image.",
+					fields: [
+						defineField({
+							name: "alt",
+							type: "string",
+							title: "Alternative Text",
+						}),
+					],
+				}),
+			],
 		}),
 		defineField({
 			name: "author",
