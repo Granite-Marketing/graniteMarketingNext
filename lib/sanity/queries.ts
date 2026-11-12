@@ -76,6 +76,7 @@ export const BLOG_POST_QUERY = defineQuery(`
       publishedAt,
       "updatedAt": _updatedAt,
       featuredImage,
+      socialImage,
       categories[]-> {
         _id,
         name,

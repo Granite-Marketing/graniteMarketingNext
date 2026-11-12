@@ -44,6 +44,20 @@ export const blogPost = defineType({
 			],
 		}),
 		defineField({
+			name: "socialImage",
+			title: "Social Share Image",
+			type: "image",
+			description:
+				"1200x630 image for link previews on LinkedIn, Slack and similar. Never shown on the site. Leave empty to use the featured image.",
+			fields: [
+				defineField({
+					name: "alt",
+					type: "string",
+					title: "Alternative Text",
+				}),
+			],
+		}),
+		defineField({
 			name: "seo",
 			title: "SEO",
 			type: "seo",
