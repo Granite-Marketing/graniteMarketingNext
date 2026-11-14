@@ -16,6 +16,7 @@ import {
 import { XIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import posthog from "posthog-js";
 import { useState } from "react";
 
 interface TemplateLink {
@@ -53,6 +54,7 @@ export function BlogPostHero({
 	const handleCopyLink = async () => {
 		try {
 			await navigator.clipboard.writeText(postUrl);
+			posthog.capture("blog_post_shared", { share_method: "copy_link" });
 			setCopied(true);
 			setTimeout(() => setCopied(false), 2000);
 		} catch {
@@ -62,16 +64,19 @@ export function BlogPostHero({
 
 	const handleShareLinkedIn = () => {
 		const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`;
+		posthog.capture("blog_post_shared", { share_method: "linkedin" });
 		window.open(linkedInUrl, "_blank", "noopener,noreferrer");
 	};
 
 	const handleShareX = () => {
 		const xUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(post.title)}`;
+		posthog.capture("blog_post_shared", { share_method: "x" });
 		window.open(xUrl, "_blank", "noopener,noreferrer");
 	};
 
 	const handleShareFacebook = () => {
 		const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
+		posthog.capture("blog_post_shared", { share_method: "facebook" });
 		window.open(facebookUrl, "_blank", "noopener,noreferrer");
 	};
 
