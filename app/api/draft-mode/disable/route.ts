@@ -1,5 +1,10 @@
+import { SeverityNumber } from "@opentelemetry/api-logs";
+import { after } from "next/server";
 import { draftMode } from "next/headers";
 import { NextResponse } from "next/server";
+import { loggerProvider, posthogLogger } from "@/instrumentation";
+
+export const runtime = "nodejs";
 
 /**
  * Disables Draft Mode and returns to the published site.
@@ -9,7 +14,25 @@ import { NextResponse } from "next/server";
  * not-implemented in the installed Sanity types.
  */
 export async function GET() {
+	posthogLogger?.emit({
+		body: "Draft Mode disable requested",
+		severityNumber: SeverityNumber.INFO,
+		attributes: { route: "/api/draft-mode/disable", action: "disable_requested" },
+	});
+
 	(await draftMode()).disable();
+
+	posthogLogger?.emit({
+		body: "Draft Mode disabled",
+		severityNumber: SeverityNumber.INFO,
+		attributes: { route: "/api/draft-mode/disable", action: "disabled" },
+	});
+
+	after(async () => {
+		if (loggerProvider) {
+			await loggerProvider.forceFlush().catch(() => {});
+		}
+	});
 
 	// Built from the configured site URL rather than request.url, which is
 	// derived from the Host header and would be a reflected open redirect

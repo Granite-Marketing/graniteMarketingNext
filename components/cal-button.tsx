@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { getCalApi } from "@calcom/embed-react";
+import posthog from "posthog-js";
 import { cn } from "@/lib/utils";
 import { CAL_LINK, CAL_NAMESPACE } from "./data";
 
@@ -50,6 +51,7 @@ export function CalButton({
 			data-cal-namespace={CAL_NAMESPACE}
 			data-cal-link={calLink}
 			data-cal-config='{"layout":"month_view","theme":"dark"}'
+			onClick={() => posthog.capture("consultation_booking_opened")}
 			className={cn(
 				"cursor-pointer rounded bg-relay-cyan font-mono font-semibold text-relay-bg transition-all hover:bg-relay-bright hover:shadow-[0_0_28px_rgba(63,198,220,0.35)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-relay-cyan",
 				size === "lg" ? "px-6 py-3.5 text-[13px]" : "px-4.5 py-2.5 text-xs",

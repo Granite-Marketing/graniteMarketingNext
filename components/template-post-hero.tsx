@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import posthog from "posthog-js";
 import { useState } from "react";
 
 interface TemplatePostHeroProps {
@@ -41,6 +42,9 @@ export function TemplatePostHero({ post }: TemplatePostHeroProps) {
 			const response = await fetch(post.workflowJsonUrl);
 			const json = await response.text();
 			await navigator.clipboard.writeText(json);
+			posthog.capture("workflow_template_copied", {
+				template_category: post.category,
+			});
 			setCopied(true);
 			setTimeout(() => setCopied(false), 2000);
 		} catch {
@@ -118,7 +122,15 @@ export function TemplatePostHero({ post }: TemplatePostHeroProps) {
 												aria-label="Download workflow JSON"
 												asChild
 											>
-												<a href={post.workflowJsonUrl} download>
+											<a
+												href={post.workflowJsonUrl}
+												download
+												onClick={() =>
+													posthog.capture("workflow_template_downloaded", {
+														template_category: post.category,
+													})
+												}
+											>
 													<Download className="w-4 h-4" />
 												</a>
 											</Button>
